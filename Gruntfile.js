@@ -18,9 +18,19 @@ module.exports = function(grunt) {
 				dest: 'dist/media/js/tools.min.js'	
 			}
 		},
+		sass: {
+			default: {
+				options: {
+					style: 'compressed'
+				},
+				files: {
+					'dist/media/css/cartographer.css': 'dist/media/css/cartographer.sass'
+				}
+			}
+		},
 		concat: {
 			default: {
-				src: ['src/media/js/*.js', 'src/media/js/vendor/*.js'],
+				src: ['src/media/js/vendor/*.js', 'src/media/js/utils/*.js'],
 				dest: 'dist/media/js/' + package + '.js',
 			},
 			tools: {
@@ -28,15 +38,20 @@ module.exports = function(grunt) {
 				dest: 'dist/media/js/tools.js',	
 			}
 		},
-		clean: ['dist/media/js/' + package + '.js', 'dist/media/js/tools.js'],
+		clean: {
+			release: ['dist/media/js/' + package + '.js', 'dist/media/js/tools.js', 'dist/media/js/vendor', 'dist/media/js/tools', 'dist/media/js/utils'],
+			default: ['dist/media/js/vendor', 'dist/media/js/tools', 'dist/media/js/utils', 'dist/media/css/*.sass'],
+		},
 		copy: {
 			default: {
-				src: 'src/index.html',
-				dest: 'dist/index.html'
+				expand: true,
+				cwd: 'src/',
+				src: '**',
+				dest: 'dist/'
 			}
 		},
 		watch: {
-			files: ['src/index.html', 'src/media/js/*.js', 'src/media/js/tools/*.js'],
+			files: ['src/index.html', 'src/media/js/*.js', 'src/media/js/*/*.js', 'src/media/css/*.sass'],
 			tasks: ['default'],
 		}
 	});
@@ -47,8 +62,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-sass');
 
 	// Default task(s).
-	grunt.registerTask('default', ['concat', 'copy']);
-	//grunt.registerTask('default', ['concat', 'uglify', 'copy', 'clean']);
+	grunt.registerTask('default', ['copy', 'concat', 'sass', 'clean:default']);
+	grunt.registerTask('release', ['copy', 'concat', 'uglify', 'sass', 'clean:release']);
 };

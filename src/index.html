@@ -3,38 +3,61 @@
 <head>
 <meta charset="UTF-8" />
 <title>Cartographer</title>
-<style>
-body {
-	margin: 0;
-	overflow: hidden;
-}
-#toolbar {
-	width: 200px;
-	height: 40px;
-	position: absolute;
-	background-color: lightgray;
-	border: : 1px solid gray;
-	top: 0;
-	left: 0;
-}
-canvas {
-	background-color: #C9AE7F;
-}
-</style>
+<link href="http://fonts.googleapis.com/css?family=Rokkitt:400,700" rel="stylesheet" />
+<link rel="stylesheet" href="media/css/font-awesome.min.css" />
+<link rel="stylesheet" href="media/css/cartographer.css" />
 
 </head>
 <body>
 <canvas id="canvas" resize></canvas>
 
-<div id="toolbar">
-	<a href="javascript:brush.activate();">Brush</a>
-	<a href="javascript:lines.activate();">Lines</a>
-	<a href="javascript:clouds.activate();">Clouds</a>
-	<a href="javascript:circles.activate();">Circles</a>
+<div id="tools" class="panel">
+	<ul>
+		<li>
+			<label for="background">Background:</label>
+			<select id="background" data-for="background"></select>
+		</li>
+		<li id="brush" class="tool">
+			<span class="fa fa-pencil" title="Brush"></span>
+			<ul>
+				<li>
+					<label for="terrain">Terrain:</label>
+					<select id="terrain" data-for="brush"></select>
+				</li>
+				<li>
+					<label for="size">Size:</label>
+					<select id="size" data-for="brush">
+						<option value="small">Small</option>
+						<option value="medium">Medium</option>
+						<option value="large">Large</option>
+						<option value="huge">Huge</option>
+					</select>
+				</li>
+			</ul>
+		</li>
+		<li id="feature" class="tool">
+			<span class="fa fa-photo" title="Features"></span>
+			<ul>
+				<li>
+					<label for="feature_type">Type</label>
+					<select id="feature_type" data-for="feature"></select>
+				</li>
+			</ul>
+		</li>
+		<li class="separator"></li>
+		<li id="selection" class="tool"><span class="fa fa-arrow-left" title="Select"></span></li>
+		<li id="move" class="tool"><span class="fa fa-arrows" title="Move"></span></li>
+		<li id="delete" class="tool"><span class="fa fa-eraser" title="Delete"></span></li>
+	</ul>
+</div>
+
+<div id="layers" class="panel">
+	<h1>Layers</h1>
 </div>
 
 <script type="text/javascript" src="media/js/cartographer.js"></script>
 <script type="text/paperscript" src="media/js/tools.js" canvas="canvas"></script>
+<script type="text/javascript" src="media/js/run.js"></script>
 
 </body>
 </html>

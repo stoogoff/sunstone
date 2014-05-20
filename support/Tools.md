@@ -16,6 +16,10 @@ Draws an area in a colour which can be used to draw:
 
 This will need to have a colour selector and brush size.
 
+## Fill
+
+Outline an area which is filled with one of the above terrains.
+
 ## Object
 
 Draws a single object in place. Objects will include:

@@ -1,5 +1,8 @@
 
-// colours
+// foregrounds
+$fontColour: #333
+
+// backgrounds
 $button: darkgray
 $buttonActive: white
 $panel: lightgray
@@ -7,16 +10,24 @@ $panel: lightgray
 // borders
 $panelBorder: 1px solid gray
 $buttonBorder: 1px solid gray
-$buttonActiveBorder: 1px solid black
+$buttonActiveBorder: 1px solid #333
 
 body
 	margin: 0
 	overflow: hidden
+	font-color: $fontColour
+	font-family: 'Rokkitt', serif
 
 .panel
 	position: absolute
 	background-color: $panel
 	border: $panelBorder
+
+#tools
+	top: 0
+	left: 0
+	width: 100%
+	z-index: 100
 
 	ul
 		list-style-type: none
@@ -54,8 +65,8 @@ body
 				background-color: $panel
 				border: $panelBorder
 				display: none
-				min-width: 300px
-				z-index: 110
+				white-space: nowrap
+				z-index: 80
 				border-radius: 3px
 
 				li
@@ -72,19 +83,24 @@ body
 				ul
 					display: block
 
-#tools
-	top: 0
-	left: 0
-	width: 100%
-	z-index: 100
-
 #layers
 	top: 40px
 	width: 300px
 	bottom: 0
 	right: 0
 	z-index: 90
+	padding: 6px
 
-canvas
-	background-color: #C9AE7F
+	h1, h2
+		padding: 0
+		margin: 0
+
+	ul
+		list-style-type: none
+		margin: 0
+		padding: 0
+
+		li
+			padding: 6px 2px
+
 

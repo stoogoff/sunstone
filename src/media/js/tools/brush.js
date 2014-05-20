@@ -1,10 +1,17 @@
 
-brush = (function(theme) {
-	var fillColour, strokeWidth, path, layer;
+brush = (function() {
+	var fillColour, strokeWidth, path, activeLayer;
 	var tool = new Tool();
 
 	tool.minDistance = 10;
 	tool.onMouseDown = function(event) {
+		// keep each piece of terrain on its own layer
+		if(!layerManager.exists(activeLayer)) {
+			layerManager.add(activeLayer);
+		}
+
+		layerManager.activate(activeLayer);
+
 		path = new Path();
 		path.fillColor = fillColour;
 		path.strokeColor = fillColour;
@@ -17,7 +24,7 @@ brush = (function(theme) {
 	tool.onMouseDrag = function(event) {
 		var step = event.delta / 2;
 		step.angle += 90;
-		
+
 		step.normalize();
 
 		var top = event.middlePoint + step;
@@ -46,21 +53,21 @@ brush = (function(theme) {
 	};
 
 	tool.terrain = function(terrain, colour) {
-		// TODO terrain will add onto an extra layer
 		if(colour)
 			fillColour = colour;
 
 		if(terrain)
-			layer = terrain;
+			activeLayer = terrain;
 
-		return layer;
+		return activeLayer;
 	};
 
 	// add base size methods
 	var sizes = {
 		"small": 2,
 		"medium": 20,
-		"large": 40
+		"large": 40,
+		"huge": 80
 	};
 
 	for(var i in sizes) {
@@ -72,7 +79,7 @@ brush = (function(theme) {
 	}
 
 	// add base terrain methods
-	var terrains = theme.terrain();
+	var terrains = utils.theme.terrain();
 
 	for(var i in terrains) {
 		var t = i.toLowerCase();
@@ -89,4 +96,4 @@ brush = (function(theme) {
 	tool.water();
 
 	return tool;
-})(theme);
+})();

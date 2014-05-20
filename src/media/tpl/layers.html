@@ -1,0 +1,8 @@
+<div>
+	<h2>{{title}}</h2>
+	<ul>
+		{{#each layers}}
+			<li><label><input type="checkbox" name="{{@key}}" checked="checked" disabled="disabled" /> {{this}}</label></li>
+		{{/each}}
+	</ul>
+</div>

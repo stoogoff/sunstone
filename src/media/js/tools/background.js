@@ -1,5 +1,5 @@
 
-background = (function(theme) {
+background = (function() {
 	var tool = {};
 	var layer;
 
@@ -13,9 +13,8 @@ background = (function(theme) {
 		return layer;
 	};
 
-	// TODO - pull from theme
 	// add base terrain methods
-	var terrains = theme.terrain();
+	var terrains = utils.theme.terrain();
 
 	for(var i in terrains) {
 		tool[i.toLowerCase()] = (function(terrain, colour) {
@@ -26,7 +25,7 @@ background = (function(theme) {
 	}
 
 	// set defaults
-	tool.water();
+	tool.sand();
 
 	return tool;
-})(theme);
+})();
