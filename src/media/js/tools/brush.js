@@ -1,12 +1,15 @@
 
-brush = (function() {
-	var fillColour, size, path;
+brush = (function(theme) {
+	var fillColour, strokeWidth, path, layer;
 	var tool = new Tool();
 
 	tool.minDistance = 10;
 	tool.onMouseDown = function(event) {
 		path = new Path();
 		path.fillColor = fillColour;
+		path.strokeColor = fillColour;
+		path.strokeWidth = strokeWidth;
+		path.strokeCap = 'round';
 
 		path.add(event.point);
 	};
@@ -14,35 +17,48 @@ brush = (function() {
 	tool.onMouseDrag = function(event) {
 		var step = event.delta / 2;
 		step.angle += 90;
-
-		step = step.normalize(size);
 		
+		step.normalize();
+
 		var top = event.middlePoint + step;
 		var bottom = event.middlePoint - step;
 
 		path.add(top);
 		path.insert(0, bottom);
+		path.smooth();
 	};
 
 	tool.onMouseUp = function(event) {
 		path.add(event.point);
-		path.closed = true;
+		path.closed = false;
+		path.reduce();
 		path.smooth();
 	};
 
 	// public functions
-	tool.setSize = function(newSize) {
-		size = newSize;
+	tool.size = function(newSize) {
+		if(newSize)
+			strokeWidth = newSize;
+
+		for(var i in sizes)
+			if(strokeWidth == sizes[i])
+				return i;
 	};
 
-	tool.setTerrain = function(terrain, colour) {
+	tool.terrain = function(terrain, colour) {
 		// TODO terrain will add onto an extra layer
-		fillColour = colour;
+		if(colour)
+			fillColour = colour;
+
+		if(terrain)
+			layer = terrain;
+
+		return layer;
 	};
 
 	// add base size methods
 	var sizes = {
-		"small": 5,
+		"small": 2,
 		"medium": 20,
 		"large": 40
 	};
@@ -50,30 +66,27 @@ brush = (function() {
 	for(var i in sizes) {
 		tool[i] = (function(newSize) {
 			return function() {
-				size = newSize;
+				tool.size(newSize);
 			};
 		})(sizes[i]);
 	}
 
 	// add base terrain methods
-	var terrains = {
-		"sea": "#273A63",
-		"sand": "#C9AE7F",
-		"earth": "#604310",
-		"grass": "#1B510D"
-	};
+	var terrains = theme.terrain();
 
 	for(var i in terrains) {
-		tool[i] = (function(terrain, colour) {
+		var t = i.toLowerCase();
+
+		tool[t] = (function(terrain, colour) {
 			return function() {
-				fillColour = colour;
+				return tool.terrain(terrain, colour);
 			};
-		})(i, terrains[i]);
+		})(t, terrains[i]);
 	}
 
 	// set defaults
 	tool.large();
-	tool.sea();
+	tool.water();
 
 	return tool;
-})();
+})(theme);

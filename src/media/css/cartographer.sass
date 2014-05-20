@@ -1,0 +1,90 @@
+
+// colours
+$button: darkgray
+$buttonActive: white
+$panel: lightgray
+
+// borders
+$panelBorder: 1px solid gray
+$buttonBorder: 1px solid gray
+$buttonActiveBorder: 1px solid black
+
+body
+	margin: 0
+	overflow: hidden
+
+.panel
+	position: absolute
+	background-color: $panel
+	border: $panelBorder
+
+	ul
+		list-style-type: none
+		margin: 0
+		padding: 0 0 0 10px
+
+		li
+			display: inline-block
+			vertical-align: middle
+			position: relative
+
+			// separator
+			&.separator
+				border-left: $panelBorder
+				margin: 0 5px 0 4px
+				width: 1px
+				height: 28px
+
+			// buttons
+			span
+				display: inline-block
+				border: $buttonBorder
+				background-color: $button
+				font-size: 26px
+				padding: 4px
+				margin: 4px 2px
+				border-radius: 3px
+
+			// child panels
+			ul
+				position: absolute
+				padding: 6px
+				top: 46px
+				left: 2px
+				background-color: $panel
+				border: $panelBorder
+				display: none
+				min-width: 300px
+				z-index: 110
+				border-radius: 3px
+
+				li
+					margin-right: 10px
+
+				li:last-child
+					margin-right: 0
+
+			&.active
+				span
+					border: $buttonActiveBorder
+					background-color: $buttonActive
+
+				ul
+					display: block
+
+#tools
+	top: 0
+	left: 0
+	width: 100%
+	z-index: 100
+
+#layers
+	top: 40px
+	width: 300px
+	bottom: 0
+	right: 0
+	z-index: 90
+
+canvas
+	background-color: #C9AE7F
+
