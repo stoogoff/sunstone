@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Cartographer</title>
+<style>
+body {
+	margin: 0;
+	overflow: hidden;
+}
+#toolbar {
+	width: 200px;
+	height: 40px;
+	position: absolute;
+	background-color: lightgray;
+	border: : 1px solid gray;
+	top: 0;
+	left: 0;
+}
+canvas {
+	background-color: #C9AE7F;
+}
+</style>
+
+</head>
+<body>
+<canvas id="canvas" resize></canvas>
+
+<div id="toolbar">
+	<a href="javascript:brush.activate();">Brush</a>
+	<a href="javascript:lines.activate();">Lines</a>
+	<a href="javascript:clouds.activate();">Clouds</a>
+	<a href="javascript:circles.activate();">Circles</a>
+</div>
+
+<script type="text/javascript" src="media/js/cartographer.js"></script>
+<script type="text/paperscript" src="media/js/tools.js" canvas="canvas"></script>
+
+</body>
+</html>
