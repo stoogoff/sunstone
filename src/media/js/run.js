@@ -18,7 +18,7 @@ $(function() {
 		if(currentTool && currentTool.deactivate)
 			currentTool.deactivate();
 
-		if(window[this.id]) {
+		if(window[this.id] && window[this.id].activate) {
 			window[this.id].activate();
 
 			currentTool = window[this.id];
