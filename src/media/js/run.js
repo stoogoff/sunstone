@@ -43,7 +43,7 @@ $(function() {
 	}
 
 	// add feature list
-	// TODO - change feature list to show a items with an image
+	// TODO - change feature list to show items with an image
 	var selectors = $('select#feature_type');
 	var features = utils.theme.features();
 
@@ -53,36 +53,43 @@ $(function() {
 
 	// set up the layer lists
 	var layersPanel = $("#layers");
-	var layerTemplate = new utils.TemplateLoader('media/tpl/layers.html');
-	var layersLoaded = _.after(2, function() {
-		layersPanel.find('input[type=checkbox]').change(function() {
-			var layer = $(this).attr('name');
-			var state = this.checked;
 
-			layerManager.display(layer, state);
+	// add all of the default layers
+	window.setTimeout(function() {
+		var terrainPanel = new utils.LayersPanel(layersPanel, 'Terrain', terrain);
+		var featuresPanel = new utils.LayersPanel(layersPanel, 'Features', features);
+
+		var layersLoaded = _.after(2, function() {
+			layersPanel.find('input[type=checkbox]').change(function() {
+				var layer = $(this).attr('name');
+				var state = this.checked;
+
+				layerManager.display(layer, state);
+			}).end()
+			.find(".sortable").sortable({
+				stop: function(event, ui) {
+					var movedLayer = $(ui.item).find('input').attr('name');
+					var layersList = [];
+
+					$(this).find('input').each(function(idx, input) {
+						layersList.push(input.name);
+					});
+
+					for(var i = 0, len = layersList.length; i < len; ++i) {
+						if(movedLayer == layersList[i] && i == 0) {
+							layerManager.moveBelow(layersList[i + 1], movedLayer);
+							break;	
+						}
+						else if(movedLayer == layersList[i]) {
+							layerManager.moveAbove(layersList[i - 1], movedLayer);
+							break;
+						}
+					}
+				}
+			});
 		});
 
-		// do this later to avoid paper script timing
-		window.setTimeout(function() {
-			layerManager.onAdd(function(name) {
-				layersPanel.find('input[name=' + name + ']').removeAttr('disabled');
-			});
-		}, 1000);
-	});
-
-	var objectKeys = function(o) {
-		return _.object(_.chain(o).keys().map(function(s) {
-			return s.toLowerCase();
-		}).value(), _.keys(o))
-	};
-
-	layerTemplate.load(layersPanel, {
-		'title': 'Terrain',
-		'layers': objectKeys(terrain)
-	}, layersLoaded);
-
-	layerTemplate.load(layersPanel, {
-		'title': 'Features',
-		'layers': objectKeys(features)
-	}, layersLoaded);
+		terrainPanel.load(layersLoaded);
+		featuresPanel.load(layersLoaded);
+	}, 1000);
 });

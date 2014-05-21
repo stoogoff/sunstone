@@ -1,4 +1,5 @@
 
+// manages layer state and ordering
 layerManager = (function() {
 	var LayerManager = function() {
 		var events = new utils.Publisher();
@@ -20,6 +21,11 @@ layerManager = (function() {
 
 			return layer;
 		};
+
+		this.addList = function(layers) {
+			for(var i = 0, len = layers.length; i < len; ++i)
+				this.add(layers[i]);
+		}
 
 		// activate an existing layer
 		this.activate = function(name) {
@@ -49,9 +55,31 @@ layerManager = (function() {
 		this.display = function(name, state) {
 			if(this.exists(name)) {
 				project.layers[name].visible = state === true;
-				events.publish(state ? 'onShow' : 'onHide', name);
+				events.publish(state === true ? 'onShow' : 'onHide', name);
 			}
 		};
+
+		this.moveAbove = function(base, layer) {
+			if(this.exists(base) && this.exists(layer)) {
+				project.layers[layer].moveAbove(project.layers[base]);
+			}
+		};
+
+		this.moveBelow = function(base, layer) {
+			if(this.exists(base) && this.exists(layer)) {
+				project.layers[layer].moveBelow(project.layers[base]);
+			}
+		};
+
+		this.list = function() {
+			var list = [];
+
+			project.layers.forEach(function(layer) {
+				list.push(layer.name || "default layer");
+			})
+
+			return list;
+		}
 
 		// set up events
 		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow'];

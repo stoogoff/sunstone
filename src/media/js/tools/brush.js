@@ -1,4 +1,5 @@
 
+// draws solid colour terrain
 brush = (function() {
 	var fillColour, strokeWidth, path, activeLayer;
 	var tool = new Tool();

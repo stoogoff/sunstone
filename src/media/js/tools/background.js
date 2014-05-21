@@ -1,4 +1,5 @@
 
+// Changes the background colour of the map
 background = (function() {
 	var tool = {};
 	var layer;

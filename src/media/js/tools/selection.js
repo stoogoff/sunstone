@@ -1,4 +1,5 @@
 
+// selects a feature on the map
 selection = (function() {
 	var tool = new Tool();
 	var currentHit;

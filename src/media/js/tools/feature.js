@@ -1,4 +1,5 @@
 
+// places a single SVG feature on the map
 feature = (function() {
 	var symbols = {}, activeLayer, symbolData;
 	var tool = new Tool();
@@ -26,8 +27,6 @@ feature = (function() {
 
 	// set the feature icon
 	tool.feature = function(layer, feature) {
-		console.log(arguments)
-
 		if(layer)
 			activeLayer = layer;
 
