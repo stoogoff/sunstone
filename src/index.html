@@ -45,7 +45,37 @@
 			</ul>
 		</li>
 		<li class="separator"></li>
-		<li id="zoom" class="tool"><span class="fa fa-search" title="Zoom"></span></li>
+		<li id="pan" class="tool"><span class="fa fa-crosshairs" title="Pan"></span></li>
+		<li id="zoom" class="tool">
+			<span class="fa fa-search" title="Zoom"></span>
+			<ul>
+				<li>
+					<label for="zoom_type">Zoom:</label>
+					<select id="zoom_type" data-for="zoom">
+						<option value="zoomIn">In</option>
+						<option value="zoomOut">Out</option>
+					</select>
+				</li>
+				<li>
+					<label for="zoom_step">Step:</label>
+					<select id="zoom_step" data-for="zoom">
+						<option value="small">Small</option>
+						<option value="medium">Medium</option>
+						<option value="large">Large</option>
+					</select>
+				</li>
+				<li>
+					<label for="zoom_to">To:</label>
+					<select id="zoom_to" data-for="zoom">
+						<option value=""></option>
+						<option value="zoomQuarter">25%</option>
+						<option value="zoomHalf">50%</option>
+						<option value="zoomFull">100%</option>
+						<option value="zoomDouble">200%</option>
+					</select></li>
+				<li>Or click and drag</li>
+			</ul>
+		</li>
 		<li id="selection" class="tool"><span class="fa fa-arrow-left" title="Select"></span></li>
 		<li id="move" class="tool"><span class="fa fa-arrows" title="Move"></span></li>
 		<li id="delete" class="tool"><span class="fa fa-eraser" title="Delete"></span></li>

@@ -35,23 +35,19 @@ layerManager = (function() {
 			}
 		};
 
-		// hide the layer
+		// layer visibility
 		this.hide = function(name) {
 			if(this.exists(name)) {
 				project.layers[name].visible = false;
 				events.publish('onHide', name);
 			}
 		};
-
-		// show the layer
 		this.show = function(name) {
 			if(this.exists(name)) {
 				project.layers[name].visible = true;
 				events.publish('onShow', name);
 			}
 		};
-
-		// set the visible state of the layer
 		this.display = function(name, state) {
 			if(this.exists(name)) {
 				project.layers[name].visible = state === true;
@@ -59,16 +55,20 @@ layerManager = (function() {
 			}
 		};
 
+		// sorting
 		this.moveAbove = function(base, layer) {
 			if(this.exists(base) && this.exists(layer)) {
 				project.layers[layer].moveAbove(project.layers[base]);
 			}
 		};
-
 		this.moveBelow = function(base, layer) {
 			if(this.exists(base) && this.exists(layer)) {
 				project.layers[layer].moveBelow(project.layers[base]);
 			}
+		};
+
+		this.scale = function(size) {
+			view.zoom = size;
 		};
 
 		this.list = function() {
@@ -76,10 +76,12 @@ layerManager = (function() {
 
 			project.layers.forEach(function(layer) {
 				list.push(layer.name || "default layer");
-			})
+			});
 
 			return list;
-		}
+		};
+
+
 
 		// set up events
 		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow'];

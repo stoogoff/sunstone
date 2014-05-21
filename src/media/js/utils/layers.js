@@ -16,9 +16,6 @@ utils.LayersPanel = function(parent, title, layers) {
 		}).value();
 	};
 
-	console.log(title)
-	console.log(objectKeys(layers))
-
 	this.load = function(callback) {
 		template.load(parent, {
 			'title': title,
