@@ -57,7 +57,6 @@ layerManager = (function() {
 		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow'];
 
 		for(var i = 0, len = handlers.length; i < len; ++i) {
-
 			this[handlers[i]] = (function(name) {
 				return function(callback) {
 					return events.subscribe(name, callback);

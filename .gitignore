@@ -13,6 +13,7 @@ atlassian-ide-plugin.xml
 .sass-cache/
 Gemfile.lock
 
-# Node and distribution folder
+# Folders
 node_modules/*
 dist/*
+support/gfx/*

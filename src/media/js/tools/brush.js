@@ -73,7 +73,7 @@ brush = (function() {
 	for(var i in sizes) {
 		tool[i] = (function(newSize) {
 			return function() {
-				tool.size(newSize);
+				return tool.size(newSize);
 			};
 		})(sizes[i]);
 	}
