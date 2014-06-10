@@ -1,17 +1,33 @@
 
 // Changes the background colour of the map
 background = (function() {
+	var LAYER = 0;
 	var tool = {};
-	var layer;
+	var currentTerrain, image, layer, rectangle;
+	var canvas = project.view.element;
 
 	tool.terrain = function(terrain, colour) {
-		if(colour)
-			document.getElementById('canvas').style.backgroundColor = colour;
+		layerManager.activate(LAYER);
+
+		if(colour) {
+			canvas.style.backgroundColor = colour;
+
+			if(rectangle)
+				rectangle.remove();
+
+			rectangle = new Path.Rectangle({
+				point: [0, 0],
+				size: [image.bounds.width || canvas.offsetWidth, image.bounds.height || canvas.offsetHeight],
+				fillColor: colour
+			});
+
+			rectangle.sendToBack();
+		}
 
 		if(terrain)
-			layer = terrain;
+			currentTerrain = terrain;
 
-		return layer;
+		return currentTerrain;
 	};
 
 	// add base terrain methods
@@ -25,8 +41,18 @@ background = (function() {
 		})(i, terrains[i]);
 	}
 
-	// set defaults
-	tool.sand();
+	tool.load = function() {
+		// load background image
+		image = new Raster(utils.theme.background());
+
+		image.onLoad = function() {
+			image.blendMode = 'multiply';
+			image.position = new Point(image.bounds.width / 2, image.bounds.height / 2);
+		};
+
+		// set defaults
+		tool.sand();
+	};
 
 	return tool;
 })();

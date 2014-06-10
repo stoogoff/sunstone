@@ -32,6 +32,11 @@ $(function() {
 
 		if(window[tool] && window[tool][method])
 			window[tool][method]();
+
+		var reset = self.attr('data-reset');
+
+		if(reset && reset === "true")
+			this.selectedIndex = 0;
 	});
 
 	// add terrain to select lists
@@ -43,7 +48,6 @@ $(function() {
 	}
 
 	// add feature list
-	// TODO - change feature list to show items with an image
 	var selectors = $('select#feature_type');
 	var features = utils.theme.features();
 
@@ -89,7 +93,13 @@ $(function() {
 			});
 		});
 
+		// load background image and display
+		window.background.load();
+
 		terrainPanel.load(layersLoaded);
 		featuresPanel.load(layersLoaded);
 	}, 1000);
+
+	// set up sliding panel
+	utils.SlidingPanel(layersPanel, layersPanel.find('.toggle span'));
 });

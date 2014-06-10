@@ -38,6 +38,9 @@ zoom = (function() {
 	tool.large = function() {
 		step = 1;
 	};
+	tool.zoomFive = function() {
+		view.zoom = 5;
+	};
 	tool.zoomDouble = function() {
 		view.zoom = 2;
 	};

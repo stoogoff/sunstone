@@ -32,7 +32,11 @@ layerManager = (function() {
 			if(this.exists(name)) {
 				project.layers[name].activate();
 				events.publish('onActivate', name);
+
+				return project.layers[name];
 			}
+
+			throw "Couldn't activate layer '" + name + "'";
 		};
 
 		// layer visibility
@@ -56,19 +60,38 @@ layerManager = (function() {
 		};
 
 		// sorting
+		this.toFront = function(layer) {
+			if(this.exists(layer)) {
+				project.layers[layer].bringToFront();
+			}
+
+			throw "Couldn't move layer '" + layer + "' to front of stack";
+		};
+		this.toBack = function(layer) {
+			if(this.exists(layer)) {
+				project.layers[layer].sendToBack();
+			}
+
+			throw "Couldn't move layer '" + layer + "' to back of stack";
+		};
 		this.moveAbove = function(base, layer) {
 			if(this.exists(base) && this.exists(layer)) {
 				project.layers[layer].moveAbove(project.layers[base]);
 			}
+
+			throw "Couldn't move layer '" + layer + "' above '" + base + "'";
 		};
 		this.moveBelow = function(base, layer) {
 			if(this.exists(base) && this.exists(layer)) {
 				project.layers[layer].moveBelow(project.layers[base]);
 			}
+
+			throw "Couldn't move layer '" + layer + "' below '" + base + "'";
 		};
 
 		this.scale = function(size) {
 			view.zoom = size;
+			events.publish('onScale', size);
 		};
 
 		this.list = function() {
@@ -81,10 +104,8 @@ layerManager = (function() {
 			return list;
 		};
 
-
-
 		// set up events
-		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow'];
+		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow', 'onScale'];
 
 		for(var i = 0, len = handlers.length; i < len; ++i) {
 			this[handlers[i]] = (function(name) {
@@ -94,6 +115,8 @@ layerManager = (function() {
 			})(handlers[i]);
 		}
 	};
+
+	project.layers[0].name = "default";
 
 	return new LayerManager();
 })();
