@@ -1,13 +1,13 @@
 
 // Changes the background colour of the map
 background = (function() {
-	var LAYER = 0;
 	var tool = {};
-	var currentTerrain, image, layer, rectangle;
+	var currentTerrain, image, layer, rectangle, previousLayer;
 	var canvas = project.view.element;
 
 	tool.terrain = function(terrain, colour) {
-		layerManager.activate(LAYER);
+		previousLayer = project.activeLayer.name;
+		layerManager.activate(config.BACKGROUND.LAYER);
 
 		if(colour) {
 			canvas.style.backgroundColor = colour;
@@ -20,12 +20,12 @@ background = (function() {
 				size: [image.bounds.width || canvas.offsetWidth, image.bounds.height || canvas.offsetHeight],
 				fillColor: colour
 			});
-
-			rectangle.sendToBack();
 		}
 
 		if(terrain)
 			currentTerrain = terrain;
+
+		layerManager.activate(previousLayer);
 
 		return currentTerrain;
 	};

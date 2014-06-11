@@ -1,7 +1,6 @@
 
 // draws solid colour terrain
 brush = (function() {
-	var CURSOR_LAYER = "cursor";
 	var fillColour, strokeWidth, path, activeLayer, cursor;
 	var tool = new Tool();
 
@@ -9,6 +8,8 @@ brush = (function() {
 
 	// mouse control related functions
 	tool.onMouseDown = function(event) {
+		layerManager.activate(activeLayer);
+
 		path = new Path();
 		path.strokeColor = fillColour;
 		path.strokeWidth = strokeWidth;
@@ -19,7 +20,7 @@ brush = (function() {
 
 	tool.onMouseMove = function(event) {
 		if(!cursor) {
-			layerManager.activate(CURSOR_LAYER);
+			layerManager.activate(config.CURSOR.LAYER);
 
 			cursor = new Path.Circle(event.point, strokeWidth / 2);
 			cursor.strokeColor = 'black';
@@ -42,13 +43,7 @@ brush = (function() {
 		path.smooth();
 	};
 
-	// start up and tear down functions
-	tool.activate = function() {
-		layerManager.activate(activeLayer);
-
-		Tool.prototype.activate.call(this);
-	};
-
+	// tear down function
 	tool.deactivate = function() {
 		if(cursor) {
 			cursor.remove();
@@ -61,8 +56,8 @@ brush = (function() {
 		if(newSize)
 			strokeWidth = newSize;
 
-		for(var i in sizes)
-			if(strokeWidth == sizes[i])
+		for(var i in config.BRUSH.SIZES)
+			if(strokeWidth == config.BRUSH.SIZES[i])
 				return i;
 	};
 
@@ -77,19 +72,12 @@ brush = (function() {
 	};
 
 	// add base size methods
-	var sizes = {
-		"small": 2,
-		"medium": 20,
-		"large": 40,
-		"huge": 80
-	};
-
-	for(var i in sizes) {
+	for(var i in config.BRUSH.SIZES) {
 		tool[i] = (function(newSize) {
 			return function() {
 				return tool.size(newSize);
 			};
-		})(sizes[i]);
+		})(config.BRUSH.SIZES[i]);
 	}
 
 	// add base terrain methods

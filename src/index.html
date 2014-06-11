@@ -79,7 +79,20 @@
 		</li>
 		<li id="selection" class="tool"><span class="fa fa-arrow-left" title="Select"></span></li>
 		<li id="move" class="tool"><span class="fa fa-arrows" title="Move"></span></li>
-		<li id="delete" class="tool"><span class="fa fa-eraser" title="Delete"></span></li>
+		<li id="remove" class="tool">
+			<span class="fa fa-eraser" title="Delete"></span>
+			<ul>
+				<li>
+					<label for="remove_size">Size:</label>
+					<select id="remove_size" data-for="remove">
+						<option value="small">Small</option>
+						<option value="medium">Medium</option>
+						<option value="large">Large</option>
+						<option value="huge">Huge</option>
+					</select>
+				</li>
+			</ul>
+		</li>
 	</ul>
 </div>
 

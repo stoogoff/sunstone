@@ -1,7 +1,6 @@
 
 // places a single SVG feature on the map
 feature = (function() {
-	var CURSOR_LAYER = "cursor";
 	var symbols = {}, activeLayer, symbolData, cursor;
 	var tool = new Tool();
 
@@ -37,10 +36,10 @@ feature = (function() {
 		}
 		
 		if(!cursor) {
-			layerManager.activate(CURSOR_LAYER);
+			layerManager.activate(config.CURSOR.LAYER);
 
 			cursor = symbols[activeLayer].place({ x: 0, y: 0 });
-			cursor.opacity = 0.5;
+			cursor.opacity = config.CURSOR.OPACITY;
 
 			layerManager.activate(activeLayer);
 		}

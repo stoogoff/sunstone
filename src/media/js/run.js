@@ -1,4 +1,3 @@
-
 $(function() {
 	var currentTool = null;
 
@@ -6,11 +5,16 @@ $(function() {
 		$('.tool.active').removeClass('active');
 		$(this).addClass('active');
 
-		// any additrional work for the tools
+		// any additional work for the tools
 		switch(this.id) {
 			case "brush":
 				$('#size').val(brush.size());
 				$('#terrain').val(brush.terrain());
+
+				break;
+
+			case "remove":
+				$('#remove_size').val(remove.size());
 
 				break;
 		}
@@ -60,6 +64,10 @@ $(function() {
 
 	// add all of the default layers
 	window.setTimeout(function() {
+		// set up background
+		layerManager.add("background", true);
+
+		// set up panels
 		var terrainPanel = new utils.LayersPanel(layersPanel, 'Terrain', terrain);
 		var featuresPanel = new utils.LayersPanel(layersPanel, 'Features', features);
 
@@ -93,14 +101,14 @@ $(function() {
 			});
 		});
 
-		// load background image and display
-		window.background.load();
-
 		// set up base layers
 		terrainPanel.load(layersLoaded);
 		featuresPanel.load(layersLoaded);
 
-		layerManager.add("cursor");
+		// this prevents the cursor layer being used for hit tests
+		layerManager.add("cursor", true);
+
+		window.background.load();
 	}, 1000);
 
 	// set up sliding panel

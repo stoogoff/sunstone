@@ -10,10 +10,17 @@ layerManager = (function() {
 		};
 
 		// add a new layer to the layers list
-		this.add = function(name) {
+		this.add = function(name, locked) {
+			if(this.exists(name)) {
+				return project.layers[name];
+			}
+
 			var layer = new Layer();
 
 			layer.name = name;
+
+			if(locked === true)
+				layer._locked = true;
 
 			project.layers[name] = layer;
 
@@ -62,31 +69,25 @@ layerManager = (function() {
 		// sorting
 		this.toFront = function(layer) {
 			if(this.exists(layer)) {
-				project.layers[layer].bringToFront();
+				//project.layers[layer].bringToFront();
+				this.moveAbove(project.layers[project.layers.length - 1], layer);
 			}
-
-			throw "Couldn't move layer '" + layer + "' to front of stack";
 		};
 		this.toBack = function(layer) {
 			if(this.exists(layer)) {
-				project.layers[layer].sendToBack();
+				//project.layers[layer].sendToBack();
+				this.moveAbove(project.layers[0], layer);
 			}
-
-			throw "Couldn't move layer '" + layer + "' to back of stack";
 		};
 		this.moveAbove = function(base, layer) {
 			if(this.exists(base) && this.exists(layer)) {
 				project.layers[layer].moveAbove(project.layers[base]);
 			}
-
-			throw "Couldn't move layer '" + layer + "' above '" + base + "'";
 		};
 		this.moveBelow = function(base, layer) {
 			if(this.exists(base) && this.exists(layer)) {
 				project.layers[layer].moveBelow(project.layers[base]);
 			}
-
-			throw "Couldn't move layer '" + layer + "' below '" + base + "'";
 		};
 
 		this.scale = function(size) {
