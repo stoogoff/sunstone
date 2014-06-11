@@ -1,29 +1,11 @@
 
 // places a single SVG feature on the map
 feature = (function() {
+	var CURSOR_LAYER = "cursor";
 	var symbols = {}, activeLayer, symbolData, cursor;
 	var tool = new Tool();
 
-	var createSymbol = function() {
-		// it's already created
-		if(symbols[activeLayer])
-			return;
-
-		// import from SVG, create the symbol and remove the import
-		var imported = project.importSVG(symbolData.svg());
-
-		symbols[activeLayer] = new Symbol(imported);
-
-		imported.remove();
-	};
-
-	var createHoverSymbol = function(position) {
-		if(!cursor) {
-			cursor = symbols[activeLayer].place(position);
-			cursor.opacity = 0.5;
-		}
-	};
-
+	// remove the hover symbol
 	var removeHoverSymbol = function() {
 		if(cursor) {
 			cursor.remove();
@@ -32,25 +14,38 @@ feature = (function() {
 	};
 
 	tool.onMouseDown = function(event) {
-		// keep each feature on its own layer
-		if(!layerManager.exists(activeLayer)) {
-			layerManager.add(activeLayer);
-		}
-
-		layerManager.activate(activeLayer);
-
-		// create a symbol from the SVG, if it doesn't exist
-		createSymbol();
-
 		// drop the symbol at the cursor
 		symbols[activeLayer].place(event.point);
 	};
 
 	tool.onMouseMove = function(event) {
-		createSymbol();
-		createHoverSymbol(event.point);
-
 		cursor.position = event.point;
+	};
+
+	tool.activate = function() {
+		// keep each feature on its own layer
+		layerManager.activate(activeLayer);
+
+		// create a symbol from the SVG, if it doesn't exist
+		if(!symbols[activeLayer]) {
+			// import from SVG, create the symbol and remove the import
+			var imported = project.importSVG(symbolData.svg());
+
+			symbols[activeLayer] = new Symbol(imported);
+
+			imported.remove();
+		}
+		
+		if(!cursor) {
+			layerManager.activate(CURSOR_LAYER);
+
+			cursor = symbols[activeLayer].place({ x: 0, y: 0 });
+			cursor.opacity = 0.5;
+
+			layerManager.activate(activeLayer);
+		}
+
+		Tool.prototype.activate.call(this);
 	};
 
 	tool.deactivate = function() {

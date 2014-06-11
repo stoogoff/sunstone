@@ -1,36 +1,15 @@
 
 // draws solid colour terrain
 brush = (function() {
+	var CURSOR_LAYER = "cursor";
 	var fillColour, strokeWidth, path, activeLayer, cursor;
 	var tool = new Tool();
 
-	var createCursor = function(position) {
-		if(cursor)
-			return;
-
-		cursor = new Path.Circle(position, strokeWidth);
-		cursor.strokeColor = 'black';
-		cursor.opacity = 09.5;
-	};
-
-	var removeCursor = function() {
-		if(cursor) {
-			cursor.remove();
-			cursor = null;
-		}
-	}
-
 	tool.minDistance = 10;
+
+	// mouse control related functions
 	tool.onMouseDown = function(event) {
-		// keep each piece of terrain on its own layer
-		if(!layerManager.exists(activeLayer)) {
-			layerManager.add(activeLayer);
-		}
-
-		layerManager.activate(activeLayer);
-
 		path = new Path();
-		path.fillColor = fillColour;
 		path.strokeColor = fillColour;
 		path.strokeWidth = strokeWidth;
 		path.strokeCap = 'round';
@@ -39,36 +18,42 @@ brush = (function() {
 	};
 
 	tool.onMouseMove = function(event) {
-		createCursor(event.point);
+		if(!cursor) {
+			layerManager.activate(CURSOR_LAYER);
+
+			cursor = new Path.Circle(event.point, strokeWidth / 2);
+			cursor.strokeColor = 'black';
+			cursor.opacity = 0.5;
+
+			layerManager.activate(activeLayer);
+		}
 
 		cursor.position = event.point;
 	};
 
 	tool.onMouseDrag = function(event) {
-		var step = event.delta / 2;
-		step.angle += 90;
-
-		step.normalize();
-
-		var top = event.middlePoint + step;
-		var bottom = event.middlePoint - step;
-
-		path.add(top);
-		path.insert(0, bottom);
-		path.smooth();
+		path.add(event.point);
 
 		cursor.position = event.point;
 	};
 
 	tool.onMouseUp = function(event) {
-		path.add(event.point);
-		path.closed = false;
 		path.reduce();
 		path.smooth();
 	};
 
+	// start up and tear down functions
+	tool.activate = function() {
+		layerManager.activate(activeLayer);
+
+		Tool.prototype.activate.call(this);
+	};
+
 	tool.deactivate = function() {
-		removeCursor();
+		if(cursor) {
+			cursor.remove();
+			cursor = null;
+		}
 	};
 
 	// public functions

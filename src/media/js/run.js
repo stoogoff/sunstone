@@ -96,8 +96,11 @@ $(function() {
 		// load background image and display
 		window.background.load();
 
+		// set up base layers
 		terrainPanel.load(layersLoaded);
 		featuresPanel.load(layersLoaded);
+
+		layerManager.add("cursor");
 	}, 1000);
 
 	// set up sliding panel
