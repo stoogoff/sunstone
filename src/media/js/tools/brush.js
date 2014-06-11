@@ -1,8 +1,24 @@
 
 // draws solid colour terrain
 brush = (function() {
-	var fillColour, strokeWidth, path, activeLayer;
+	var fillColour, strokeWidth, path, activeLayer, cursor;
 	var tool = new Tool();
+
+	var createCursor = function(position) {
+		if(cursor)
+			return;
+
+		cursor = new Path.Circle(position, strokeWidth);
+		cursor.strokeColor = 'black';
+		cursor.opacity = 09.5;
+	};
+
+	var removeCursor = function() {
+		if(cursor) {
+			cursor.remove();
+			cursor = null;
+		}
+	}
 
 	tool.minDistance = 10;
 	tool.onMouseDown = function(event) {
@@ -22,6 +38,12 @@ brush = (function() {
 		path.add(event.point);
 	};
 
+	tool.onMouseMove = function(event) {
+		createCursor(event.point);
+
+		cursor.position = event.point;
+	};
+
 	tool.onMouseDrag = function(event) {
 		var step = event.delta / 2;
 		step.angle += 90;
@@ -34,6 +56,8 @@ brush = (function() {
 		path.add(top);
 		path.insert(0, bottom);
 		path.smooth();
+
+		cursor.position = event.point;
 	};
 
 	tool.onMouseUp = function(event) {
@@ -41,6 +65,10 @@ brush = (function() {
 		path.closed = false;
 		path.reduce();
 		path.smooth();
+	};
+
+	tool.deactivate = function() {
+		removeCursor();
 	};
 
 	// public functions

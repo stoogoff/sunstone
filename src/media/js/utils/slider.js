@@ -3,13 +3,16 @@ utils.SlidingPanel = function(panel, button) {
 	var CLOSE_CLASS = "fa-angle-double-right";
 	var OPEN_TITLE = "Expand";
 	var CLOSE_TITLE = "Collapse";
-	var target = Math.floor(panel.offset().left);
+	var isOpen = true, isActive = false;
 
 	var open = function() {
 		button.removeClass(OPEN_CLASS).addClass(CLOSE_CLASS).attr("title", CLOSE_TITLE);
 
 		panel.animate({
 			right: 0
+		}, 400, 'swing', function() {
+			isOpen = true;
+			isActive = false;
 		});
 	};
 
@@ -19,10 +22,18 @@ utils.SlidingPanel = function(panel, button) {
 
 		panel.animate({
 			right: -panel.width() + button.width()
+		}, 400, 'swing', function() {
+			isOpen = false;
+			isActive = false;
 		});
 	};
 
 	button.click(function() {
-		Math.floor(panel.offset().left) == target ? close() : open();
+		if(isActive)
+			return;
+
+		isActive = true;
+
+		isOpen ? close() : open();
 	});
 };
