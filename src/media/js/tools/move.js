@@ -15,7 +15,7 @@ move =(function() {
 			target = event.item;
 
 			// find symbol beneath the current point and highlight it
-			if(event.item.constructor === PlacedSymbol) {
+			if(event.item.constructor === PlacedSymbol || event.item.constructor === PointText) {
 				if(!cursor) {
 					cursor = new Path.Rectangle(target.bounds, new Point(5, 5));
 					cursor.fillColor = config.CURSOR.HIGHLIGHT;

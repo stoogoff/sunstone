@@ -34,5 +34,36 @@ utils.theme = (function() {
 		return features;
 	};
 
+	tool.fonts = function() {
+		var loaded = {
+			"Large Heading": {
+				"font": "serif",
+				"size": 24,
+				"bold": true,
+				"italic": false
+			},
+			"Small Heading": {
+				"font": "serif",
+				"size": 20,
+				"bold": false,
+				"italic": true
+			},
+			"Text": {
+				"font": "sans-serif",
+				"size": 12,
+				"bold": false,
+				"italic": false
+			},
+		};
+
+		var fonts = {};
+
+		for(var i in loaded) {
+			fonts[i] = new utils.Font(i, loaded[i]);
+		}
+
+		return fonts;
+	};
+
 	return tool;
 })();

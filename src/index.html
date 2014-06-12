@@ -44,8 +44,17 @@
 				</li>
 			</ul>
 		</li>
+		<li id="text" class="tool">
+			<span class="fa fa-font"></span>
+			<ul>
+				<li>
+					<label for="font_style">Style</label>
+					<select id="font_style" data-for="text"></select>
+				</li>
+			</ul>
+		</li>
 		<li class="separator"></li>
-		<li id="pan" class="tool"><span class="fa fa-crosshairs" title="Pan"></span></li>
+		<li id="pan" class="tool active"><span class="fa fa-crosshairs" title="Pan"></span></li>
 		<li id="zoom" class="tool">
 			<span class="fa fa-search" title="Zoom"></span>
 			<ul>
@@ -100,7 +109,15 @@
 	<h1>Layers</h1>
 
 	<div class="toggle">
-		<span class="fa fa-angle-double-right" title="Collapse"></span>
+		<span class="btn fa fa-angle-double-right" title="Collapse"></span>
+	</div>
+</div>
+
+<div id="textPanel" class="floatingPanel">
+	<textarea></textarea>
+	<div>
+		<span title="Save" class="btn save fa fa-check"></span>
+		<span title="Cancel" class="btn cancel fa fa-times"></span>
 	</div>
 </div>
 

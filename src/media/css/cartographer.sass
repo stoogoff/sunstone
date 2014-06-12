@@ -14,6 +14,18 @@ $buttonBorder: 1px solid gray
 $buttonActiveBorder: 1px solid #333
 $borderRadius: 3px
 
+// mixins
+@mixin panel
+	position: absolute
+	padding: 6px
+	background-color: $panel
+	border: $panelBorder
+	white-space: nowrap
+	z-index: 80
+	border-radius: $borderRadius
+
+
+// styles
 html, body
 	width: 100%
 	height: 100%
@@ -37,17 +49,18 @@ body
 		right: 0
 		bottom: 0
 
-		span
-			margin: 2px
-			padding: 4px
-			font-size: 20px
-			color: lighten($fontColour, 30%)
-			border-radius: $borderRadius
-			width: 20px
-			text-align: center
+.btn
+	margin: 0.1em
+	padding: 0.5em
+	font-size: 20px
+	color: lighten($fontColour, 30%)
+	border-radius: $borderRadius
+	text-align: center
+	width: 1em
+	height: 1em
 
-			&:hover
-				background-color: $buttonActive
+	&:hover
+		background-color: $buttonActive
 
 #tools
 	top: 0
@@ -88,16 +101,10 @@ body
 
 			// child panels
 			ul
-				position: absolute
-				padding: 6px
+				@include panel
 				top: 46px
 				left: 2px
-				background-color: $panel
-				border: $panelBorder
 				display: none
-				white-space: nowrap
-				z-index: 80
-				border-radius: $borderRadius
 
 				li
 					margin-right: 10px
@@ -138,3 +145,23 @@ body
 				background-color: $layer
 
 
+// floating panels
+.floatingPanel
+	@include panel
+
+
+#textPanel
+	top: -300px
+	left: 0
+	visibility: hidden
+
+	div
+		text-align: right
+
+	.btn
+		font-size: 14px
+
+	textarea
+		width: 200px
+		height: 70px
+		margin: 0

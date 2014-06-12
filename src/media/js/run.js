@@ -1,4 +1,5 @@
 $(function() {
+	// active tools and event handling
 	var currentTool = null;
 
 	$('.tool').click(function() {
@@ -43,21 +44,20 @@ $(function() {
 			this.selectedIndex = 0;
 	});
 
-	// add terrain to select lists
-	var selectors = $('select#background,select#terrain')
+	var addOptions = function(select, options) {
+		for(var i in options) {
+			select.append($('<option />').attr('value', i.toLowerCase().replace(' ', '')).text(i));
+		}
+	};
+
+	// add terrain, features and text styles
 	var terrain = utils.theme.terrain();
-
-	for(var i in terrain) {
-		selectors.append($('<option />').attr('value', i.toLowerCase()).text(i));
-	}
-
-	// add feature list
-	var selectors = $('select#feature_type');
 	var features = utils.theme.features();
+	var fonts = utils.theme.fonts();
 
-	for(var i in features) {
-		selectors.append($('<option />').attr('value', i.toLowerCase()).text(i));	
-	}
+	addOptions($('select#background,select#terrain'), terrain);
+	addOptions($('select#feature_type'), features);
+	addOptions($('#font_style'), fonts);
 
 	// set up the layer lists
 	var layersPanel = $("#layers");
@@ -70,8 +70,9 @@ $(function() {
 		// set up panels
 		var terrainPanel = new utils.LayersPanel(layersPanel, 'Terrain', terrain);
 		var featuresPanel = new utils.LayersPanel(layersPanel, 'Features', features);
+		var textPanel = new utils.LayersPanel(layersPanel, 'Text', fonts);
 
-		var layersLoaded = _.after(2, function() {
+		var layersLoaded = _.after(3, function() {
 			layersPanel.find('input[type=checkbox]').change(function() {
 				var layer = $(this).attr('name');
 				var state = this.checked;
@@ -104,11 +105,14 @@ $(function() {
 		// set up base layers
 		terrainPanel.load(layersLoaded);
 		featuresPanel.load(layersLoaded);
+		textPanel.load(layersLoaded);
 
 		// this prevents the cursor layer being used for hit tests
 		layerManager.add("cursor", true);
 
 		window.background.load();
+
+		window.pan.activate();
 	}, 1000);
 
 	// set up sliding panel

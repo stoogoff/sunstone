@@ -5,6 +5,7 @@ background = (function() {
 	var currentTerrain, image, layer, rectangle, previousLayer;
 	var canvas = project.view.element;
 
+	// public methods
 	tool.terrain = function(terrain, colour) {
 		previousLayer = project.activeLayer.name;
 		layerManager.activate(config.BACKGROUND.LAYER);
@@ -30,17 +31,6 @@ background = (function() {
 		return currentTerrain;
 	};
 
-	// add base terrain methods
-	var terrains = utils.theme.terrain();
-
-	for(var i in terrains) {
-		tool[i.toLowerCase()] = (function(terrain, colour) {
-			return function() {
-				return tool.terrain(terrain, colour);
-			};
-		})(i, terrains[i]);
-	}
-
 	tool.load = function() {
 		// load background image
 		image = new Raster(utils.theme.background());
@@ -53,6 +43,17 @@ background = (function() {
 		// set defaults
 		tool.sand();
 	};
+
+	// add base terrain methods
+	var terrains = utils.theme.terrain();
+
+	for(var i in terrains) {
+		tool[i.toLowerCase()] = (function(terrain, colour) {
+			return function() {
+				return tool.terrain(terrain, colour);
+			};
+		})(i, terrains[i]);
+	}
 
 	return tool;
 })();

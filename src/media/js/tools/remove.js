@@ -15,7 +15,7 @@ remove = (function() {
 			target = event.item;
 
 			// find symbol beneath the current point and highlight it
-			if(event.item.constructor === PlacedSymbol) {
+			if(event.item.constructor === PlacedSymbol || event.item.constructor === PointText) {
 				if(!cursor) {
 					cursor = new Path.Rectangle(target.bounds, new Point(5, 5));
 					cursor.fillColor = config.CURSOR.WARN;
@@ -26,7 +26,8 @@ remove = (function() {
 			}
 			// find path between the current point
 			else if(event.item.constructor === Path) {
-				target.selected = true;
+				//target.selected = true;
+
 				if(!cursor) {
 					cursor = new Path.Circle(event.point, strokeWidth / 2);
 					cursor.fillColor = config.CURSOR.WARN;
@@ -46,7 +47,7 @@ remove = (function() {
 	};
 
 	tool.onMouseDown = function(event) {
-		if(target && target.constructor === PlacedSymbol) {
+		if(target && (target.constructor === PlacedSymbol || event.item.constructor === PointText)) {
 			target.remove();
 			target = null;
 
