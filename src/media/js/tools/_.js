@@ -1,3 +1,8 @@
+
+// project options
+project.options.hitTolerance = 20;
+
+// global config
 config = {
 	BRUSH: {
 		SIZES: {
@@ -12,7 +17,8 @@ config = {
 	},
 	CURSOR: {
 		LAYER: "cursor",
-		COLOUR: "red",
+		HIGHLIGHT: "green",
+		WARN: "red",
 		OPACITY: 0.5
 	}
 };

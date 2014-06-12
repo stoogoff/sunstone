@@ -1,7 +1,4 @@
 remove = (function() {
-	// config
-	project.options.hitTolerance = 20;
-
 	var cursor, target, strokeWidth, deleteCursor = false;
 	var tool = new Tool();
 
@@ -21,7 +18,7 @@ remove = (function() {
 			if(event.item.constructor === PlacedSymbol) {
 				if(!cursor) {
 					cursor = new Path.Rectangle(target.bounds, new Point(5, 5));
-					cursor.fillColor = config.CURSOR.COLOUR;
+					cursor.fillColor = config.CURSOR.WARN;
 					cursor.opacity = config.CURSOR.OPACITY;
 				}
 
@@ -32,7 +29,7 @@ remove = (function() {
 				target.selected = true;
 				if(!cursor) {
 					cursor = new Path.Circle(event.point, strokeWidth / 2);
-					cursor.fillColor = config.CURSOR.COLOUR;
+					cursor.fillColor = config.CURSOR.WARN;
 					cursor.opacity = config.CURSOR.OPACITY;
 				}
 
