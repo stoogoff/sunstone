@@ -36,9 +36,8 @@ selection = (function() {
 			var location = hitResult.location;
 			segment = path.insert(location.index + 1, event.point);
 
-			console.log(location.segment.linear)
-
-			//path.smooth();
+			if(!path.firstSegment.linear)
+				path.smooth();
 		}
 
 		if(doubleClickTimer)
