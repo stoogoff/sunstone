@@ -9,13 +9,14 @@ $(function() {
 		// any additional work for the tools
 		switch(this.id) {
 			case "brush":
-				$('#size').val(brush.size());
-				$('#terrain').val(brush.terrain());
+				$('#brush_size').val(brush.size());
+				$('#brush_terrain').val(brush.terrain());
 
 				break;
 
-			case "remove":
-				$('#remove_size').val(remove.size());
+			case "area":
+				$('#area_terrain').val(area.terrain());
+				$('#area_style').val(area.style());
 
 				break;
 		}
@@ -55,7 +56,7 @@ $(function() {
 	var features = utils.theme.features();
 	var fonts = utils.theme.fonts();
 
-	addOptions($('select#background,select#terrain'), terrain);
+	addOptions($('select#background,select#brush_terrain,select#area_terrain'), terrain);
 	addOptions($('select#feature_type'), features);
 	addOptions($('#font_style'), fonts);
 

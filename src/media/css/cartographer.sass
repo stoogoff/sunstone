@@ -1,18 +1,24 @@
 
+// import default colours
+@import "colours.sass"
+
+// custom colours
+
 // foregrounds
 $fontColour: #333
 
 // backgrounds
-$button: darkgray
-$buttonActive: white
-$panel: lightgray
-$layer: white
+$button: $gray
+$buttonActive: $white
+$panel: $silver
+$layer: $white
 
 // borders
-$panelBorder: 1px solid gray
-$buttonBorder: 1px solid gray
-$buttonActiveBorder: 1px solid #333
+$panelBorder: 1px solid $gray
+$buttonBorder: 1px solid $gray
+$buttonActiveBorder: 1px solid $fontColour
 $borderRadius: 3px
+
 
 // mixins
 @mixin panel
@@ -24,6 +30,9 @@ $borderRadius: 3px
 	z-index: 80
 	border-radius: $borderRadius
 
+@mixin transition
+	transition: .2s ease-in-out
+
 
 // styles
 html, body
@@ -34,7 +43,7 @@ html, body
 	margin: 0
 
 body
-	font-color: $fontColour
+	color: $fontColour
 	font-family: 'Rokkitt', serif
 
 .panel
@@ -44,6 +53,7 @@ body
 
 	.toggle
 		border-top: $panelBorder
+		background-color: $panel
 		position: absolute
 		left: 0
 		right: 0
@@ -53,14 +63,18 @@ body
 	margin: 0.1em
 	padding: 0.5em
 	font-size: 20px
-	color: lighten($fontColour, 30%)
+	color: $gray
 	border-radius: $borderRadius
 	text-align: center
 	width: 1em
 	height: 1em
+	@include transition
 
 	&:hover
 		background-color: $buttonActive
+
+	&.primary
+		color: $green
 
 #tools
 	top: 0
@@ -89,13 +103,14 @@ body
 			span
 				display: inline-block
 				border: 1px solid $panel
-				//background-color: $button
 				font-size: 26px
 				padding: 4px
 				margin: 4px 2px
 				border-radius: $borderRadius
+				@include transition
 
 				&:hover
+					color: $navy
 					border: $buttonBorder
 					background-color: $button
 
@@ -114,6 +129,7 @@ body
 
 			&.active
 				span
+					color: $black
 					border: $buttonActiveBorder
 					background-color: $buttonActive
 
@@ -140,9 +156,12 @@ body
 		li
 			padding: 6px 2px
 			border-radius: $borderRadius
+			color: $navy
+			@include transition
 
 			&:hover
 				background-color: $layer
+				color: $blue
 
 
 // floating panels

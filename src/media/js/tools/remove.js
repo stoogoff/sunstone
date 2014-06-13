@@ -1,5 +1,5 @@
 remove = (function() {
-	var cursor, target, strokeWidth, deleteCursor = false;
+	var cursor, target, deleteCursor = false;
 	var tool = new Tool();
 
 	tool.minDistance = 10;
@@ -12,10 +12,15 @@ remove = (function() {
 		deleteCursor = true;
 
 		if(event.item) {
+			if(cursor && event.item !== target) {
+				cursor.remove();
+				cursor = null;
+			}
+
 			target = event.item;
 
 			// find symbol beneath the current point and highlight it
-			if(event.item.constructor === PlacedSymbol || event.item.constructor === PointText) {
+			if(target.constructor === PlacedSymbol || target.constructor === PointText) {
 				if(!cursor) {
 					cursor = new Path.Rectangle(target.bounds, new Point(5, 5));
 					cursor.fillColor = config.CURSOR.WARN;
@@ -25,16 +30,21 @@ remove = (function() {
 				cursor.position = target.bounds.center;
 			}
 			// find path between the current point
-			else if(event.item.constructor === Path) {
-				//target.selected = true;
-
+			else if(target.constructor === Path) {
 				if(!cursor) {
-					cursor = new Path.Circle(event.point, strokeWidth / 2);
-					cursor.fillColor = config.CURSOR.WARN;
+					cursor = target.clone(false);
 					cursor.opacity = config.CURSOR.OPACITY;
-				}
 
-				cursor.position = event.point;
+					if(target.fillColor)
+						cursor.fillColor = config.CURSOR.WARN;
+
+					if(target.strokeColor) {
+						cursor.strokeColor = config.CURSOR.WARN;
+						cursor.strokeWidth = target.strokeWidth;
+					}
+
+					project.activeLayer.addChild(cursor);
+				}
 			}
 
 			deleteCursor = false;
@@ -47,7 +57,7 @@ remove = (function() {
 	};
 
 	tool.onMouseDown = function(event) {
-		if(target && (target.constructor === PlacedSymbol || event.item.constructor === PointText)) {
+		if(target) {
 			target.remove();
 			target = null;
 
@@ -71,26 +81,12 @@ remove = (function() {
 		Tool.prototype.activate.call(this);
 	};
 
-	// public methods
-	tool.size = function(newSize) {
-		if(newSize)
-			strokeWidth = newSize;
-
-		for(var i in config.BRUSH.SIZES)
-			if(strokeWidth == config.BRUSH.SIZES[i])
-				return i;
+	tool.deactivate = function() {
+		if(cursor) {
+			cursor.remove();
+			cursor = null;
+		}
 	};
-
-	// add base size methods
-	for(var i in config.BRUSH.SIZES) {
-		tool[i] = (function(newSize) {
-			return function() {
-				return tool.size(newSize);
-			};
-		})(config.BRUSH.SIZES[i]);
-	}
-
-	tool.large();
 
 	return tool;
 })();

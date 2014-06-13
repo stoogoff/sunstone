@@ -38,15 +38,22 @@ utils.theme = (function() {
 		var loaded = {
 			"Large Heading": {
 				"font": "serif",
-				"size": 24,
+				"size": 28,
 				"bold": true,
-				"italic": false
+				"italic": false,
+				"colour": "#333",
+				"outline": {
+					"width": 1,
+					"colour": "#ccc"
+				},
+				"shadow": false
 			},
 			"Small Heading": {
 				"font": "serif",
 				"size": 20,
 				"bold": false,
-				"italic": true
+				"italic": true,
+				"outline": false
 			},
 			"Text": {
 				"font": "sans-serif",

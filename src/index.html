@@ -18,19 +18,35 @@
 			<select id="background" data-for="background"></select>
 		</li>
 		<li id="brush" class="tool">
-			<span class="fa fa-pencil" title="Brush"></span>
+			<span class="fa fa-pencil" title="Line"></span>
 			<ul>
 				<li>
-					<label for="terrain">Terrain:</label>
-					<select id="terrain" data-for="brush"></select>
+					<label for="brush_terrain">Terrain:</label>
+					<select id="brush_terrain" data-for="brush"></select>
 				</li>
 				<li>
-					<label for="size">Size:</label>
-					<select id="size" data-for="brush">
+					<label for="brush_size">Size:</label>
+					<select id="brush_size" data-for="brush">
 						<option value="small">Small</option>
 						<option value="medium">Medium</option>
 						<option value="large">Large</option>
 						<option value="huge">Huge</option>
+					</select>
+				</li>
+			</ul>
+		</li>
+		<li id="area" class="tool">
+			<span class="fa fa-edit" title="Area"></span>
+			<ul>
+				<li>
+					<label for="area_terrain">Terrain:</label>
+					<select id="area_terrain" data-for="area"></select>
+				</li>
+				<li>
+					<label for="area_style">Style:</label>
+					<select id="area_style" data-for="area">
+						<option value="smooth">Smooth</option>
+						<option value="line">Line</option>
 					</select>
 				</li>
 			</ul>
@@ -45,7 +61,7 @@
 			</ul>
 		</li>
 		<li id="text" class="tool">
-			<span class="fa fa-font"></span>
+			<span class="fa fa-font" title="Text"></span>
 			<ul>
 				<li>
 					<label for="font_style">Style</label>
@@ -86,22 +102,10 @@
 				<li>Or click and drag</li>
 			</ul>
 		</li>
-		<li id="selection" class="tool"><span class="fa fa-arrow-left" title="Select"></span></li>
 		<li id="move" class="tool"><span class="fa fa-arrows" title="Move"></span></li>
-		<li id="remove" class="tool">
-			<span class="fa fa-eraser" title="Delete"></span>
-			<ul>
-				<li>
-					<label for="remove_size">Size:</label>
-					<select id="remove_size" data-for="remove">
-						<option value="small">Small</option>
-						<option value="medium">Medium</option>
-						<option value="large">Large</option>
-						<option value="huge">Huge</option>
-					</select>
-				</li>
-			</ul>
-		</li>
+		<li id="remove" class="tool"><span class="fa fa-eraser" title="Delete"></span></li>
+		<li class="separator"></li>
+		<li id="selection" class="tool"><span class="fa fa-arrow-left" title="Select and Edit"></span></li>
 	</ul>
 </div>
 
@@ -116,7 +120,7 @@
 <div id="textPanel" class="floatingPanel">
 	<textarea></textarea>
 	<div>
-		<span title="Save" class="btn save fa fa-check"></span>
+		<span title="Save" class="btn primary save fa fa-check"></span>
 		<span title="Cancel" class="btn cancel fa fa-times"></span>
 	</div>
 </div>

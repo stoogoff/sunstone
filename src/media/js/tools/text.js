@@ -33,10 +33,12 @@ text = (function() {
 			}).end();
 		}
 
+		var viewPosition = view.projectToView(event.point);
+
 		textPanel.css({
 			"visibility": "visible",
-			"top": event.point.y + "px",
-			"left": event.point.x + "px"
+			"top": viewPosition.y + "px",
+			"left": viewPosition.x + "px"
 		}).find("textarea").focus();
 	};
 
@@ -46,6 +48,8 @@ text = (function() {
 
 		Tool.prototype.activate.call(this);
 	};
+
+	tool.deactivate = hidePanel;
 
 	// public methods
 	tool.font = function(font) {
