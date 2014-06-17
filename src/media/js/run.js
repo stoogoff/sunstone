@@ -19,6 +19,18 @@ $(function() {
 				$('#area_style').val(area.style());
 
 				break;
+
+			case "download":
+				var	canvas = document.getElementById("canvas");
+				var context = canvas.getContext("2d");
+				var source = canvas.toDataURL("image/png");
+
+				var win = window.open(null, '_blank');
+
+				win.document.write('<img src="' + source + '" />');
+				win.focus();
+
+				return;
 		}
 
 		if(currentTool && currentTool.deactivate)
