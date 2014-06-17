@@ -1,8 +1,6 @@
 text = (function() {
-	var dropPoint, currentFont, textPanel;
-
+	var dropPoint, currentFont, textPanel, editingText;
 	var tool = new Tool();
-
 	var hidePanel = function() {
 		if(!textPanel)
 			return;
@@ -11,21 +9,26 @@ text = (function() {
 			"top": "-300px",
 			"visibility": "hidden"
 		}).find("textarea").val("");
-	}
+
+		editingText = null;
+	};
 
 	// mouse events
 	tool.onMouseUp = function(event) {
-		dropPoint = event.point;
+		dropPoint = editingText ? editingText.position : event.point;
 
-		// TODO display panel
+		// display panel
 		if(!textPanel) {
 			textPanel = $("#textPanel").find('.save').click(function() {
 				var content = textPanel.find("textarea").val();
-				var textItem = new PointText(dropPoint);
 
-				currentFont.setFont(textItem);
+				if(!editingText) {
+					editingText = new PointText(dropPoint);
 
-				textItem.content = content;
+					currentFont.setFont(editingText);
+				}
+
+				editingText.content = content;
 
 				hidePanel();
 			}).end().find('.cancel').click(function() {
@@ -33,13 +36,23 @@ text = (function() {
 			}).end();
 		}
 
-		var viewPosition = view.projectToView(event.point);
+		var viewPosition = view.projectToView(dropPoint);
+
+		if(editingText)
+			textPanel.find("textarea").val(editingText.content);
 
 		textPanel.css({
 			"visibility": "visible",
 			"top": viewPosition.y + "px",
 			"left": viewPosition.x + "px"
 		}).find("textarea").focus();
+	};
+
+	tool.onMouseDown = function(event) {
+		var result = project.activeLayer.hitTest(event.point);
+
+		if(result && result.item.constructor === PointText)
+			editingText = result.item;
 	};
 
 	// start up and tear down
