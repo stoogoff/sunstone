@@ -1,5 +1,6 @@
 text = (function() {
 	var dropPoint, currentFont, textPanel, editingText;
+	var cursor = new Cursor(config.CURSOR.HIGHLIGHT);
 	var tool = new Tool();
 	var hidePanel = function() {
 		if(!textPanel)
@@ -14,6 +15,8 @@ text = (function() {
 	};
 
 	// mouse events
+
+	// on mouse up display the text editing box
 	tool.onMouseUp = function(event) {
 		dropPoint = editingText ? editingText.position : event.point;
 
@@ -23,6 +26,7 @@ text = (function() {
 				var content = textPanel.find("textarea").val();
 
 				if(!editingText) {
+					layerManager.activate(currentFont.id());
 					editingText = new PointText(dropPoint);
 
 					currentFont.setFont(editingText);
@@ -48,35 +52,39 @@ text = (function() {
 		}).find("textarea").focus();
 	};
 
+	// on mouse down check to see if a text block has been hit
 	tool.onMouseDown = function(event) {
-		var result = project.activeLayer.hitTest(event.point);
+		layerManager.activate(currentFont.id());
+
+		var result = project.hitTest(event.point);
 
 		if(result && result.item.constructor === PointText)
 			editingText = result.item;
 	};
 
-	// start up and tear down
-	tool.activate = function() {
-		layerManager.activate("text");
-
-		Tool.prototype.activate.call(this);
+	tool.onMouseMove = function(event) {
+		target = cursor.update(event);
 	};
 
-	tool.deactivate = hidePanel;
+	// start up and tear down
+	tool.deactivate = function() {
+		cursor.remove();
+		hidePanel();
+	};
 
 	// public methods
 	tool.font = function(font) {
 		if(font)
 			currentFont = font;
 
-		return font;
+		return currentFont;
 	};
 
 	// add base font style methods
 	var fonts = utils.theme.fonts();
 
 	for(var i in fonts) {
-		var t = i.toLowerCase().replace(' ', '');
+		var t = utils.toId(i);
 
 		tool[t] = (function(font) {
 			return function() {

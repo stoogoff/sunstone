@@ -6,13 +6,13 @@ utils.LayersPanel = function(parent, title, layers) {
 	// convert the supplied hash into lowercase:Titlecase based on the keys only
 	function objectKeys(o) {
 		return _.object(_.chain(o).keys().map(function(s) {
-			return s.toLowerCase();
+			return utils.toId(s);
 		}).value(), _.keys(o))
 	};
 
 	function lower(o) {
 		return _.chain(o).keys().map(function(s) {
-			return s.toLowerCase();
+			return utils.toId(s);
 		}).value();
 	};
 

@@ -3,6 +3,10 @@ utils.Font = function(name, data) {
 		return name;
 	};
 
+	this.id = function() {
+		return utils.toId(name);
+	};
+
 	this.setFont = function(text) {
 		text.font = data["font"];
 		text.fontSize = data["size"];

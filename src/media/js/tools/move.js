@@ -1,59 +1,13 @@
 move =(function() {
-	var cursor, target, offset, deleteCursor = false;
+	var target, offset;
+	var cursor = new Cursor(config.CURSOR.HIGHLIGHT);
 	var tool = new Tool();
 
 	tool.minDistance = 3;
 
 	// mouse functions
 	tool.onMouseMove = function(event) {
-		if(target)
-			target = null;
-		
-		deleteCursor = true;
-
-		if(event.item) {
-			if(cursor && event.item !== target) {
-				cursor.remove();
-				cursor = null;
-			}
-
-			target = event.item;
-
-			// find symbol beneath the current point and highlight it
-			if(target.constructor === PlacedSymbol || target.constructor === PointText) {
-				if(!cursor) {
-					cursor = new Path.Rectangle(target.bounds, new Point(5, 5));
-					cursor.fillColor = config.CURSOR.HIGHLIGHT;
-					cursor.opacity = config.CURSOR.OPACITY;
-				}
-
-				cursor.position = target.bounds.center;
-			}
-			// find path between the current point
-			else if(target.constructor === Path) {
-				if(!cursor) {
-					cursor = target.clone(false);
-					cursor.opacity = config.CURSOR.OPACITY;
-
-					if(target.fillColor)
-						cursor.fillColor = config.CURSOR.HIGHLIGHT;
-
-					if(target.strokeColor) {
-						cursor.strokeColor = config.CURSOR.HIGHLIGHT;
-						cursor.strokeWidth = target.strokeWidth;
-					}
-
-					project.activeLayer.addChild(cursor);
-				}
-			}
-
-			deleteCursor = false;
-		}
-
-		if(cursor && deleteCursor) {
-			cursor.remove();
-			cursor = null;
-		}
+		target = cursor.update(event);
 	};
 
 	tool.onMouseDown = function(event) {
@@ -64,7 +18,7 @@ move =(function() {
 	tool.onMouseDrag = function(event) {
 		if(target) {
 			target.position = event.point + offset;
-			cursor.position = target.bounds.center;
+			cursor.move(target.bounds.center);
 		}
 	};
 
@@ -77,10 +31,7 @@ move =(function() {
 	};
 
 	tool.deactivate = function() {
-		if(cursor) {
-			cursor.remove();
-			cursor = null;
-		}
+		cursor.remove();
 	};
 
 	return tool;

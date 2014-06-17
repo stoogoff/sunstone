@@ -43,7 +43,8 @@ config = {
 		LAYER: "cursor",
 		HIGHLIGHT: colours.green,
 		WARN: colours.red,
-		OPACITY: 0.5
+		OPACITY: 0.5,
+		CORNERS: [5, 5]
 	},
 	SHADOW: {
 		COLOUR: colours.black,

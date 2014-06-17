@@ -29,6 +29,10 @@ layerManager = (function() {
 			return layer;
 		};
 
+		this.current = function() {
+			return project.activeLayer.name;
+		};
+
 		this.addList = function(layers) {
 			for(var i = 0, len = layers.length; i < len; ++i)
 				this.add(layers[i]);

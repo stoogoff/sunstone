@@ -47,7 +47,7 @@ $(function() {
 
 	var addOptions = function(select, options) {
 		for(var i in options) {
-			select.append($('<option />').attr('value', i.toLowerCase().replace(' ', '')).text(i));
+			select.append($('<option />').attr('value', utils.toId(i)).text(i));
 		}
 	};
 

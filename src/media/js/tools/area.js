@@ -78,7 +78,7 @@ area = (function() {
 	var terrains = utils.theme.terrain();
 
 	for(var i in terrains) {
-		var t = i.toLowerCase();
+		var t = utils.toId(i);
 
 		tool[t] = (function(terrain, colour) {
 			return function() {
