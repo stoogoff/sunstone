@@ -12,7 +12,7 @@ pan = (function() {
 		var end = event.point - paper.view.center;
 		var delta = start - end;
         
-		view.scrollBy(delta);
+		layerManager.pan(delta);
 
 		start = end;
 	};

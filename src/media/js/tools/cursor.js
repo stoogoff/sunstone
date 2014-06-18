@@ -1,4 +1,4 @@
-Cursor = function(colour) {
+Cursor = function(colour, constructors) {
 	var cursor, target, offset, layer, deleteCursor = false;
 
 	function setLayer() {
@@ -26,6 +26,10 @@ Cursor = function(colour) {
 			}
 
 			target = event.item;
+
+			if(constructors && _.indexOf(constructors, target.constructor) == -1) {
+				return target;
+			}
 
 			// find symbol beneath the current point and highlight it
 			if(target.constructor === PlacedSymbol || target.constructor === PointText) {

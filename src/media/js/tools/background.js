@@ -2,7 +2,7 @@
 // Changes the background colour of the map
 background = (function() {
 	var tool = {};
-	var currentTerrain, image, layer, rectangle, previousLayer;
+	var currentTerrain, image, layer, rectangle, fillColour, previousLayer;
 	var canvas = project.view.element;
 
 	// public methods
@@ -18,9 +18,11 @@ background = (function() {
 
 			rectangle = new Path.Rectangle({
 				point: [0, 0],
-				size: [image.bounds.width || canvas.offsetWidth, image.bounds.height || canvas.offsetHeight],
+				size: view.size,
 				fillColor: colour
 			});
+
+			fillColour = colour;
 		}
 
 		if(terrain)
@@ -37,8 +39,32 @@ background = (function() {
 
 		image.onLoad = function() {
 			image.blendMode = 'multiply';
-			image.position = new Point(image.bounds.width / 2, image.bounds.height / 2);
+			image.position = view.center;
 		};
+
+		// subscribe to view updates
+
+		// this keeps the image and colour rectangle fixed centre
+		// it does the job but the pan feels kind of weird
+		layerManager.onPan(function() {
+			rectangle.position = image.position = view.center;
+		});
+
+		layerManager.onScale(function() {
+			image.scaling = 1 / view.zoom;
+
+			var w = view.size.width;
+			var h = view.size.height;
+
+			// resize
+			rectangle.segments[0].point = [0, 0];
+			rectangle.segments[1].point = [w, 0];
+			rectangle.segments[2].point = [w, h];
+			rectangle.segments[3].point = [0, h];
+
+			// reposition
+			rectangle.position = view.center;
+		});
 
 		// set defaults
 		tool.sand();

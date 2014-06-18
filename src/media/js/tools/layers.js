@@ -99,6 +99,11 @@ layerManager = (function() {
 			events.publish('onScale', size);
 		};
 
+		this.pan = function(delta) {
+			view.scrollBy(delta);
+			events.publish('onPan', delta);
+		};
+
 		this.list = function() {
 			var list = [];
 
@@ -110,7 +115,7 @@ layerManager = (function() {
 		};
 
 		// set up events
-		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow', 'onScale'];
+		var handlers = ['onAdd', 'onActivate', 'onHide', 'onShow', 'onScale', 'onPan'];
 
 		for(var i = 0, len = handlers.length; i < len; ++i) {
 			this[handlers[i]] = (function(name) {

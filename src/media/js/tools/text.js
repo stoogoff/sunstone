@@ -1,6 +1,6 @@
 text = (function() {
 	var dropPoint, currentFont, textPanel, editingText;
-	var cursor = new Cursor(config.CURSOR.HIGHLIGHT);
+	var cursor = new Cursor(config.CURSOR.HIGHLIGHT, [PointText]);
 	var tool = new Tool();
 	var hidePanel = function() {
 		if(!textPanel)

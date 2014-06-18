@@ -16,11 +16,11 @@ zoom = (function() {
 			newZoom -= currentStep;
 
 		if(newZoom <= MIN)
-			view.zoom = MIN;
+			layerManager.scale(MIN);
 		else if(newZoom >= MAX)
-			view.zoom = MAX;
+			layerManager.scale(MAX);
 		else
-			view.zoom = newZoom;
+			layerManager.scale(newZoom);
 	};
 
 	tool.zoomIn = function() {
@@ -39,19 +39,19 @@ zoom = (function() {
 		step = 1;
 	};
 	tool.zoomFive = function() {
-		view.zoom = 5;
+		layerManager.scale(5);
 	};
 	tool.zoomDouble = function() {
-		view.zoom = 2;
+		layerManager.scale(2);
 	};
 	tool.zoomFull = function() {
-		view.zoom = 1;
+		layerManager.scale(1);
 	};
 	tool.zoomHalf = function() {
-		view.zoom = 0.5;
+		layerManager.scale(0.5);
 	};
 	tool.zoomQuarter = function() {
-		view.zoom = 0.25;
+		layerManager.scale(0.25);
 	}
 
 	tool.zoomIn();
