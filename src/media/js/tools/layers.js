@@ -94,6 +94,7 @@ layerManager = (function() {
 			}
 		};
 
+		// view functions
 		this.scale = function(size) {
 			view.zoom = size;
 			events.publish('onScale', size);
@@ -104,6 +105,17 @@ layerManager = (function() {
 			events.publish('onPan', delta);
 		};
 
+		// remove all objects on all layers, except those which are locked
+		this.clear = function() {
+			project.layers.forEach(function(layer) {
+				if(!layer._locked) {
+					while(layer.children.length > 0)
+						layer.children[0].remove();
+				}
+			});
+		};
+
+		// show all layers
 		this.list = function() {
 			var list = [];
 

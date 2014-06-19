@@ -8,6 +8,8 @@ $(function() {
 
 		// any additional work for the tools
 		switch(this.id) {
+			// brush and area are specific extra bits of functionality
+
 			case "brush":
 				$('#brush_size').val(brush.size());
 				$('#brush_terrain').val(brush.terrain());
@@ -20,6 +22,7 @@ $(function() {
 
 				break;
 
+			// the following are single button clicks
 			case "download":
 				var	canvas = document.getElementById("canvas");
 				var context = canvas.getContext("2d");
@@ -29,6 +32,16 @@ $(function() {
 
 				win.document.write('<img src="' + source + '" />');
 				win.focus();
+
+				$("#pan").click();
+
+				return;
+
+			case "clear":
+				if(window.confirm("Are you sure? There is no undo."))
+					layerManager.clear();
+
+				$("#pan").click();
 
 				return;
 		}
