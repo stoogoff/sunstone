@@ -27,12 +27,7 @@ feature = (function() {
 
 		// create a symbol from the SVG, if it doesn't exist
 		if(!symbols[activeLayer]) {
-			// import from SVG, create the symbol and remove the import
-			var imported = project.importSVG(symbolData.svg());
-
-			symbols[activeLayer] = new Symbol(imported);
-
-			imported.remove();
+			symbols[activeLayer] = symbolData.symbol();
 		}
 		
 		if(!cursor) {
@@ -70,7 +65,7 @@ feature = (function() {
 	var features = utils.theme.features();
 
 	for(var i in features) {
-		var t = i.toLowerCase();
+		var t = features[i].id();
 
 		tool[t] = (function(feature, image) {
 			return function() {

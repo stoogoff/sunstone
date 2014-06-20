@@ -7,7 +7,7 @@ background = (function() {
 
 	// public methods
 	tool.terrain = function(terrain, colour) {
-		previousLayer = project.activeLayer.name;
+		previousLayer = layerManager.current();
 		layerManager.activate(config.BACKGROUND.LAYER);
 
 		if(colour) {
@@ -21,6 +21,7 @@ background = (function() {
 				size: view.size,
 				fillColor: colour
 			});
+			rectangle.position = view.center;
 
 			fillColour = colour;
 		}

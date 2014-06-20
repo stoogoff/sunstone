@@ -2,7 +2,11 @@
 // a container for features, which handles loading
 utils.Feature = function(name, basePath) {
 	var events = new utils.Publisher();
-	var svg = false;
+	var svg = false, symbol;
+
+	this.id = function() {
+		return utils.toId(name);
+	};
 
 	this.name = function() {
 		return name;
@@ -15,6 +19,20 @@ utils.Feature = function(name, basePath) {
 
 	this.svg = function() {
 		return svg;
+	};
+
+	this.symbol = function() {
+		if(!symbol) {
+			// import from SVG, create the symbol and remove the import
+			var imported = paper.project.importSVG(svg);
+
+			symbol = new paper.Symbol(imported);
+
+			// this doesn't seem to be necessary...
+			//imported.remove();
+		}
+
+		return symbol;
 	};
 
 	this.load = function() {

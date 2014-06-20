@@ -84,7 +84,7 @@ text = (function() {
 	var fonts = utils.theme.fonts();
 
 	for(var i in fonts) {
-		var t = utils.toId(i);
+		var t = fonts[i].id();
 
 		tool[t] = (function(font) {
 			return function() {

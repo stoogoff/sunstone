@@ -1,4 +1,6 @@
 $(function() {
+	var LOAD = 1000, SAVE = 10000, MAP_KEY = "map";
+
 	// active tools and event handling
 	var currentTool = null;
 
@@ -136,10 +138,21 @@ $(function() {
 		// this prevents the cursor layer being used for hit tests
 		layerManager.add("cursor", true);
 
+		// load tools and activate the correct one
 		window.background.load();
-
 		window.pan.activate();
-	}, 1000);
+
+		// load up any existing features
+		if(utils.store.has(MAP_KEY)) {
+			io.importJSON(utils.store.get(MAP_KEY));
+		}
+
+		// auto save the map data
+		window.setInterval(function() {
+			utils.store.set(MAP_KEY, io.exportJSON());
+		}, SAVE);
+
+	}, LOAD);
 
 	// set up sliding panel
 	utils.SlidingPanel(layersPanel, layersPanel.find('.toggle span'));

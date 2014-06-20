@@ -1,5 +1,6 @@
 utils.theme = (function() {
 	var tool = {};
+	var features, fonts;
 
 	tool.terrain = function() {
 		return {
@@ -16,13 +17,17 @@ utils.theme = (function() {
 	};
 
 	tool.features = function() {
+		if(features)
+			return features;
+
 		var loaded = {
 			"Mountain": "media/img/features/Mountain",
 			"Hill": "media/img/features/Hill",
 			"Tree": "media/img/features/Tree",
 			"City": "media/img/features/City",
 		};
-		var features = {};
+
+		features = {};
 
 		for(var i in loaded) {
 			features[i] = new utils.Feature(i, loaded[i]);
@@ -35,6 +40,9 @@ utils.theme = (function() {
 	};
 
 	tool.fonts = function() {
+		if(fonts)
+			return fonts;
+
 		var loaded = {
 			"Large Heading": {
 				"font": "serif",
@@ -63,7 +71,7 @@ utils.theme = (function() {
 			},
 		};
 
-		var fonts = {};
+		fonts = {};
 
 		for(var i in loaded) {
 			fonts[i] = new utils.Font(i, loaded[i]);
