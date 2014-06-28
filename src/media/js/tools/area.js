@@ -2,7 +2,7 @@ area = (function() {
 	var fillColour, activeLayer, path, smoothing, doubleClickTimer, doubleClick;
 	var tool = new Tool();
 
-	tool.minDistance = 10;
+	tool.minDistance = 5;
 
 	// mouse control related functions
 	tool.onMouseUp = function(event) {

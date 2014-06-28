@@ -34,18 +34,20 @@ io = (function() {
 				layer.children.forEach(function(item) {
 					// symbol, text, path
 					var itemData = {};
-					var position = {
-						"x": item.position.x,
-						"y": item.position.y
-					};
 
 					if(item.constructor === PlacedSymbol) {
-						itemData = position;
+						itemData = {
+							"x": item.position.x,
+							"y": item.position.y
+						};
 					}
 					// text only
 					else if(item.constructor === PointText) {
 						itemData["content"] = item.content;
-						itemData["position"] = position;
+						itemData["position"] = {
+							"x": item.point.x,
+							"y": item.point.y
+						};
 					}
 					// paths
 					else if(item.constructor === Path) {
@@ -113,7 +115,6 @@ io = (function() {
 
 		importObjects(data, fonts, function(layer, font) {
 			layer.forEach(function(item) {
-				// TODO co-ords are slightly off here...
 				// Seems to be based on centre positions and gets worse with repeat export / import
 				var text = new PointText(item.position);
 				
