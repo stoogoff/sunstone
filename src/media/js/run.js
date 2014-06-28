@@ -10,8 +10,7 @@ $(function() {
 
 		// any additional work for the tools
 		switch(this.id) {
-			// brush and area are specific extra bits of functionality
-
+			// set the select boxes for brush and area tools
 			case "brush":
 				$('#brush_size').val(brush.size());
 				$('#brush_terrain').val(brush.terrain());
@@ -84,7 +83,7 @@ $(function() {
 	var fonts = utils.theme.fonts();
 
 	addOptions($('select#background,select#brush_terrain,select#area_terrain'), terrain);
-	addOptions($('select#feature_type'), features);
+	addOptions($('select#feature_type,select#field_type'), features);
 	addOptions($('#font_style'), fonts);
 
 	// set up the layer lists
