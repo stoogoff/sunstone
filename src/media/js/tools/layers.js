@@ -105,6 +105,10 @@ layerManager = (function() {
 			events.publish('onPan', delta);
 		};
 
+		this.panTo = function(position) {
+			this.pan(position - view.center);
+		};
+
 		// remove all objects on all layers, except those which are locked
 		this.clear = function() {
 			project.layers.forEach(function(layer) {

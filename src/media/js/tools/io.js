@@ -1,6 +1,5 @@
 io = (function() {
 
-
 	function importObjects(data, layers, callback) {
 		for(var i in layers) {
 			var layer = utils.toId(i);

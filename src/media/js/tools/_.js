@@ -42,6 +42,7 @@ config = {
 	CURSOR: {
 		LAYER: "cursor",
 		HIGHLIGHT: colours.green,
+		NEUTRAL: colours.blue,
 		WARN: colours.red,
 		OPACITY: 0.5,
 		CORNERS: [5, 5]

@@ -4,7 +4,7 @@ brush = (function() {
 	var fillColour, strokeWidth, path, activeLayer, cursor;
 	var tool = new Tool();
 
-	tool.minDistance = 10;
+	tool.minDistance = 5;
 
 	// mouse control related functions
 	tool.onMouseDown = function(event) {
