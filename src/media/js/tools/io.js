@@ -115,7 +115,6 @@ io = (function() {
 
 		importObjects(data, fonts, function(layer, font) {
 			layer.forEach(function(item) {
-				// Seems to be based on centre positions and gets worse with repeat export / import
 				var text = new PointText(item.position);
 				
 				font.setFont(text);
