@@ -136,18 +136,14 @@ body
 				ul
 					display: block
 
-#layers
-	top: 40px
+#sidebar
+	top: 44px
 	width: 300px
 	bottom: 0
 	right: 0
 	z-index: 90
-	padding: 6px
 
-	h1, h2
-		padding: 0
-		margin: 0
-
+#layers
 	ul
 		list-style-type: none
 		margin: 0
@@ -184,3 +180,83 @@ body
 		width: 200px
 		height: 70px
 		margin: 0
+
+// tab panels
+.tabs
+	margin: 0
+	padding: 10px 0 0 4px
+	border-bottom: $buttonBorder
+
+	li
+		display: inline-block
+		padding: 4px
+		border: $buttonBorder
+		background-color: $gray
+		border-radius: 3px 3px 0 0
+		position: relative
+		top: 1px
+		cursor: default
+		@include transition
+
+		&:hover
+			color: $blue
+
+		&.active
+			background-color: $panel
+			border-bottom-color: $panel
+
+			&:hover
+				color: $fontColour
+
+.tab-panels
+	padding: 4px
+	position: absolute
+	top: 40px
+	left: 0
+	right: 0
+	bottom: 46px
+	overflow: auto
+
+	.tab
+		display: none
+		padding: 4px 8px
+
+		&.active
+			display: block
+
+		h2
+			padding: 9px 0 0
+			margin: 10px 0 0
+			border-top: $panelBorder
+
+			&:first-of-type
+				margin: 0
+				border: 0
+
+		h2+p
+			margin-top: 4px
+
+
+dt
+	font-weight: bold
+	margin-bottom: 4px
+	cursor: default
+	border-top: $panelBorder
+	padding-top: 8px
+	margin-top: 10px
+	@include transition
+
+	&:hover
+		color: $blue
+
+	&:first-of-type
+		border-top: 0
+
+dd
+	margin-left: 0
+	line-height: 1.2em
+	margin-right: 10px
+
+
+.inprogress
+	color: $maroon

@@ -154,5 +154,25 @@ $(function() {
 	}, LOAD);
 
 	// set up sliding panel
-	utils.SlidingPanel(layersPanel, layersPanel.find('.toggle span'));
+	var sidebar = $("#sidebar");
+
+	utils.SlidingPanel(sidebar, sidebar.find('.toggle span'));
+
+	// activate tabs
+	$(".tabs li").click(function() {
+		// hide existing
+		$(".tabs li,.tab-panels .active").removeClass("active");
+		
+		var self = $(this);
+		var panel = self.attr("data-for");
+
+		$("#" + panel).addClass("active");
+		self.addClass("active");
+	});
+
+	// allow the definition lists to be hidden
+	$("dt").attr("title", "Click to show or hide").click(function() {
+		$(this).next().slideToggle();
+	});
+	$("dd").hide();
 });

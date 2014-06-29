@@ -44,7 +44,7 @@ field = (function() {
 			// TODO reduce the size of the shape drawn by half the width of the symbol
 			// TODO repeat drawing algorithm
 
-			// TODO remove the cursor
+			// remove the cursor
 			cursor.remove();
 			cursor = null;
 
