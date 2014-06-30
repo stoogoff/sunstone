@@ -50,17 +50,14 @@ utils.theme = (function() {
 				"bold": true,
 				"italic": false,
 				"colour": "#333",
-				"outline": {
-					"width": 1,
-					"colour": "#ccc"
-				},
+				"outline": false,
 				"shadow": false
 			},
 			"Small Heading": {
 				"font": "serif",
 				"size": 20,
 				"bold": false,
-				"italic": true,
+				"italic": false,
 				"outline": false
 			},
 			"Text": {

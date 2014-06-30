@@ -196,6 +196,7 @@ body
 		position: relative
 		top: 1px
 		cursor: default
+		color: lighten($fontColour, 20%)
 		@include transition
 
 		&:hover
@@ -204,6 +205,7 @@ body
 		&.active
 			background-color: $panel
 			border-bottom-color: $panel
+			color: $fontColour
 
 			&:hover
 				color: $fontColour
