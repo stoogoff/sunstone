@@ -53,6 +53,14 @@ area = (function() {
 			path.lastSegment.point = event.point;
 	};
 
+	// tear down function
+	tool.deactivate = function() {
+		if(path) {
+			path.remove();
+			path = null;
+		}
+	};
+
 	// public methods
 	tool.style = function() {
 		return smoothing ? "smooth" : "line";

@@ -82,6 +82,14 @@ field = (function() {
 			cursor.lastSegment.point = event.point;
 	};
 
+	// tear down function
+	tool.deactivate = function() {
+		if(cursor) {
+			cursor.remove();
+			cursor = null;
+		}
+	};
+
 	// public methods
 
 	// set the feature icon
