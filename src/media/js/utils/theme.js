@@ -21,19 +21,34 @@ utils.theme = (function() {
 			return features;
 
 		var loaded = {
-			"Mountain": "media/img/features/Mountain",
-			"Hill": "media/img/features/Hill",
-			"Tree": "media/img/features/Tree",
-			"City": "media/img/features/City",
+			"Mountain": [
+				// TODO - this needs to have two graphics
+				"media/img/features/Mountain",
+				"media/img/features/Mountain"
+			],
+			"Hill": [
+				"media/img/features/Hill"
+			],
+			"Tree": [
+				"media/img/features/Tree"
+			],
+			"City": [
+				"media/img/features/City"
+			],
 		};
 
 		features = {};
 
 		for(var i in loaded) {
-			features[i] = new utils.Feature(i, loaded[i]);
-			// TODO - add onLoad handler to track theme loading
-			// the UI shouldn't respond until the theme is loaded
-			features[i].load();
+			features[i] = [];
+
+			for(var j = 0; j < loaded[i].length; ++j) {
+				var feature = new utils.Feature(i, loaded[i][j]);
+				// TODO - add onLoad handler to track theme loading
+				// the UI shouldn't respond until the theme is loaded
+				feature.load();
+				features[i].push(feature);
+			}
 		}
 
 		return features;

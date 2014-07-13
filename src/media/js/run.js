@@ -71,9 +71,29 @@ $(function() {
 			this.selectedIndex = 0;
 	});
 
+	var addOption = function(select, value, text) {
+		select.append($('<option />').attr('value', value).text(text));
+	};
+
 	var addOptions = function(select, options) {
 		for(var i in options) {
-			select.append($('<option />').attr('value', utils.toId(i)).text(i));
+			var option = options[i];
+			var value = utils.toId(i);
+
+			// multilevel options
+			if(_.isArray(options[i])) {
+				if(options[i].length > 1) {
+					_.each(options[i], function(element, index) {
+						addOption(select, value + "_" + index, i + " " + (index + 1));
+					});
+
+					continue;
+				}
+
+				value = value + "_0";
+			}
+
+			addOption(select, value, i);
 		}
 	};
 
@@ -83,8 +103,13 @@ $(function() {
 	var fonts = utils.theme.fonts();
 
 	addOptions($('select#background,select#brush_terrain,select#area_terrain'), terrain);
-	addOptions($('select#feature_type,select#field_type'), features);
+	addOptions($('select#feature_type'), features);
 	addOptions($('#font_style'), fonts);
+
+	// field type just needs the feature types, not the individual images
+	var tmp = _.keys(features);
+
+	addOptions($('select#field_type'), _.object(tmp, tmp));
 
 	// set up the layer lists
 	var layersPanel = $("#layers");

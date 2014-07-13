@@ -17,6 +17,10 @@ utils.Feature = function(name, basePath) {
 		return basePath + '.png';
 	};
 
+	this.basePath = function() {
+		return basePath;
+	};
+
 	this.svg = function() {
 		return svg;
 	};
@@ -28,8 +32,8 @@ utils.Feature = function(name, basePath) {
 
 			symbol = new paper.Symbol(imported);
 
-			// this doesn't seem to be necessary...
-			//imported.remove();
+			// store the path so the correct image can be used during import and export
+			symbol.featurePath = basePath;
 		}
 
 		return symbol;

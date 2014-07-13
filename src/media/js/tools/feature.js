@@ -50,7 +50,7 @@ feature = (function() {
 	// set the feature icon
 	tool.feature = function(layer, feature) {
 		if(layer)
-			activeLayer = layer;
+			activeLayer = layer.substring(0, layer.indexOf("_"));
 
 		if(feature) {
 			symbolData = feature;
@@ -58,24 +58,26 @@ feature = (function() {
 			removeHoverSymbol();
 		}
 
-		return layer;
+		return activeLayer;
 	};
 
 	// add methods based on available features in the theme
 	var features = utils.theme.features();
 
 	for(var i in features) {
-		var t = features[i].id();
+		_.each(features[i], function(element, index) {
+			var t = element.id() + "_" + index;
 
-		tool[t] = (function(feature, image) {
-			return function() {
-				return tool.feature(feature, image);
-			};
-		})(t, features[i]);
+			tool[t] = (function(feature, image) {
+				return function() {
+					return tool.feature(feature, image);
+				};
+			})(t, element);
+		});
 	}
 
 	// set default state
-	tool.mountain();
+	tool.mountain_0();
 
 	return tool;
 })();

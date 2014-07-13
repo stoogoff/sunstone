@@ -17,10 +17,12 @@ field = (function() {
 			layerManager.activate(activeLayer);
 
 			// TODO fill in features
-			var symbol = symbolData.symbol();
 
 			// place symbols at corners
 			for(var i = 0, len = cursor.segments.length; i < len; ++i) {
+				// randomly select a feature
+				var symbol = symbolData[_.random(symbolData.length - 1)].symbol();
+
 				symbol.place(cursor.segments[i].point);
 
 				// divide distance between each corner by size of symbol to get the number to add
@@ -60,7 +62,7 @@ field = (function() {
 			cursor.strokeColor = config.CURSOR.NEUTRAL;
 			cursor.strokeColor.alpha = config.CURSOR.OPACITY;
 			cursor.strokeCap = 'round';
-			cursor.strokeWidth = symbolData.symbol().definition.bounds.width;
+			cursor.strokeWidth = symbolData[0].symbol().definition.bounds.width;
 		}
 
 		cursor.add(event.point);
@@ -108,7 +110,7 @@ field = (function() {
 	var features = utils.theme.features();
 
 	for(var i in features) {
-		var t = features[i].id();
+		var t = features[i][0].id();
 
 		tool[t] = (function(feature, image) {
 			return function() {

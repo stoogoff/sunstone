@@ -37,7 +37,8 @@ io = (function() {
 					if(item.constructor === PlacedSymbol) {
 						itemData = {
 							"x": item.position.x,
-							"y": item.position.y
+							"y": item.position.y,
+							"feature": item.symbol.featurePath
 						};
 					}
 					// text only
@@ -126,10 +127,14 @@ io = (function() {
 		var features = utils.theme.features();
 
 		importObjects(data, features, function(layer, feature) {
-			var symbol = feature.symbol();
+			var symbols = {};
+
+			_.each(feature, function(element) {
+				symbols[element.basePath()] = element.symbol();
+			});
 
 			layer.forEach(function(item) {
-				symbol.place(item);
+				symbols[item.feature].place(item);
 			});
 		});
 	}
