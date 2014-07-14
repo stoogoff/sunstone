@@ -134,7 +134,9 @@ io = (function() {
 			});
 
 			layer.forEach(function(item) {
-				symbols[item.feature].place(item);
+				var symbol = item.feature && symbols[item.feature] ? symbols[item.feature] : feature[0].symbol();
+					
+				symbol.place(item);
 			});
 		});
 	}

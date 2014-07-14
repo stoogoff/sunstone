@@ -1,7 +1,7 @@
 
 // places a single SVG feature on the map
 feature = (function() {
-	var symbols = {}, activeLayer, symbolData, cursor;
+	var activeLayer, symbol, cursor;
 	var tool = new Tool();
 
 	// remove the hover symbol
@@ -14,7 +14,7 @@ feature = (function() {
 
 	tool.onMouseDown = function(event) {
 		// drop the symbol at the cursor
-		symbols[activeLayer].place(event.point);
+		symbol.place(event.point);
 	};
 
 	tool.onMouseMove = function(event) {
@@ -22,22 +22,15 @@ feature = (function() {
 	};
 
 	tool.activate = function() {
-		// keep each feature on its own layer
-		layerManager.activate(activeLayer);
-
-		// create a symbol from the SVG, if it doesn't exist
-		if(!symbols[activeLayer]) {
-			symbols[activeLayer] = symbolData.symbol();
-		}
-		
 		if(!cursor) {
 			layerManager.activate(config.CURSOR.LAYER);
 
-			cursor = symbols[activeLayer].place({ x: 0, y: 0 });
+			cursor = symbol.place({ x: 0, y: 0 });
 			cursor.opacity = config.CURSOR.OPACITY;
-
-			layerManager.activate(activeLayer);
 		}
+
+		// keep each feature on its own layer
+		layerManager.activate(activeLayer);
 
 		Tool.prototype.activate.call(this);
 	};
@@ -53,7 +46,7 @@ feature = (function() {
 			activeLayer = layer.substring(0, layer.indexOf("_"));
 
 		if(feature) {
-			symbolData = feature;
+			symbol = feature.symbol();
 
 			removeHoverSymbol();
 		}
