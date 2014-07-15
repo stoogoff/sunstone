@@ -31,9 +31,10 @@ utils.Feature = function(name, basePath) {
 			var imported = paper.project.importSVG(svg);
 
 			symbol = new paper.Symbol(imported);
+			symbol.definition.scaling = .5;
 
-			// store the path so the correct image can be used during import and export
-			symbol.featurePath = basePath;
+			// this doesn't seem to be necessary...
+			//imported.remove();
 		}
 
 		return symbol;

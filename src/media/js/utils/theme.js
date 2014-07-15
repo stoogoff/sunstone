@@ -22,7 +22,6 @@ utils.theme = (function() {
 
 		var loaded = {
 			"Mountain": [
-				// TODO - this needs to have two graphics
 				"media/img/features/MountainA",
 				"media/img/features/MountainB",
 				"media/img/features/MountainC"
@@ -32,8 +31,7 @@ utils.theme = (function() {
 				"media/img/features/HillB"
 			],
 			"Forest": [
-				"media/img/features/TreeA",
-				"media/img/features/TreeB"
+				"media/img/features/Trees"
 			],
 			"City": [
 				"media/img/features/City"
