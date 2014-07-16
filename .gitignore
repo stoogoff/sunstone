@@ -19,4 +19,4 @@ dist/*
 support/gfx/*
 
 # Compiled files
-.pyc
+*.pyc
