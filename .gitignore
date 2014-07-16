@@ -17,3 +17,6 @@ Gemfile.lock
 node_modules/*
 dist/*
 support/gfx/*
+
+# Compiled files
+.pyc

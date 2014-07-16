@@ -16,6 +16,10 @@ def tar():
 
 
 def deploy():
+	"""
+	Call tar and deploy the tar file to the server before untarring it.
+	"""
+	local("grunt") # this should be "grunt release" but there's a bug
 	tar()
 
 	with cd(env.serverPath):
