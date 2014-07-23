@@ -33,8 +33,8 @@ utils.Feature = function(name, basePath) {
 			symbol = new paper.Symbol(imported);
 			symbol.definition.scaling = .5;
 
-			// this doesn't seem to be necessary...
-			//imported.remove();
+			// this is used for storage purposes, so the correct image can be stored in the JSON
+			symbol.featurePath = this.basePath();
 		}
 
 		return symbol;
