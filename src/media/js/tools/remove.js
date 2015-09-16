@@ -1,5 +1,5 @@
 remove = (function() {
-	var target;
+	var target, currentMap;
 	var cursor = new Cursor(config.CURSOR.WARN);
 	var tool = new Tool();
 
@@ -12,6 +12,8 @@ remove = (function() {
 
 	tool.onMouseDown = function(event) {
 		if(target) {
+			currentMap.removeObject(target.layer.name, target.name);
+
 			target.remove();
 			target = null;
 
@@ -20,8 +22,9 @@ remove = (function() {
 	};
 
 	// start up / tear down functions
-	tool.activate = function() {
+	tool.activate = function(map) {
 		layerManager.activate(config.CURSOR.LAYER);
+		currentMap = map;
 
 		Tool.prototype.activate.call(this);
 	};

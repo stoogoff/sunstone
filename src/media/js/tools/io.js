@@ -44,10 +44,8 @@ io = (function() {
 					// text only
 					else if(item.constructor === PointText) {
 						itemData["content"] = item.content;
-						itemData["position"] = {
-							"x": item.point.x,
-							"y": item.point.y
-						};
+						itemData["x"] = item.point.x;
+						itemData["y"] = item.point.y;
 					}
 					// paths
 					else if(item.constructor === Path) {
@@ -86,7 +84,7 @@ io = (function() {
 		var terrain = utils.theme.terrain();
 
 		importObjects(data, terrain, function(layer, colour) {
-			layer.forEach(function(item) {
+			var addPath = function(item, id) {
 				var path = new Path();
 
 				path.closed = item.closed;
@@ -94,7 +92,17 @@ io = (function() {
 				path.strokeWidth = item.strokeWidth;
 				path.strokeCap = 'round';
 
+				var offset = { x: 0, y: 0 };
+
+				if(item.x && item.y && _.isNumber(item.x) && _.isNumber(item.y)) {
+					offset.x = item.x;
+					offset.y = item.y;
+				}
+
 				item.segments.forEach(function(segment) {
+					segment.x += offset.x;
+					segment.y += offset.y;
+
 					path.add(segment);
 				});
 
@@ -104,40 +112,77 @@ io = (function() {
 					if(item.smooth)
 						path.smooth();
 				}
-			});
+
+				if(id)
+					path.name = id;
+			};
+
+			if(layer.forEach)
+				layer.forEach(addPath);
+			else {
+				for(var key in layer) {
+					addPath(layer[key], key);
+				}
+			}
 		});
 
 		// set background
-		background[data["background"]]();
+		if("background" in data) {
+			background[data["background"]]();
+		}
 
 		// create text and font styles
 		var fonts = utils.theme.fonts();
 
 		importObjects(data, fonts, function(layer, font) {
-			layer.forEach(function(item) {
-				var text = new PointText(item.position);
-				
+			var addText = function(item, id) {
+				var text = new PointText(item.position ? item.position : { "x": item.x, "y": item.y });
+
 				font.setFont(text);
 
 				text.content = item.content;
-			});	
+
+				if(id) {
+					text.name = id;
+				}
+			};
+
+			if(layer.forEach) {
+				layer.forEach(addText);
+			}
+			else {
+				for(var key in layer) {
+					addText(layer[key], key);
+				}
+			}
 		});
 
 		// load symbols
 		var features = utils.theme.features();
 
 		importObjects(data, features, function(layer, feature) {
+			var addSymbol = function(item, id) {
+				var symbol = item.feature && symbols[item.feature] ? symbols[item.feature] : feature[0].symbol();
+				var placed = symbol.place(item);
+
+				if(id) {
+					placed.name = id;
+				}
+			};
 			var symbols = {};
 
 			_.each(feature, function(element) {
 				symbols[element.basePath()] = element.symbol();
 			});
 
-			layer.forEach(function(item) {
-				var symbol = item.feature && symbols[item.feature] ? symbols[item.feature] : feature[0].symbol();
-					
-				symbol.place(item);
-			});
+			if(layer.forEach) {
+				layer.forEach(addSymbol);
+			}
+			else {
+				for(var key in layer) {
+					addSymbol(layer[key], key);
+				}
+			}
 		});
 	}
 

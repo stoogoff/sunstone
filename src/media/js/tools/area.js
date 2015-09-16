@@ -1,5 +1,5 @@
 area = (function() {
-	var fillColour, activeLayer, path, smoothing, doubleClickTimer, doubleClick;
+	var fillColour, activeLayer, path, smoothing, doubleClickTimer, doubleClick, currentMap;
 	var tool = new Tool();
 
 	tool.minDistance = 5;
@@ -18,6 +18,8 @@ area = (function() {
 			if(smoothing)
 				path.smooth();
 
+			// save
+			path.name = currentMap.addPath(activeLayer, path);
 			path = null;
 
 			return;
@@ -51,6 +53,12 @@ area = (function() {
 	tool.onMouseMove = function(event) {
 		if(path && path.lastSegment)
 			path.lastSegment.point = event.point;
+	};
+
+	tool.activate = function(map) {
+		currentMap = map;
+
+		Tool.prototype.activate.call(this);
 	};
 
 	// tear down function

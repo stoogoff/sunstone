@@ -1,5 +1,5 @@
 move =(function() {
-	var target, offset;
+	var target, offset, currentMap;
 	var cursor = new Cursor(config.CURSOR.HIGHLIGHT);
 	var tool = new Tool();
 
@@ -22,10 +22,17 @@ move =(function() {
 		}
 	};
 
+	tool.onMouseUp = function(event) {
+		if(target) {
+			currentMap.moveObject(target.layer.name, target.name, target.position);
+		}
+	};
+
 	// start up / tear down functions
-	tool.activate = function() {
+	tool.activate = function(map) {
 		layerManager.activate(config.CURSOR.LAYER);
 		offset = new Point(0, 0);
+		currentMap = map;
 
 		Tool.prototype.activate.call(this);
 	};

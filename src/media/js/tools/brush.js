@@ -1,7 +1,7 @@
 
 // draws solid colour terrain
 brush = (function() {
-	var fillColour, strokeWidth, path, activeLayer, cursor;
+	var fillColour, strokeWidth, path, activeLayer, cursor, currentMap;
 	var tool = new Tool();
 
 	tool.minDistance = 5;
@@ -41,6 +41,13 @@ brush = (function() {
 	tool.onMouseUp = function(event) {
 		path.reduce();
 		path.smooth();
+		path.name = currentMap.addPath(activeLayer, path);
+	};
+
+	tool.activate = function(map) {
+		currentMap = map;
+
+		Tool.prototype.activate.call(this);
 	};
 
 	// tear down function

@@ -1,5 +1,5 @@
 text = (function() {
-	var dropPoint, currentFont, textPanel, editingText;
+	var dropPoint, currentFont, textPanel, editingText, currentMap;
 	var cursor = new Cursor(config.CURSOR.HIGHLIGHT, [PointText]);
 	var tool = new Tool();
 	var hidePanel = function() {
@@ -34,6 +34,12 @@ text = (function() {
 
 				editingText.content = content;
 
+				currentMap.addObject(currentFont.id(), {
+					"content": content,
+					"x": editingText.point.x,
+					"y": editingText.point.y
+				});
+
 				hidePanel();
 			}).end().find('.cancel').click(function() {
 				hidePanel();
@@ -64,6 +70,12 @@ text = (function() {
 
 	tool.onMouseMove = function(event) {
 		target = cursor.update(event);
+	};
+
+	tool.activate = function(map) {
+		currentMap = map;
+
+		Tool.prototype.activate.call(this);
 	};
 
 	// start up and tear down

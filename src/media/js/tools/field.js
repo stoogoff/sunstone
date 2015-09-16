@@ -1,8 +1,18 @@
 field = (function() {
-	var activeLayer, symbolData, cursor, doubleClickTimer, doubleClick;
+	var activeLayer, symbolData, cursor, doubleClickTimer, doubleClick, currentMap;
 	var tool = new Tool();
 
 	tool.minDistance = 5;
+
+	function addSymbol(symbol, point) {
+		var placed = symbol.place(point);
+
+		placed.name = currentMap.addObject(activeLayer, {
+			"x": point.x,
+			"y": point.y,
+			"feature": symbol.featurePath
+		});
+	}
 
 	// mouse control related functions
 	tool.onMouseUp = function(event) {
@@ -23,7 +33,7 @@ field = (function() {
 				// randomly select a feature
 				var symbol = symbolData[_.random(symbolData.length - 1)].symbol();
 
-				symbol.place(cursor.segments[i].point);
+				addSymbol(symbol, cursor.segments[i].point);
 
 				// divide distance between each corner by size of symbol to get the number to add
 				var currentPoint = cursor.segments[i].point;
@@ -39,7 +49,7 @@ field = (function() {
 				for(var j = 1; j <= toAdd; ++j) {
 					currentPoint -= offsetVector;
 
-					symbol.place(currentPoint);
+					addSymbol(symbol, currentPoint);
 				}
 			}
 
@@ -82,6 +92,12 @@ field = (function() {
 	tool.onMouseMove = function(event) {
 		if(cursor && cursor.lastSegment)
 			cursor.lastSegment.point = event.point;
+	};
+
+	tool.activate = function(map) {
+		currentMap = map;
+
+		Tool.prototype.activate.call(this);
 	};
 
 	// tear down function

@@ -1,6 +1,18 @@
 $(function() {
 	var LOAD = 1000, SAVE = 10000, MAP_KEY = "map";
 
+	// TODO generate map ID
+	var mapId = location.hash.substring(1);
+
+	if(mapId === "") {
+		location.replace("#" + utils.createGuid());
+	}
+
+	// TODO load map data from Firebase and display it
+	var map = new utils.Map(mapId);
+
+	// TODO map needs to reload on hash change
+
 	// active tools and event handling
 	var currentTool = null;
 
@@ -51,7 +63,7 @@ $(function() {
 			currentTool.deactivate();
 
 		if(window[this.id] && window[this.id].activate) {
-			window[this.id].activate();
+			window[this.id].activate(map);
 
 			currentTool = window[this.id];
 		}
@@ -62,8 +74,10 @@ $(function() {
 		var tool = self.attr('data-for');
 		var method = self.val();
 
-		if(window[tool] && window[tool][method])
+		if(window[tool] && window[tool][method]) {
+			window[tool].activate(map);
 			window[tool][method]();
+		}
 
 		var reset = self.attr('data-reset');
 
@@ -166,10 +180,12 @@ $(function() {
 		window.background.load();
 		window.pan.activate();
 
+		map.load();
+
 		// load up any existing features
-		if(utils.store.has(MAP_KEY)) {
+		/*if(utils.store.has(MAP_KEY)) {
 			io.importJSON(utils.store.get(MAP_KEY));
-		}
+		}*/
 
 		// auto save the map data
 		window.setInterval(function() {

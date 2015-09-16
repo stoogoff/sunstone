@@ -2,7 +2,7 @@
 // Changes the background colour of the map
 background = (function() {
 	var tool = {};
-	var currentTerrain, image, layer, rectangle, fillColour, previousLayer;
+	var currentTerrain, image, layer, rectangle, fillColour, previousLayer, currentMap;
 	var canvas = project.view.element;
 
 	// public methods
@@ -26,12 +26,22 @@ background = (function() {
 			fillColour = colour;
 		}
 
-		if(terrain)
+		if(terrain) {
 			currentTerrain = terrain;
+
+			if(currentMap)
+				currentMap.setBackground(terrain);
+		}
 
 		layerManager.activate(previousLayer);
 
 		return currentTerrain;
+	};
+
+	tool.activate = function(map) {
+		currentMap = map;
+
+		Tool.prototype.activate.call(this);
 	};
 
 	tool.load = function() {
@@ -43,7 +53,7 @@ background = (function() {
 			image.position = view.center;
 		};
 
-		// subscribe to view updates
+		// TODO subscribe to view updates
 
 		// this keeps the image and colour rectangle fixed centre
 		// it does the job but the pan feels kind of weird
