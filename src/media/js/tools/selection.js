@@ -1,7 +1,7 @@
 
 // selects a feature on the map
 selection = (function() {
-	var path, segment, doubleClickTimer, doubleClick;
+	var path, segment, doubleClickTimer, doubleClick, currentMap;
 	var tool = new Tool();
 
 	// mouse events
@@ -22,6 +22,8 @@ selection = (function() {
 		if(doubleClick && hitResult.type == "segment") {
 			hitResult.segment.remove();
 
+			currentMap.setPathSegments(path.layer.name, path);
+
 			doubleClick = false;
 
 			return;
@@ -38,6 +40,8 @@ selection = (function() {
 
 			if(!path.firstSegment.linear)
 				path.smooth();
+
+			currentMap.setPathSegments(path.layer.name, path);
 		}
 
 		if(doubleClickTimer)
@@ -51,6 +55,8 @@ selection = (function() {
 	tool.onMouseDrag = function(event) {
 		if(segment)
 			segment.point += event.delta;
+
+		//currentMap.setPathSegments(path.layer.name, path);
 	};
 
 	tool.onMouseMove = function(event) {
@@ -67,7 +73,17 @@ selection = (function() {
 		}
 	};
 
+	tool.onMouseUp = function(event) {
+		currentMap.setPathSegments(path.layer.name, path);
+	};
+
 	// setup and tear down
+	tool.activate = function(map) {
+		currentMap = map;
+
+		Tool.prototype.activate.call(this);
+	};
+
 	tool.deactivate = function() {
 		if(path) {
 			path.selected = false;

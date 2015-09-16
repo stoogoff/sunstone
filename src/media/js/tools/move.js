@@ -24,7 +24,7 @@ move =(function() {
 
 	tool.onMouseUp = function(event) {
 		if(target) {
-			currentMap.moveObject(target.layer.name, target.name, target.position);
+			currentMap.moveObject(target.layer.name, target);
 		}
 	};
 

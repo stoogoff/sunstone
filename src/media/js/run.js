@@ -6,6 +6,7 @@ $(function() {
 
 	if(mapId === "") {
 		location.replace("#" + utils.createGuid());
+		return;
 	}
 
 	// TODO load map data from Firebase and display it
@@ -67,6 +68,10 @@ $(function() {
 
 			currentTool = window[this.id];
 		}
+	});
+
+	$("#name").change(function() {
+		map.setName($(this).val());
 	});
 
 	$('select').change(function() {
@@ -180,14 +185,22 @@ $(function() {
 		window.background.load();
 		window.pan.activate();
 
-		map.load();
-
 		// load up any existing features
+		map.load(function(data) {
+			if(_.isObject(data) && "layers" in data)
+				io.importJSON(data);
+
+			["name", "background"].forEach(function(key) {
+				if(key in data)
+					$("#" + key).val(data[key]);
+			});
+		});
+
 		/*if(utils.store.has(MAP_KEY)) {
 			io.importJSON(utils.store.get(MAP_KEY));
 		}*/
 
-		// auto save the map data
+		// auto save the map data to localhost
 		window.setInterval(function() {
 			utils.store.set(MAP_KEY, io.exportJSON());
 		}, SAVE);

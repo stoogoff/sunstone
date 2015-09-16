@@ -24,21 +24,25 @@ text = (function() {
 		if(!textPanel) {
 			textPanel = $("#textPanel").find('.save').click(function() {
 				var content = textPanel.find("textarea").val();
+				var saveData = {
+					"content": content,
+					"x": dropPoint.x,
+					"y": dropPoint.y
+				};
 
 				if(!editingText) {
 					layerManager.activate(currentFont.id());
 					editingText = new PointText(dropPoint);
 
 					currentFont.setFont(editingText);
+
+					editingText.name = currentMap.addObject(currentFont.id(), saveData);
+				}
+				else {
+					currentMap.updateObject(currentFont.id(), editingText.name, saveData);
 				}
 
 				editingText.content = content;
-
-				currentMap.addObject(currentFont.id(), {
-					"content": content,
-					"x": editingText.point.x,
-					"y": editingText.point.y
-				});
 
 				hidePanel();
 			}).end().find('.cancel').click(function() {
