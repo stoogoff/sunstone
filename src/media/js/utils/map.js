@@ -4,10 +4,10 @@ utils.Map = function(id) {
 
 	var map = new Firebase("https://we-evolve-sunstone.firebaseio.com/maps/" + id);
 
-	this.load = function(callback) {
+	this.update = function(callback) {
 		console.log("loading...");
 
-		map.once("value", function(snapshot) {
+		map.on("value", function(snapshot) {
 			var data = snapshot.val();
 
 			console.log("value fired");
@@ -15,26 +15,30 @@ utils.Map = function(id) {
 
 			if(_.isFunction(callback))
 				callback(data);
+
+			console.log("----------------")
 		});
-
-		/*map.on("child_added", function(snapshot) {
-			var data = snapshot.val();
-
-			console.log("child_added fired");
-			console.log(data);
-
-			if(!_.isObject(data))
-				return;
-
-			if("layers" in data)
-				io.importJSON(snapshot.val());
-			else {
-				console.log("single object")
-			}
-
-			// TODO doesn't update display unless an event fires
-		});*/
 	};
+
+	//if(_.isFunction(update)) {
+		//console.log("connecting update function");
+
+		/*var handler = function(evt) {
+			return function(snapshot) {
+				var data = snapshot.val();
+
+				console.log(evt + " fired");
+				console.log(arguments)
+				console.log(data);
+				console.log("------------------")
+			};
+		};
+
+		["value", "child_added", "child_removed", "child_changed", "child_moved"].forEach(function(evt) {
+			map.on(evt, handler(evt));
+		});*/
+
+	//}
 
 	this.setBackground = function(background) {
 		return this.setNode("background", utils.toId(background));

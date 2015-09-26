@@ -9,7 +9,7 @@ $(function() {
 		return;
 	}
 
-	// TODO load map data from Firebase and display it
+	// load map data from Firebase and display it
 	var map = new utils.Map(mapId);
 
 	// TODO map needs to reload on hash change
@@ -186,7 +186,12 @@ $(function() {
 		window.pan.activate();
 
 		// load up any existing features
-		map.load(function(data) {
+		map.update(function(data) {
+			// TODO handles adding objects only
+			// TODO needs to handle:
+			// TODO    moving
+			// TODO    deleting
+			// TODO    adjusting path points
 			if(_.isObject(data) && "layers" in data)
 				io.importJSON(data);
 

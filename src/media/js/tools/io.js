@@ -1,5 +1,14 @@
 io = (function() {
 
+	function nodeExists(id) {
+		var existing = project.getItem({
+			name: id
+		});
+
+		// already added
+		return existing != null;
+	}
+
 	function importObjects(data, layers, callback) {
 		for(var i in layers) {
 			var layer = utils.toId(i);
@@ -85,6 +94,10 @@ io = (function() {
 
 		importObjects(data, terrain, function(layer, colour) {
 			var addPath = function(item, id) {
+				if(id && nodeExists(id)) {
+					return;
+				}
+
 				var path = new Path();
 
 				path.closed = item.closed;
@@ -136,6 +149,10 @@ io = (function() {
 
 		importObjects(data, fonts, function(layer, font) {
 			var addText = function(item, id) {
+				if(id && nodeExists(id)) {
+					return;
+				}
+
 				var text = new PointText(item.position ? item.position : { "x": item.x, "y": item.y });
 
 				font.setFont(text);
@@ -162,6 +179,10 @@ io = (function() {
 
 		importObjects(data, features, function(layer, feature) {
 			var addSymbol = function(item, id) {
+				if(id && nodeExists(id)) {
+					return;
+				}
+
 				var symbol = item.feature && symbols[item.feature] ? symbols[item.feature] : feature[0].symbol();
 				var placed = symbol.place(item);
 
