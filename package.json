@@ -11,10 +11,17 @@
 		"start": "node ./build/ staging",
 		"server": "pushd staging; python -m SimpleHTTPServer; popd",
 		"end": "lsof -ti:8000 | xargs kill -TERM",
-		"build": "node ./build/"
+		"build": "node ./build/",
+		"clean": "rm -rf"
+	},
+	"dependencies": {
+		"lodash": "^4.17.15"
 	},
 	"devDependencies": {
+		"@rollup/plugin-commonjs": "^11.0.2",
+		"@rollup/plugin-node-resolve": "^7.1.1",
 		"metalsmith": "^2.3.0",
+		"metalsmith-rollup": "^2.0.0",
 		"metalsmith-sass": "^1.7.0"
 	}
 }
