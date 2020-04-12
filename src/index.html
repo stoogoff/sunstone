@@ -7,6 +7,24 @@
 </head>
 <body>
 
+<div id="container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-database.js"></script>
+<script>
+	// Your web app's Firebase configuration
+	var firebaseConfig = {
+		apiKey: "AIzaSyBbdm6ZtvOKLiVMls1EV8ofzHp6C7-J9pU",
+		authDomain: "we-evolve-sunstone.firebaseapp.com",
+		databaseURL: "https://we-evolve-sunstone.firebaseio.com",
+		projectId: "we-evolve-sunstone",
+		storageBucket: "we-evolve-sunstone.appspot.com",
+		messagingSenderId: "900439586715",
+		appId: "1:900439586715:web:a96bdf63b2329a916bd33e"
+	};
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+</script>
 <script src="{{ VERSION }}/media/js/bundle.js"></script>
 
 </body>

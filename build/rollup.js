@@ -10,7 +10,7 @@ module.exports = (config) => {
 		rollup.rollup(config).then(bundle => bundle.generate(config.output)).then(output => {
 			// remove all other JS files
 			Object.keys(files).forEach(path => {
-				if(is.ext(path, ".js")) {
+				if(is.ext(path, ".js,.jsx")) {
 					delete files[path];
 				}
 			});

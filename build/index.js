@@ -16,8 +16,9 @@ const path = require("path");
 const fs = require("fs");
 const Metalsmith = require("metalsmith");
 const sass = require("metalsmith-sass");
-//const rollup = require("metalsmith-rollup");
 const rollup = require("./rollup");
+const babel = require("rollup-plugin-babel");
+const replace = require("rollup-plugin-replace");
 const commonjs = require("@rollup/plugin-commonjs");
 const resolve = require("@rollup/plugin-node-resolve");
 
@@ -52,12 +53,18 @@ Metalsmith(__dirname)
 
 	// use rollup to create JS bundle
 	.use(rollup({
-		input: "./src/media/js/run.js",
+		input: "./src/media/js/App.jsx",
 		output: {
 			format: "cjs",
 			file: path.join(VERSION, "media", "js", BUNDLE)
 		},
 		plugins: [
+			replace({
+				"process.env.NODE_ENV": JSON.stringify("production") // toggle on LIVE
+			}),
+			babel({
+				exclude: "node_modules/**"
+			}),
 			resolve(),
 			commonjs()
 		]
