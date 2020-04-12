@@ -12,16 +12,17 @@
 		"server": "pushd staging; python -m SimpleHTTPServer; popd",
 		"end": "lsof -ti:8000 | xargs kill -TERM",
 		"build": "node ./build/",
-		"clean": "rm -rf"
+		"clean": "node ./build/clean.js"
 	},
 	"dependencies": {
-		"lodash": "^4.17.15"
+		"paper": "^0.12.4"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^11.0.2",
 		"@rollup/plugin-node-resolve": "^7.1.1",
 		"metalsmith": "^2.3.0",
-		"metalsmith-rollup": "^2.0.0",
-		"metalsmith-sass": "^1.7.0"
+		"metalsmith-sass": "^1.7.0",
+		"rimraf": "^3.0.2",
+		"rollup": "^2.6.0"
 	}
 }

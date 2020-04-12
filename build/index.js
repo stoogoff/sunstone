@@ -16,7 +16,8 @@ const path = require("path");
 const fs = require("fs");
 const Metalsmith = require("metalsmith");
 const sass = require("metalsmith-sass");
-const rollup = require("metalsmith-rollup");
+//const rollup = require("metalsmith-rollup");
+const rollup = require("./rollup");
 const commonjs = require("@rollup/plugin-commonjs");
 const resolve = require("@rollup/plugin-node-resolve");
 
@@ -57,21 +58,12 @@ Metalsmith(__dirname)
 			file: path.join(VERSION, "media", "js", BUNDLE)
 		},
 		plugins: [
-			resolve({
-				browser: true
-			}),
+			resolve(),
 			commonjs()
 		]
 	}))
 
-	// remove all non-bundled JS files
-	.use(each((file, p, files) => {
-		if(!p.endsWith(BUNDLE)) {
-			delete files[p];
-		}
-	}, ".js"))
-
-	// perfix media files with version number
+	// prefix media files with version number
 	.use(each((file, p, files) => {
 		if(p.startsWith("media/")) {
 			let versionedPath = VERSION + "/" + p;
@@ -80,6 +72,15 @@ Metalsmith(__dirname)
 			delete files[p];
 		}
 	}))
+
+	// write metadata into HTML files, may switch to using layouts in the future
+	.use(each((file, p, files, metalsmith) => {
+		const metadata = metalsmith.metadata();
+
+		Object.keys(metadata).forEach(key => {
+			file.contents = file.contents.toString().replace(new RegExp(`{{ ${key} }}`, 'g'), metadata[key]);
+		});
+	}, ".html"))
 
 	// log
 	.use(each((f, k) => console.log(k)))
