@@ -24,6 +24,6 @@ module.exports = (config) => {
 			}
 
 			next();
-		})
+		}).catch(error => console.error(error))
 	}
 }

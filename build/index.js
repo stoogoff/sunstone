@@ -21,6 +21,7 @@ const babel = require("rollup-plugin-babel");
 const replace = require("rollup-plugin-replace");
 const commonjs = require("@rollup/plugin-commonjs");
 const resolve = require("@rollup/plugin-node-resolve");
+const postcss = require("rollup-plugin-postcss");
 
 const each = require("./each");
 
@@ -62,6 +63,11 @@ Metalsmith(__dirname)
 			replace({
 				"process.env.NODE_ENV": JSON.stringify("production") // toggle on LIVE
 			}),
+			postcss({
+				extract: false,
+				modules: true,
+				use: ["sass"]
+			}),
 			babel({
 				exclude: "node_modules/**"
 			}),
@@ -85,7 +91,7 @@ Metalsmith(__dirname)
 		const metadata = metalsmith.metadata();
 
 		Object.keys(metadata).forEach(key => {
-			file.contents = file.contents.toString().replace(new RegExp(`{{ ${key} }}`, 'g'), metadata[key]);
+			file.contents = file.contents.toString().replace(new RegExp(`{{ ${key} }}`, "g"), metadata[key]);
 		});
 	}, ".html"))
 
