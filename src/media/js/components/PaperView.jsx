@@ -1,6 +1,6 @@
 
 import React from "react";
-import paper from "paper";
+import paper from "paper/dist/paper-core";
 
 
 import { Pen1, Pen2 } from "../tools/pen";
@@ -51,17 +51,20 @@ export default class PaperView extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log(paper)
+		console.log("PaperView.componentDidMount", paper)
 
-		this.scope = new paper.PaperScope();
+		this.scope = paper;//new paper.PaperScope();
 		this.scope.setup(this.canvas.current);
 
 		/*Pen2.initialize();
+
+		Pen2._scope = paper;
+
 		Pen2.activate();
 
 		console.log(Pen2)*/
 
-const pen2 = new paper.Tool()
+/*const pen2 = new paper.Tool()
 
 pen2.minDistance = 20;
 
@@ -77,7 +80,7 @@ pen2.onMouseDrag = (event) => {
 };
 
 
-pen2.activate();
+pen2.activate();*/
 	}
 
 	render() {

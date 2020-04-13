@@ -60,6 +60,8 @@ class App extends React.Component {
 			"pen1": Pen1,
 			"pen2": Pen2
 		}
+
+		this.tools.pen1.activate();
 	}
 
 	componentWillUnmount() {
