@@ -10,6 +10,11 @@ import Input from 'react-toolbox/lib/input';
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 
 
+import PaperView from "./components/PaperView.jsx"
+import { Pen1, Pen2 } from "./tools/pen";
+
+
+
 /*import Button from 'react-toolbox/lib/button';
 import Drawer from 'react-toolbox/lib/drawer';
 import AppBar from 'react-toolbox/lib/app_bar';
@@ -40,6 +45,8 @@ class App extends React.Component {
 			drawerPinned: false,
 			sidebarPinned: false
 		}
+
+
 	}
 
 	componentDidMount() {
@@ -48,6 +55,11 @@ class App extends React.Component {
 				value: snapshot.val()
 			});
 		});
+
+		this.tools = {
+			"pen1": Pen1,
+			"pen2": Pen2
+		}
 	}
 
 	componentWillUnmount() {
@@ -76,29 +88,30 @@ class App extends React.Component {
 		});
 	}
 
+	activateTool(type) {
+		console.log("activating", type)
+
+		let active = this.tools[type].activate();
+
+		console.log("activated?", active)
+
+		console.log(this.tools[type])
+	}
+
 	render() {
-		let cls = this.state.expanded ? 'drawer-expanded' : 'drawer-collapsed';
-
-		console.log("expanded? " + this.state.expanded)
-
 		return (
-			<Layout className={ cls }>
-				<NavDrawer pinned={ true } onOverlayClick={ this.toggleExpanded.bind(this) } className="drawer">
+			<Layout>
+				<NavDrawer pinned={ true } className="drawer">
 					<List selectable ripple>
 						<ListItem rightIcon="chevron_left" onClick={ this.toggleExpanded.bind(this) } />
 						<ListDivider />
-						<ListItem caption='Contact the publisher' leftIcon='send' />
-						<ListItem caption='Remove this publication' leftIcon='delete' />
+						<ListItem caption='Pen 1' leftIcon='send' onClick={ this.activateTool.bind(this, "pen1") }/>
+						<ListItem caption='Pen 2' leftIcon='delete' onClick={ this.activateTool.bind(this, "pen2") }/>
 					</List>
 				</NavDrawer>
 				<Panel className="panel">
 					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" />
-					<div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-						<Welcome message="Welcome Heading" />
-						<Input type="text" value={ this.state.text } onChange={ this.changeHandler.bind(this) } />
-						<Button raised primary icon="bookmark" onClick={ this.clickHandler.bind(this) }>Update</Button>
-						<Value text={ this.state.value } />
-					</div>
+					<PaperView canvasId="map" />
 				</Panel>
 				<Sidebar pinned={ this.state.sidebarPinned } width={ 5 }>
 					<div><IconButton icon='close' onClick={ this.toggleSidebar.bind(this) }/></div>
@@ -113,6 +126,14 @@ class App extends React.Component {
 
 
 /*
+
+<div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
+						<Welcome message="Welcome Heading" />
+						<Input type="text" value={ this.state.text } onChange={ this.changeHandler.bind(this) } />
+						<Button raised primary icon="bookmark" onClick={ this.clickHandler.bind(this) }>Update</Button>
+						<Value text={ this.state.value } />
+					</div>
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);

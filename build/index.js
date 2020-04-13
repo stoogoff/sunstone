@@ -71,9 +71,20 @@ Metalsmith(__dirname)
 			babel({
 				exclude: "node_modules/**"
 			}),
-			resolve(),
+			resolve({
+				browser: true
+			}),
 			commonjs()
-		]
+		],
+		onwarn: function(warning) {
+			// should intercept ... but doesn't in some rollup versions
+			if(warning.code === 'THIS_IS_UNDEFINED') {
+				return;
+			}
+
+			// console.warn everything else
+			console.warn(warning.message);
+		}
 	}))
 
 	// prefix media files with version number

@@ -14,10 +14,8 @@
 		"build": "node ./build/",
 		"clean": "node ./build/clean.js"
 	},
-	"dependencies": {
-		"paper": "^0.12.4"
-	},
 	"devDependencies": {
+		"paper": "^0.12.4",
 		"@babel/core": "^7.9.0",
 		"@babel/preset-env": "^7.9.5",
 		"@babel/preset-react": "^7.9.4",
