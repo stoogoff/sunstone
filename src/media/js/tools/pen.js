@@ -84,6 +84,9 @@ export class Pen2 extends paper.Tool {
 
 const pen1 = new paper.Tool();
 
+pen1.name = "Line";
+pen1.icon = "create";
+
 pen1.onMouseDown = (event) => {
 	pen1.path = new paper.Path();
 	pen1.path.strokeColor = 'black';
@@ -98,6 +101,8 @@ export const Pen1 = pen1;
 
 const pen2 = new paper.Tool();
 
+pen2.name = "Clouds";
+pen2.icon = "filter_drama";
 pen2.minDistance = 20;
 
 pen2.onMouseDown = (event) => {

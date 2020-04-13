@@ -12,6 +12,8 @@ import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-
 
 import PaperView from "./components/PaperView.jsx"
 import { Pen1, Pen2 } from "./tools/pen";
+import { Pan } from "./tools/pan";
+import { Zoom } from "./tools/zoom";
 
 
 
@@ -37,6 +39,8 @@ class App extends React.Component {
 			text: "",
 			value: "",
 
+			activeTool: null,
+
 			// drawer state
 			expanded: false,
 
@@ -47,6 +51,7 @@ class App extends React.Component {
 		}
 
 
+		this.tools = [Pen1, Pen2, Pan, Zoom];
 	}
 
 	componentDidMount() {
@@ -55,13 +60,6 @@ class App extends React.Component {
 				value: snapshot.val()
 			});
 		});
-
-		this.tools = {
-			"pen1": Pen1,
-			"pen2": Pen2
-		}
-
-		this.tools.pen1.activate();
 	}
 
 	componentWillUnmount() {
@@ -90,14 +88,22 @@ class App extends React.Component {
 		});
 	}
 
-	activateTool(type) {
-		console.log("activating", type)
+	activateTool(key) {
+		let active = this.tools.find(f => f.name == key);
 
-		let active = this.tools[type].activate();
+		if(this.state.activeTool === active) {
+			return;
+		}
 
-		console.log("activated?", active)
+		if(this.state.activeTool && this.state.activeTool.deactivate) {
+			this.state.activeTool.deactivate();
+		}
 
-		console.log(this.tools[type])
+		active.activate();
+
+		this.setState({
+			activeTool: active
+		});
 	}
 
 	render() {
@@ -107,8 +113,7 @@ class App extends React.Component {
 					<List selectable ripple>
 						<ListItem rightIcon="chevron_left" onClick={ this.toggleExpanded.bind(this) } />
 						<ListDivider />
-						<ListItem caption='Pen 1' leftIcon='send' onClick={ this.activateTool.bind(this, "pen1") }/>
-						<ListItem caption='Pen 2' leftIcon='delete' onClick={ this.activateTool.bind(this, "pen2") }/>
+						{ this.tools.map(t => <ListItem caption={ t.name } className={ t === this.state.activeTool ? "active" : "" } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
 					</List>
 				</NavDrawer>
 				<Panel className="panel">
