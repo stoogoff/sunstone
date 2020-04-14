@@ -15,13 +15,19 @@ canvas#map
 		height: 100%
 
 	li.active
-		background-color: green
+		background-color: rgb(200,200,200)
 
 	.zoom
 		position: fixed
 		bottom: 1em
 		right: 1em
 		overflow: visible
+
+	.colour-picker li
+		cursor: pointer
+
+		&:hover
+			background-color: rgb(234,234,234)
 
 	.colour-display
 		display: inline-block

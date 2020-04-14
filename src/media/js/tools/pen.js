@@ -1,32 +1,31 @@
 
 import paper from "paper/dist/paper-core";
+import Tool from "./tool";
 
+export default class Pen extends Tool {
+	constructor() {
+		super();
 
-export const Pen = paper.Tool.extend({
-	initialize: () => {
-		paper.Tool.call(this);
-
-		this.name = "Line";
+		this.name = "Pen";
 		this.icon = "create";
-	},
+		this.colour = "black";
+	}
 
-	activate: (options) => {
-		this.update(options);
+	update(options) {
+		this.colour = options.foreground;
+		this.width = options.width;
+		this.opacity = options.opacity;
+	}
 
-		return paper.Tool.prototype.activate.call(this);
-	},
-
-	update: (options) => {
-		this.colour = options.foreground;	
-	},
-
-	onMouseDown: (event) => {
+	onMouseDown(event) {
 		this.path = new paper.Path();
 		this.path.strokeColor = this.colour;
-		this.path.add(event.point);
-	},
-
-	onMouseDrag: (event) => {
+		this.path.strokeWidth = this.width;
+		this.path.opacity = this.opacity;
 		this.path.add(event.point);
 	}
-});
+
+	onMouseDrag(event) {
+		this.path.add(event.point);
+	}
+}

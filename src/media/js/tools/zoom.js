@@ -53,4 +53,4 @@ export const ZoomTo = {
 
 		return boundsCheckZoom(currentZoom);
 	}
-}
+};

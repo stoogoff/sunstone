@@ -2,36 +2,54 @@
 // react and react components
 import React from "react";
 import ReactDOM from "react-dom";
-import { TwitterPicker } from "react-color";
+import { CirclePicker } from "react-color";
 
 
 // react toolbox ui imports
 import AppBar from 'react-toolbox/lib/app_bar';
 import Checkbox from 'react-toolbox/lib/checkbox';
 import { IconButton, Button } from 'react-toolbox/lib/button';
-import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout';
+import { Layout, NavDrawer, Panel } from 'react-toolbox/lib/layout';
 import Input from 'react-toolbox/lib/input';
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 import Chip from 'react-toolbox/lib/chip';
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
+import Slider from 'react-toolbox/lib/slider';
+import Avatar from 'react-toolbox/lib/avatar';
+import { Tab, Tabs } from 'react-toolbox/lib/tabs';
 
 
 // Sunstone imports
-import PaperView from "./components/PaperView.jsx"
-import { Pen } from "./tools/pen";
-import { Pan } from "./tools/pan";
+import PaperView from "./components/PaperView.jsx";
+import ColourPicker from "./components/ColourPicker.jsx";
+import LayerPanel from "./components/LayerPanel.jsx";
+
+
+// Sunstone tools
+import Pen from "./tools/pen";
+import Pan from "./tools/pan";
+import Marker from "./tools/marker";
+import Circle from "./tools/circle";
+import Rectangle from "./tools/rectangle";
+import Image from "./tools/image";
 import { ZoomIn, ZoomOut, ZoomTo } from "./tools/zoom";
-import { Marker } from "./tools/marker";
+
+/*
+
+selection tool
+deleting of selected objects
+editing of selected objects
+editing of common state of multiple objects (maybe)
+
+public state of objects for view version
+
+image upload tool (how to save this?
+move object tool)
 
 
 
-/*import Button from 'react-toolbox/lib/button';
-import Drawer from 'react-toolbox/lib/drawer';
-import AppBar from 'react-toolbox/lib/app_bar';
 */
 
-import Value from "./components/Value.jsx";
-import Welcome from "./components/Welcome.jsx";
 
 
 class App extends React.Component {
@@ -43,10 +61,16 @@ class App extends React.Component {
 		this.ref = database.ref("/maps/map1")
 
 		this.state = {
+			// tool states
 			activeTool: null,
+			colourPicker: null,
+			tabIndex: 0,
+
+			// parameters to tools
 			foreground: "black",
 			background: "white",
-			colourPicker: null,
+			opacity: 1,
+			width: 1,
 
 
 			// text to firebase vars test
@@ -62,10 +86,7 @@ class App extends React.Component {
 			sidebarPinned: false
 		}
 
-
-		console.log(new Pen())
-
-		this.tools = [Pan, Marker, new Pen()];
+		this.tools = [new Pan(), new Marker(), new Pen(), new Rectangle(), new Circle(), new Image()];
 		this.zoom = [ZoomIn, ZoomOut];
 	}
 
@@ -114,10 +135,6 @@ class App extends React.Component {
 			this.state.activeTool.deactivate();
 		}
 
-		// randomly set a colour for now
-		let colours = ["red", "green", "blue", "orange"];
-		let colour = colours[Math.floor(Math.random() * colours.length)];
-
 		// TODO what payload needs to be sent?
 		// once a tool has finished its operation it MAY need to send data somewhere
 		// should this be handled in APP or within the tool?
@@ -130,30 +147,31 @@ class App extends React.Component {
 		}
 	}
 
-	openColourPicker(type) {
+	setToolState(type, value) {
+		this.setSimpleState(type, value);
+		this.updateActiveTool();
+	}
+
+	setSimpleState(type, value) {
 		this.setState({
-			colourPicker: type
+			[type]: value
 		});
 	}
 
-	setColour(colour) {
-		let type = this.state.colourPicker
-
-		this.setState({
-			colourPicker: null,
-			[type]: colour.hex
-		});
-
+	updateActiveTool() {
 		if(this.state.activeTool && this.state.activeTool.update) {
-			console.log(this.getToolParams())
 			this.state.activeTool.update(this.getToolParams());
 		}
 	}
 
+	// the parameters which are sent very tool
+	// what the tool does with the parameters is entirely up to it
 	getToolParams() {
 		return {
 			foreground: this.state.foreground,
-			background: this.state.background
+			background: this.state.background,
+			opacity: this.state.opacity,
+			width: this.state.width,
 		};
 	}
 
@@ -161,33 +179,37 @@ class App extends React.Component {
 		return (
 			<Layout>
 				<NavDrawer pinned={ true } className="drawer">
-					<List selectable ripple>
+					<List selectable>
 						<ListItem rightIcon="chevron_left" onClick={ this.toggleExpanded.bind(this) } />
 						<ListDivider />
-						{ this.tools.map(t => <ListItem caption={ t.name } className={ t === this.state.activeTool ? "active" : "" } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
+						<ListSubHeader caption="Tools" />
+						{ this.tools.map(t => <ListItem caption={ t.name } rightIcon={ t === this.state.activeTool ? "check_box" : null } className={ t === this.state.activeTool ? "active" : null } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
 					</List>
-					<footer>
-						<p>Custom tools depending on selected tool will need to be added here</p>
-
-						<div>
-							{ this.state.colourPicker === "foreground" ? <TwitterPicker onChangeComplete={ this.setColour.bind(this) } /> : null }
-							<span onClick={ this.openColourPicker.bind(this, "foreground") }><span style={{ backgroundColor: this.state.foreground }} className="colour-display"></span>Foreground</span>
-							{ this.state.colourPicker === "background" ? <TwitterPicker onChangeComplete={ this.setColour.bind(this) } /> : null }
-							<span onClick={ this.openColourPicker.bind(this, "background") }><span style={{ backgroundColor: this.state.background }} className="colour-display"></span>Background</span>
-						</div>
-					</footer>
+					<Tabs index={ this.state.tabIndex } onChange={ this.setSimpleState.bind(this, "tabIndex") }>
+						<Tab label="Tools">
+							<List selectable>
+								<ListSubHeader caption="Opacity" />
+								<li><Slider min={ 0 } max={ 1 } editable value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } /></li>
+								<ListDivider />
+								<ListSubHeader caption="Line Width" />
+								<li><Slider min={ 0 } max={ 5 } step={ 1 } editable value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } /></li>
+								<ListDivider />
+								<ListSubHeader caption="Tool Colours" />
+								<ColourPicker caption="Foreground" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
+								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
+							</List>
+						</Tab>
+						<Tab label="layers">
+							<LayerPanel />
+						</Tab>
+					</Tabs>
 				</NavDrawer>
 				<Panel className="panel">
 					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" />
 					<PaperView canvasId="map" />
 				</Panel>
-				<Sidebar pinned={ this.state.sidebarPinned } width={ 5 }>
-					<div><IconButton icon='close' onClick={ this.toggleSidebar.bind(this) }/></div>
-					<div style={{ flex: 1 }}>
-						<p>Supplemental content goes here.</p>
-					</div>
-				</Sidebar>
 				<Chip className="zoom">
+					<Avatar icon="zoom_in" />
 					{ this.zoom.map(z => <IconButton icon={ z.icon } onClick={ z.activate.bind(z) } />)}
 					<IconMenu icon="more_vert">
 						<MenuItem caption="500%" onClick={ ZoomTo.activate.bind(ZoomTo, 5) } />
@@ -204,6 +226,15 @@ class App extends React.Component {
 
 
 /*
+
+
+<ListSubHeader caption="Colours" />
+							<ListItem caption="Foreground" onClick={ this.openColourPicker.bind(this, "foreground") } rightIcon={ this.state.colourPicker == "foreground" ? "check_box" : null } className={ this.state.colourPicker == "foreground" ? "active" : null }><span style={{ backgroundColor: this.state.foreground }} className="colour-display"></span></ListItem>
+							{ this.state.colourPicker === "foreground" ? <ListItem><CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } /></ListItem> : null }
+							<ListItem caption="Background" onClick={ this.openColourPicker.bind(this, "background") } rightIcon={ this.state.colourPicker == "background" ? "check_box" : null } className={ this.state.colourPicker == "background" ? "active" : null }><span style={{ backgroundColor: this.state.background }} className="colour-display"></span></ListItem>
+							{ this.state.colourPicker === "background" ? <ListItem><CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } /></ListItem> : null }
+
+
 
 <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
 						<Welcome message="Welcome Heading" />
@@ -287,34 +318,3 @@ ReactDOM.render(
 );
 
 
-
-/*
-
-
-			<AppBar position="absolute">
-				<Toolbar>
-					<IconButton edge="start" color="inherit" aria-label="open drawer" onClick={ this.handleDrawerOpen.bind(this) }>
-						<Menu />
-					</IconButton>
-				</Toolbar>
-			</AppBar>
-			<Drawer open={ this.state.open }>
-				<div>
-					<IconButton onClick={ this.handleDrawerClose.bind(this) }>
-						<ChevronLeft />
-					</IconButton>
-				</div>
-				<Divider />
-				<List>
-				{ ['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-					<ListItem button key={ text }>
-						<ListItemIcon><AccessAlarm /></ListItemIcon>
-						<ListItemText primary={ text } />
-					</ListItem>
-				))}
-				</List>
-			</Drawer>
-
-
-
-*/
