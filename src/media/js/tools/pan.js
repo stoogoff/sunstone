@@ -1,9 +1,13 @@
+
 import paper from "paper/dist/paper-core";
 
 let tool = new paper.Tool();
 
+
+// display info
 tool.name = "Pan";
 tool.icon = "pan_tool";
+
 
 // paper config and mouse handlers
 tool.distanceThreshold = 8;

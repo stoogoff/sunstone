@@ -8,12 +8,15 @@ import { IconButton, Button } from 'react-toolbox/lib/button';
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout';
 import Input from 'react-toolbox/lib/input';
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
+import Chip from 'react-toolbox/lib/chip';
+
 
 
 import PaperView from "./components/PaperView.jsx"
 import { Pen1, Pen2 } from "./tools/pen";
 import { Pan } from "./tools/pan";
-import { Zoom } from "./tools/zoom";
+import { ZoomIn, ZoomOut } from "./tools/zoom";
+import { Marker } from "./tools/marker";
 
 
 
@@ -51,7 +54,8 @@ class App extends React.Component {
 		}
 
 
-		this.tools = [Pen1, Pen2, Pan, Zoom];
+		this.tools = [Pan, Marker, Pen1, Pen2];
+		this.zoom = [ZoomIn, ZoomOut];
 	}
 
 	componentDidMount() {
@@ -99,11 +103,16 @@ class App extends React.Component {
 			this.state.activeTool.deactivate();
 		}
 
-		active.activate();
+		let colours = ["red", "green", "blue", "orange"];
+		let colour = colours[Math.floor(Math.random() * colours.length)];
 
-		this.setState({
-			activeTool: active
-		});
+		let activated = active.activate(colour);
+
+		if(activated) {
+			this.setState({
+				activeTool: active
+			});
+		}
 	}
 
 	render() {
@@ -126,6 +135,13 @@ class App extends React.Component {
 						<p>Supplemental content goes here.</p>
 					</div>
 			</Sidebar>
+
+			<Chip className="zoom">
+				{ this.zoom.map(z => <IconButton icon={ z.icon } onClick={ z.activate.bind(z) } />)}
+			</Chip>
+
+			
+
 		</Layout>);
 	}
 }
