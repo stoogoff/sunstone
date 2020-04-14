@@ -1,7 +1,11 @@
 
+// react and react components
 import React from "react";
 import ReactDOM from "react-dom";
+import { TwitterPicker } from "react-color";
 
+
+// react toolbox ui imports
 import AppBar from 'react-toolbox/lib/app_bar';
 import Checkbox from 'react-toolbox/lib/checkbox';
 import { IconButton, Button } from 'react-toolbox/lib/button';
@@ -9,13 +13,14 @@ import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox/lib/layout';
 import Input from 'react-toolbox/lib/input';
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 import Chip from 'react-toolbox/lib/chip';
+import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 
 
-
+// Sunstone imports
 import PaperView from "./components/PaperView.jsx"
-import { Pen1, Pen2 } from "./tools/pen";
+import { Pen } from "./tools/pen";
 import { Pan } from "./tools/pan";
-import { ZoomIn, ZoomOut } from "./tools/zoom";
+import { ZoomIn, ZoomOut, ZoomTo } from "./tools/zoom";
 import { Marker } from "./tools/marker";
 
 
@@ -38,23 +43,29 @@ class App extends React.Component {
 		this.ref = database.ref("/maps/map1")
 
 		this.state = {
-			// text to firebase vars
+			activeTool: null,
+			foreground: "black",
+			background: "white",
+			colourPicker: null,
+
+
+			// text to firebase vars test
 			text: "",
 			value: "",
 
-			activeTool: null,
-
-			// drawer state
+			// drawer state test
 			expanded: false,
 
-			// old state vars
+			// original example state
 			drawerActive: false,
 			drawerPinned: false,
 			sidebarPinned: false
 		}
 
 
-		this.tools = [Pan, Marker, Pen1, Pen2];
+		console.log(new Pen())
+
+		this.tools = [Pan, Marker, new Pen()];
 		this.zoom = [ZoomIn, ZoomOut];
 	}
 
@@ -103,16 +114,47 @@ class App extends React.Component {
 			this.state.activeTool.deactivate();
 		}
 
+		// randomly set a colour for now
 		let colours = ["red", "green", "blue", "orange"];
 		let colour = colours[Math.floor(Math.random() * colours.length)];
 
-		let activated = active.activate(colour);
+		// TODO what payload needs to be sent?
+		// once a tool has finished its operation it MAY need to send data somewhere
+		// should this be handled in APP or within the tool?
+		let activated = active.activate(this.getToolParams());
 
 		if(activated) {
 			this.setState({
 				activeTool: active
 			});
 		}
+	}
+
+	openColourPicker(type) {
+		this.setState({
+			colourPicker: type
+		});
+	}
+
+	setColour(colour) {
+		let type = this.state.colourPicker
+
+		this.setState({
+			colourPicker: null,
+			[type]: colour.hex
+		});
+
+		if(this.state.activeTool && this.state.activeTool.update) {
+			console.log(this.getToolParams())
+			this.state.activeTool.update(this.getToolParams());
+		}
+	}
+
+	getToolParams() {
+		return {
+			foreground: this.state.foreground,
+			background: this.state.background
+		};
 	}
 
 	render() {
@@ -124,6 +166,16 @@ class App extends React.Component {
 						<ListDivider />
 						{ this.tools.map(t => <ListItem caption={ t.name } className={ t === this.state.activeTool ? "active" : "" } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
 					</List>
+					<footer>
+						<p>Custom tools depending on selected tool will need to be added here</p>
+
+						<div>
+							{ this.state.colourPicker === "foreground" ? <TwitterPicker onChangeComplete={ this.setColour.bind(this) } /> : null }
+							<span onClick={ this.openColourPicker.bind(this, "foreground") }><span style={{ backgroundColor: this.state.foreground }} className="colour-display"></span>Foreground</span>
+							{ this.state.colourPicker === "background" ? <TwitterPicker onChangeComplete={ this.setColour.bind(this) } /> : null }
+							<span onClick={ this.openColourPicker.bind(this, "background") }><span style={{ backgroundColor: this.state.background }} className="colour-display"></span>Background</span>
+						</div>
+					</footer>
 				</NavDrawer>
 				<Panel className="panel">
 					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" />
@@ -134,15 +186,18 @@ class App extends React.Component {
 					<div style={{ flex: 1 }}>
 						<p>Supplemental content goes here.</p>
 					</div>
-			</Sidebar>
-
-			<Chip className="zoom">
-				{ this.zoom.map(z => <IconButton icon={ z.icon } onClick={ z.activate.bind(z) } />)}
-			</Chip>
-
-			
-
-		</Layout>);
+				</Sidebar>
+				<Chip className="zoom">
+					{ this.zoom.map(z => <IconButton icon={ z.icon } onClick={ z.activate.bind(z) } />)}
+					<IconMenu icon="more_vert">
+						<MenuItem caption="500%" onClick={ ZoomTo.activate.bind(ZoomTo, 5) } />
+						<MenuItem caption="250%" onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) } />
+						<MenuItem caption="100%" onClick={ ZoomTo.activate.bind(ZoomTo, 1) } />
+						<MenuItem caption="50%" onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) } />
+					</IconMenu>
+				</Chip>
+			</Layout>
+		);
 	}
 }
 

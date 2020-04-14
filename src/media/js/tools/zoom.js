@@ -7,8 +7,19 @@ const MAX = 5;
 const STEP = 0.1;
 
 
-// TODO select list with zoom to specific steps
 // TODO scroll to zoom
+const boundsCheckZoom = (zoom) => {
+	if(zoom < MIN) {
+		zoom = MIN;
+	}
+	else if(zoom > MAX) {
+		zoom = MAX;
+	}
+
+	paper.view.zoom = zoom;
+
+	return false;
+};
 
 
 export const ZoomIn = {
@@ -18,13 +29,7 @@ export const ZoomIn = {
 	activate() {
 		currentZoom += STEP;
 
-		if(currentZoom > MAX) {
-			currentZoom = MAX;
-		}
-
-		paper.view.zoom = currentZoom;
-
-		return false;
+		return boundsCheckZoom(currentZoom);
 	}
 };
 
@@ -35,12 +40,17 @@ export const ZoomOut = {
 	activate() {
 		currentZoom -= STEP;
 
-		if(currentZoom < MIN) {
-			currentZoom = MIN;
-		}
-
-		paper.view.zoom = currentZoom;
-
-		return false;
+		return boundsCheckZoom(currentZoom);
 	}
 };
+
+export const ZoomTo = {
+	name: "Zoom To",
+	icon: "remove",
+
+	activate(level) {
+		currentZoom = level;
+
+		return boundsCheckZoom(currentZoom);
+	}
+}

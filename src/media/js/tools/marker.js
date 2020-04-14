@@ -8,7 +8,10 @@ let tool = new paper.Tool();
 tool.name = "Marker";
 tool.icon = "room";
 
-console.log(paper)
+
+// TODO add text and other info to a marker
+// TODO colour should be settable
+
 
 
 // paper config and mouse handlers
@@ -16,8 +19,14 @@ let symbols = {};
 let imported, currentColour;
 
 
-tool.activate = function(colour) {
-	currentColour = colour || "black";
+tool.activate = (options) => {
+	tool.update(options);
+
+	return paper.Tool.prototype.activate.call(tool);
+};
+
+tool.update = (options) => {
+	currentColour = options.foreground;
 
 	if(!symbols[currentColour]) {
 		if(!imported) {
@@ -27,12 +36,9 @@ tool.activate = function(colour) {
 		symbols[currentColour] = new paper.Symbol(imported);
 		symbols[currentColour].item.children[1].fillColor = currentColour;
 	}
-
-	return paper.Tool.prototype.activate.call(this);
 };
 
-
-tool.onMouseDown = function(event) {
+tool.onMouseDown = (event) => {
 	// drop the symbol at the cursor
 	let feature = symbols[currentColour].place(event.point);
 

@@ -15,7 +15,6 @@
 		"clean": "node ./build/clean.js"
 	},
 	"devDependencies": {
-		"paper": "^0.12.4",
 		"@babel/core": "^7.9.0",
 		"@babel/preset-env": "^7.9.5",
 		"@babel/preset-react": "^7.9.4",
@@ -23,7 +22,9 @@
 		"@rollup/plugin-node-resolve": "^7.1.1",
 		"metalsmith": "^2.3.0",
 		"metalsmith-sass": "^1.7.0",
+		"paper": "^0.12.4",
 		"react": "^16.13.1",
+		"react-color": "^2.18.0",
 		"react-dom": "^16.13.1",
 		"react-toolbox": "^2.0.0-beta.13",
 		"redux": "^4.0.5",

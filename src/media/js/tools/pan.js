@@ -9,6 +9,9 @@ tool.name = "Pan";
 tool.icon = "pan_tool";
 
 
+// TODO holding space bar should activate pan
+
+
 // paper config and mouse handlers
 tool.distanceThreshold = 8;
 
