@@ -42,7 +42,7 @@ export default class LayerPanel extends React.Component {
 		this.updateLayers();
 	}
 
-	activateLayer(layer, event) {
+	clickHandler(layer, event) {
 		let target = event.target.innerHTML;
 
 		if(target == "visibility") {
@@ -71,7 +71,7 @@ export default class LayerPanel extends React.Component {
 			<Button icon="layers" label="Add layer" onClick={ this.addLayer.bind(this) } />
 			<List selectable>
 				{ this.state.layers.map((layer, index) => <ListItem caption={ (layer.name || `Layer ${index + 1}`) }
-					onClick={ this.activateLayer.bind(this, layer) }
+					onClick={ this.clickHandler.bind(this, layer) }
 					className={ layer === activeLayer ? "active" : null }
 					leftIcon={ layer.visible ? "visibility" : "visibility_off" }
 					rightIcon={ layer === activeLayer ? "check_box" : null } />)

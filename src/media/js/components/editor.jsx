@@ -1,9 +1,7 @@
 
 // react and react components
 import React from "react";
-import ReactDOM from "react-dom";
 import { CirclePicker } from "react-color";
-
 
 // react toolbox ui imports
 import AppBar from 'react-toolbox/lib/app_bar';
@@ -17,22 +15,25 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 import Slider from 'react-toolbox/lib/slider';
 import Avatar from 'react-toolbox/lib/avatar';
 import { Tab, Tabs } from 'react-toolbox/lib/tabs';
-
+import { Snackbar } from 'react-toolbox/lib/snackbar';
 
 // Sunstone imports
-import PaperView from "./components/PaperView.jsx";
-import ColourPicker from "./components/ColourPicker.jsx";
-import LayerPanel from "./components/LayerPanel.jsx";
-
+import PaperView from "../components/paper-view.jsx";
+import ColourPicker from "../components/colour-picker.jsx";
+import LayerPanel from "../components/layer-panel.jsx";
 
 // Sunstone tools
-import Pen from "./tools/pen";
-import Pan from "./tools/pan";
-import Marker from "./tools/marker";
-import Circle from "./tools/circle";
-import Rectangle from "./tools/rectangle";
-import Image from "./tools/image";
-import { ZoomIn, ZoomOut, ZoomTo } from "./tools/zoom";
+import Pen from "../tools/pen";
+import Pan from "../tools/pan";
+import Marker from "../tools/marker";
+import Circle from "../tools/circle";
+import Rectangle from "../tools/rectangle";
+import Image from "../tools/image";
+import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
+
+// Sunstone utils
+import dispatcher  from "../lib/dispatcher";
+import { ACTION_KEYS } from "../lib/config";
 
 /*
 
@@ -43,8 +44,8 @@ editing of common state of multiple objects (maybe)
 
 public state of objects for view version
 
-image upload tool (how to save this?
-move object tool)
+image upload tool (how to save this?)
+move object tool
 
 
 
@@ -52,7 +53,10 @@ move object tool)
 
 
 
-class App extends React.Component {
+
+
+
+export default class Editor extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -72,6 +76,16 @@ class App extends React.Component {
 			opacity: 1,
 			width: 1,
 
+			// map properties
+			mapName: this.props.map.name,
+
+			// copy URL snackbar and message
+			copyMessage: "",
+			copyActive: false,
+
+
+
+
 
 			// text to firebase vars test
 			text: "",
@@ -90,6 +104,7 @@ class App extends React.Component {
 		this.zoom = [ZoomIn, ZoomOut];
 	}
 
+	// START tests, probably obsolete
 	componentDidMount() {
 		this.ref.on("value", (snapshot) => {
 			this.setState({
@@ -121,6 +136,16 @@ class App extends React.Component {
 
 		this.setState({
 			text: ""
+		});
+	}
+	// END
+
+	copyURL() {
+		navigator.clipboard.writeText(this.props.map.url).then(() => {
+			this.setState({
+				copyMessage: `Link ${this.props.map.url} copied to clipboard.`,
+				copyActive: true
+			})
 		});
 	}
 
@@ -156,6 +181,12 @@ class App extends React.Component {
 		this.setState({
 			[type]: value
 		});
+	}
+
+	setMapName(name) {
+		this.setSimpleState("mapName", name);
+
+		dispatcher.dispatch(ACTION_KEYS.SET_MAP_NAME, name);
 	}
 
 	updateActiveTool() {
@@ -199,13 +230,21 @@ class App extends React.Component {
 								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
 							</List>
 						</Tab>
-						<Tab label="layers">
+						<Tab label="Layers">
 							<LayerPanel />
+						</Tab>
+						<Tab label="Map">
+							<section>
+								<Input type="text" label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } className="map-input" />
+								<div onClick={ this.copyURL.bind(this) }><Input type="text" label="Public URL" icon="file_copy" value={ this.props.map.url } className="map-input icon-after readonly" /></div>
+							</section>
 						</Tab>
 					</Tabs>
 				</NavDrawer>
 				<Panel className="panel">
-					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" />
+					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" fixed>
+						{ this.state.mapName }
+					</AppBar>
 					<PaperView canvasId="map" />
 				</Panel>
 				<Chip className="zoom">
@@ -218,6 +257,14 @@ class App extends React.Component {
 						<MenuItem caption="50%" onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) } />
 					</IconMenu>
 				</Chip>
+				<Snackbar
+					action="Dismiss"
+					label={ this.state.copyMessage }
+					active={ this.state.copyActive }
+					timeout={ 4000 }
+					onTimeout={ this.setSimpleState.bind(this, "copyActive", false) }
+					onClick={ this.setSimpleState.bind(this, "copyActive", false) }
+					type="accept" />
 			</Layout>
 		);
 	}
@@ -310,11 +357,3 @@ class App extends React.Component {
 	}
 }
 */
-
-
-ReactDOM.render(
-	<App />,
-	document.getElementById("container")
-);
-
-

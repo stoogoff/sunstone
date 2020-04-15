@@ -32,7 +32,7 @@ const VERSION = fs.readFileSync(path.join(__dirname, "VERSION"), "utf8");
 // building live or staging version?
 const LIVE = args[0] === "live";
 const OUTPUT = LIVE ? "../live" : "../staging";
-const BUNDLE = "bundle.js";
+const BUNDLE = "sunstone-editor.js";
 
 
 console.log(`\n...BUILDING...\n\nVersion: ${VERSION}\nOutput: ${OUTPUT.replace("../", "")}\n`);
@@ -54,7 +54,7 @@ Metalsmith(__dirname)
 
 	// use rollup to create JS bundle
 	.use(rollup({
-		input: "./src/media/js/App.jsx",
+		input: "./src/media/js/editor.jsx",
 		output: {
 			format: "cjs",
 			file: path.join(VERSION, "media", "js", BUNDLE)
