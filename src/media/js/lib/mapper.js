@@ -1,7 +1,11 @@
 
-import { createId } from "./utils";
+import { createId, replaceId } from "./utils";
 import { local } from "./local-store";
-import { DEFAULT_MAP, MAP_URL_LEN, STORAGE_KEYS } from "./config";
+import { DEFAULT_MAP, MAP_URL_LEN, STORAGE_KEYS, ACTION_KEYS } from "./config";
+import dispatcher from "./dispatcher";
+
+
+let database = firebase.database();
 
 
 // load a default map, either by creating a new one or loading an existing one from local storage
@@ -12,6 +16,14 @@ const mapper = {
 
 		if(local.has(STORAGE_KEYS.MAP)) {
 			map = local.get(STORAGE_KEYS.MAP);
+
+			let ref = database.ref(replaceId(STORAGE_KEYS.MAP_ID, map.id));
+
+			ref.once("value").then(snapshot => {
+				let data = snapshot.val();
+
+				dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data.nodes ? Object.values(data.nodes) : []);
+			});
 		}
 		else {
 			let id = createId(MAP_URL_LEN);
@@ -23,6 +35,14 @@ const mapper = {
 			};
 
 			local.set(STORAGE_KEYS.MAP, map);
+
+			let updates = {};
+
+			updates[replaceId(STORAGE_KEYS.MAP_DATA, map.id)] = map; 
+
+			database.ref().update(updates);
+
+			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, []);
 		}
 
 		return map;
@@ -34,15 +54,18 @@ const mapper = {
 		map.name = name;
 
 		local.set(STORAGE_KEYS.MAP, map);
+
+		let updates = {};
+
+		updates[replaceId(STORAGE_KEYS.MAP_NAME, map.id)] = name;
+
+		database.ref().update(updates);
 	},
 
 	addNode(props) {
-		let map = this.getCurrentMap();
+		let map = local.get(STORAGE_KEYS.MAP);
 
-		map.nodes = map.nodes || [];
-		map.nodes.push(props);
-
-		local.set(STORAGE_KEYS.MAP, map);
+		database.ref(replaceId(STORAGE_KEYS.MAP_NODES, map.id, props.id)).set(props);
 	}
 }
 

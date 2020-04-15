@@ -10,12 +10,16 @@ export const NODE_ID_LEN = 5;
 
 // keys for local storage
 export const STORAGE_KEYS = {
-	MAP: "sunstone-map"
+	MAP: "sunstone-map",
+	MAP_ID: "/maps/$ID$",
+	MAP_NAME: "/maps/$ID$/name",
+	MAP_NODES: "/maps/$ID$/nodes/$ID$"
 };
 
 // keys for different actions
 export const ACTION_KEYS = {
 	MAP_NAME_SET: "set-map-name",
+	MAP_DATA: "map-data",
 
 	NODE_SET: "set-node",
 	NODE_DELETE: "delete-node"

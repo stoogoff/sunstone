@@ -14,8 +14,6 @@ let tools = {
 
 // automatically draw a set of map nodes
 export const draw = (nodes) => {
-	console.log("Got nodes", nodes)
-
 	nodes.forEach(node => {
 		if(node.type in tools) {
 			let layer = paper.project.layers.find(l => l.name === node.layer);

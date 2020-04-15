@@ -106,23 +106,18 @@ export default class Editor extends React.Component {
 	}
 
 	componentDidMount() {
-		if("nodes" in this.props.map) {
-			draw(this.props.map.nodes);
+		if(this.props.nodes) {
+			draw(this.props.nodes);
 		}
-
-
-		// START tests, probably obsolete
-		/*this.ref.on("value", (snapshot) => {
-			this.setState({
-				value: snapshot.val()
-			});
-		});*/
 	}
 
-	componentWillUnmount() {
-		//this.ref.off();
+	componentWillUpdate(nextProps, nextState) {
+		if(nextProps.nodes != this.props.nodes) {
+			draw(nextProps.nodes);
+		}
 	}
 
+	// START probably not needed
 	toggleExpanded() {
 		this.setState({ expanded: !this.state.expanded });
 	}
@@ -166,13 +161,8 @@ export default class Editor extends React.Component {
 			this.state.activeTool.deactivate();
 		}
 
-		// TODO what payload needs to be sent?
 		// once a tool has finished its operation it MAY need to send data somewhere
-		// should this be handled in APP or within the tool?
 		let activated = active.activate(this.getToolParams(), (props) => {
-			// TODO needs to set the current active layer
-			console.log(props)
-
 			dispatcher.dispatch(ACTION_KEYS.NODE_SET, props);
 		});
 
@@ -206,7 +196,7 @@ export default class Editor extends React.Component {
 		}
 	}
 
-	// the parameters which are sent very tool
+	// the parameters which are sent to every tool
 	// what the tool does with the parameters is entirely up to it
 	getToolParams() {
 		return {
@@ -280,91 +270,3 @@ export default class Editor extends React.Component {
 		);
 	}
 }
-
-
-
-/*
-
-
-<ListSubHeader caption="Colours" />
-							<ListItem caption="Foreground" onClick={ this.openColourPicker.bind(this, "foreground") } rightIcon={ this.state.colourPicker == "foreground" ? "check_box" : null } className={ this.state.colourPicker == "foreground" ? "active" : null }><span style={{ backgroundColor: this.state.foreground }} className="colour-display"></span></ListItem>
-							{ this.state.colourPicker === "foreground" ? <ListItem><CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } /></ListItem> : null }
-							<ListItem caption="Background" onClick={ this.openColourPicker.bind(this, "background") } rightIcon={ this.state.colourPicker == "background" ? "check_box" : null } className={ this.state.colourPicker == "background" ? "active" : null }><span style={{ backgroundColor: this.state.background }} className="colour-display"></span></ListItem>
-							{ this.state.colourPicker === "background" ? <ListItem><CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } /></ListItem> : null }
-
-
-
-<div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem' }}>
-						<Welcome message="Welcome Heading" />
-						<Input type="text" value={ this.state.text } onChange={ this.changeHandler.bind(this) } />
-						<Button raised primary icon="bookmark" onClick={ this.clickHandler.bind(this) }>Update</Button>
-						<Value text={ this.state.value } />
-					</div>
-
-class App extends React.Component {
-	constructor(props) {
-		super(props);
-
-		let database = firebase.database();
-
-		this.ref = database.ref("/maps/map1")
-		this.state = {
-			text: "",
-			value: "",
-			open: false
-		};
-	}
-
-	componentDidMount() {
-		this.ref.on("value", (snapshot) => {
-			this.setState({
-				value: snapshot.val()
-			});
-		});
-	}
-
-	componentWillUnmount() {
-		this.ref.off();
-	}
-
-	handleDrawerClose() {
-		this.setState({
-			open: false
-		});
-	}
-
-	handleDrawerOpen() {
-		this.setState({
-			open: true
-		});
-	}
-
-	changeHandler(value) {
-		this.setState({
-			text: value
-		});
-	}
-
-	clickHandler() {
-		this.ref.set(this.state.text);
-
-		this.setState({
-			text: ""
-		});
-	}
-
-	render() {
-		return <div>
-			<AppBar title="Sunstone" leftIcon="menu" onLeftIconClick={ this.handleDrawerOpen.bind(this) } />
-			<Drawer active={ this.state.open } onOverlayClick={ this.handleDrawerClose.bind(this) }>
-				Left nav content
-			</Drawer>
-
-			<Welcome message="Welcome Heading" />
-			<Input type="text" value={ this.state.text } onChange={ this.changeHandler.bind(this) } />
-			<Button raised primary icon="bookmark" onClick={ this.clickHandler.bind(this) }>Update</Button>
-			<Value text={ this.state.value } />
-		</div>;
-	}
-}
-*/
