@@ -2,7 +2,6 @@
 import paper from "paper/dist/paper-core";
 import Tool from "./tool";
 
-
 export default class Rectangle extends Tool {
 	constructor() {
 		super();
@@ -32,8 +31,6 @@ export default class Rectangle extends Tool {
 			this.object.remove();
 		}
 
-		let rectangle;
-
 		if(this.forceSquare) {
 			let width = Math.abs(this.start.x - event.point.x);
 			let height = Math.abs(this.start.y - event.point.y);
@@ -43,13 +40,13 @@ export default class Rectangle extends Tool {
 			let x = this.start.x > event.point.x ? this.start.x - width : this.start.x;
 			let y = this.start.y > event.point.y ? this.start.y - width : this.start.y;
 
-			rectangle = new paper.Rectangle(x, y, width, height);
+			this.rectangle = new paper.Rectangle(x, y, width, height);
 		}
 		else {
-			rectangle = new paper.Rectangle(this.start, event.point);
+			this.rectangle = new paper.Rectangle(this.start, event.point);
 		}
 
-		this.object = new this._constructor(rectangle);
+		this.object = new this._constructor(this.rectangle);
 		this.object.fillColor = this.background;
 		this.object.strokeColor = this.border;
 		this.object.strokeWidth = this.width;
@@ -57,6 +54,22 @@ export default class Rectangle extends Tool {
 	}
 
 	onMouseUp(event) {
+		this.onComplete({
+			type: this.name,
+			layer: this.object.layer.name,
+			background: this.background,
+			border: this.border,
+			width: this.width,
+			opacity: this.opacity,
+			rectangle: {
+				x: this.rectangle.x,
+				y: this.rectangle.y,
+				w: this.rectangle.width,
+				h: this.rectangle.height,
+			}
+		});
+
+		this.rectangle = null;
 		this.object = null;
 	}
 
@@ -70,5 +83,15 @@ export default class Rectangle extends Tool {
 		if(event.key == "shift") {
 			this.forceSquare = false;
 		}
+	}
+
+	static auto(packet) {
+		let rectangle = new paper.Rectangle(packet.rectangle.x, packet.rectangle.y, packet.rectangle.w, packet.rectangle.h);
+		let path = new paper.Path.Rectangle(rectangle);
+
+		path.fillColor = packet.background;
+		path.strokeColor = packet.border;
+		path.strokeWidth = packet.width;
+		path.opacity = packet.opacity;
 	}
 }

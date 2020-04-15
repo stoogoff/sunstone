@@ -30,6 +30,7 @@ import Circle from "../tools/circle";
 import Rectangle from "../tools/rectangle";
 import Image from "../tools/image";
 import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
+import { draw } from "../tools/draw";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
@@ -104,17 +105,22 @@ export default class Editor extends React.Component {
 		this.zoom = [ZoomIn, ZoomOut];
 	}
 
-	// START tests, probably obsolete
 	componentDidMount() {
-		this.ref.on("value", (snapshot) => {
+		if("nodes" in this.props.map) {
+			draw(this.props.map.nodes);
+		}
+
+
+		// START tests, probably obsolete
+		/*this.ref.on("value", (snapshot) => {
 			this.setState({
 				value: snapshot.val()
 			});
-		});
+		});*/
 	}
 
 	componentWillUnmount() {
-		this.ref.off();
+		//this.ref.off();
 	}
 
 	toggleExpanded() {
@@ -163,7 +169,12 @@ export default class Editor extends React.Component {
 		// TODO what payload needs to be sent?
 		// once a tool has finished its operation it MAY need to send data somewhere
 		// should this be handled in APP or within the tool?
-		let activated = active.activate(this.getToolParams());
+		let activated = active.activate(this.getToolParams(), (props) => {
+			// TODO needs to set the current active layer
+			console.log(props)
+
+			dispatcher.dispatch(ACTION_KEYS.NODE_SET, props);
+		});
 
 		if(activated) {
 			this.setState({
@@ -186,7 +197,7 @@ export default class Editor extends React.Component {
 	setMapName(name) {
 		this.setSimpleState("mapName", name);
 
-		dispatcher.dispatch(ACTION_KEYS.SET_MAP_NAME, name);
+		dispatcher.dispatch(ACTION_KEYS.MAP_NAME_SET, name);
 	}
 
 	updateActiveTool() {
@@ -226,7 +237,7 @@ export default class Editor extends React.Component {
 								<li><Slider min={ 0 } max={ 5 } step={ 1 } editable value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } /></li>
 								<ListDivider />
 								<ListSubHeader caption="Tool Colours" />
-								<ColourPicker caption="Foreground" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
+								<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
 								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
 							</List>
 						</Tab>

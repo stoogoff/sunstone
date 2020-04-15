@@ -5,6 +5,9 @@ export const COLOURS = ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '
 // default name of the map if none is present
 export const DEFAULT_MAP = "Map 1";
 
+export const MAP_URL_LEN = 5;
+export const NODE_ID_LEN = 5;
+
 // keys for local storage
 export const STORAGE_KEYS = {
 	MAP: "sunstone-map"
@@ -12,5 +15,8 @@ export const STORAGE_KEYS = {
 
 // keys for different actions
 export const ACTION_KEYS = {
-	SET_MAP_NAME: "set-map-name"
+	MAP_NAME_SET: "set-map-name",
+
+	NODE_SET: "set-node",
+	NODE_DELETE: "delete-node"
 };

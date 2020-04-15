@@ -1,5 +1,5 @@
 
-export const createMapId = (length) => {
+export const createId = (length) => {
 	let output = "";
 	const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 

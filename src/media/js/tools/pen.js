@@ -28,4 +28,30 @@ export default class Pen extends Tool {
 	onMouseDrag(event) {
 		this.path.add(event.point);
 	}
+
+	onMouseUp(event) {
+		this.onComplete({
+			type: this.name,
+			layer: this.path.layer.name,
+			colour: this.colour,
+			width: this.width,
+			opacity: this.opacity,
+			points: this.path.segments.map(s => {
+				return {
+					x: s.point.x,
+					y: s.point.y
+				}
+			})
+		});
+	}
+
+	static auto(packet) {
+		let path = new paper.Path();
+
+		path.strokeColor = packet.colour;
+		path.strokeWidth = packet.width;
+		path.opacity = packet.opacity;
+
+		packet.points.forEach(point => path.add(new paper.Point(point.x, point.y)));
+	}
 }

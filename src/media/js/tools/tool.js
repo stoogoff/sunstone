@@ -1,5 +1,7 @@
 
 import paper from "paper/dist/paper-core";
+import { createId } from "../lib/utils";
+import { NODE_ID_LEN } from "../lib/config";
 
 export default class Tool {
 	constructor(props) {
@@ -16,11 +18,21 @@ export default class Tool {
 		});
 	}
 
-	activate(options) {
+	activate(options, completeHandler) {
 		if(this.update) {
 			this.update(options);
 		}
 
+		this.completeHandler = completeHandler;
+
 		return this._tool.activate();
+	}
+
+	onComplete(props) {
+		if(this.completeHandler) {
+			props.id = createId(NODE_ID_LEN);
+
+			this.completeHandler(props);
+		}
 	}
 }
