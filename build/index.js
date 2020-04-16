@@ -24,6 +24,7 @@ const resolve = require("@rollup/plugin-node-resolve");
 const postcss = require("rollup-plugin-postcss");
 
 const each = require("./each");
+const is = require("./is");
 
 
 // current app version
@@ -32,10 +33,41 @@ const VERSION = fs.readFileSync(path.join(__dirname, "VERSION"), "utf8");
 // building live or staging version?
 const LIVE = args[0] === "live";
 const OUTPUT = LIVE ? "../live" : "../staging";
-const BUNDLE = "sunstone-editor.js";
+const EDITOR = "sunstone-editor.js";
+const VIEWER = "sunstone-viewer.js";
 
 
 console.log(`\n...BUILDING...\n\nVersion: ${VERSION}\nOutput: ${OUTPUT.replace("../", "")}\n`);
+
+
+// roll up settings
+let rollupPlugins = [
+	replace({
+		"process.env.NODE_ENV": JSON.stringify("production")//LIVE ? JSON.stringify("production") : JSON.stringify("development")
+	}),
+	postcss({
+		extract: false,
+		modules: true,
+		use: ["sass"]
+	}),
+	babel({
+		exclude: "node_modules/**"
+	}),
+	resolve({
+		browser: true
+	}),
+	commonjs()
+];
+
+let rollupWarning = (warning) => {
+	// should intercept ... but doesn't in some rollup versions
+	if(warning.code === 'THIS_IS_UNDEFINED') {
+		return;
+	}
+
+	// console.warn everything else
+	console.warn(warning.message);
+};
 
 
 // setup Metalsmith and run
@@ -52,40 +84,34 @@ Metalsmith(__dirname)
 		outputDir: "media/css/"
 	}))
 
-	// use rollup to create JS bundle
+	// use rollup to create JS bundle for editor
 	.use(rollup({
 		input: "./src/media/js/editor.jsx",
 		output: {
 			format: "cjs",
-			file: path.join(VERSION, "media", "js", BUNDLE)
+			file: path.join(VERSION, "media", "js", EDITOR)
 		},
-		plugins: [
-			replace({
-				"process.env.NODE_ENV": JSON.stringify("production") // toggle on LIVE
-			}),
-			postcss({
-				extract: false,
-				modules: true,
-				use: ["sass"]
-			}),
-			babel({
-				exclude: "node_modules/**"
-			}),
-			resolve({
-				browser: true
-			}),
-			commonjs()
-		],
-		onwarn: function(warning) {
-			// should intercept ... but doesn't in some rollup versions
-			if(warning.code === 'THIS_IS_UNDEFINED') {
-				return;
-			}
-
-			// console.warn everything else
-			console.warn(warning.message);
-		}
+		plugins: rollupPlugins,
+		onwarn: rollupWarning
 	}))
+		
+	// use rollup to create JS bundle for viewer
+	.use(rollup({
+		input: "./src/media/js/viewer.jsx",
+		output: {
+			format: "cjs",
+			file: path.join(VERSION, "media", "js", VIEWER)
+		},
+		plugins: rollupPlugins,
+		onwarn: rollupWarning
+	}))
+
+	// remove all other JS files
+	.use(each((file, p, files) => {
+		if(!p.endsWith(EDITOR) && !p.endsWith(VIEWER)) {
+			delete files[path];
+		}
+	}, ".js,.jsx"))
 
 	// prefix media files with version number
 	.use(each((file, p, files) => {

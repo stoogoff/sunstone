@@ -34,7 +34,7 @@ import { draw } from "../tools/draw";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
-import { ACTION_KEYS } from "../lib/config";
+import { ACTION_KEYS, MODE } from "../lib/config";
 
 /*
 
@@ -78,7 +78,7 @@ export default class Editor extends React.Component {
 			width: 1,
 
 			// map properties
-			mapName: this.props.map.name,
+			mapName: this.props.map ? this.props.map.name : "",
 
 			// copy URL snackbar and message
 			copyMessage: "",
@@ -101,11 +101,19 @@ export default class Editor extends React.Component {
 			sidebarPinned: false
 		}
 
-		this.tools = [new Pan(), new Marker(), new Pen(), new Rectangle(), new Circle(), new Image()];
+		this.tools = [new Pan()];
+
+		// add extra tools if not in view mode
+		if(this.props.mode == MODE.EDIT) {
+			this.tools = this.tools.concat([new Marker(), new Pen(), new Rectangle(), new Circle(), new Image()]);
+		}
+
 		this.zoom = [ZoomIn, ZoomOut];
 	}
 
 	componentDidMount() {
+		this.tools[0].activate();
+
 		if(this.props.nodes) {
 			draw(this.props.nodes);
 		}
@@ -114,6 +122,12 @@ export default class Editor extends React.Component {
 	componentWillUpdate(nextProps, nextState) {
 		if(nextProps.nodes != this.props.nodes) {
 			draw(nextProps.nodes);
+		}
+
+		if(nextProps.map != this.props.map) {
+			this.setState({
+				mapName: nextProps.map ? nextProps.map.name : ""
+			});
 		}
 	}
 
@@ -210,38 +224,40 @@ export default class Editor extends React.Component {
 	render() {
 		return (
 			<Layout>
-				<NavDrawer pinned={ true } className="drawer">
-					<List selectable>
-						<ListItem rightIcon="chevron_left" onClick={ this.toggleExpanded.bind(this) } />
-						<ListDivider />
-						<ListSubHeader caption="Tools" />
-						{ this.tools.map(t => <ListItem caption={ t.name } rightIcon={ t === this.state.activeTool ? "check_box" : null } className={ t === this.state.activeTool ? "active" : null } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
-					</List>
-					<Tabs index={ this.state.tabIndex } onChange={ this.setSimpleState.bind(this, "tabIndex") }>
-						<Tab label="Tools">
-							<List selectable>
-								<ListSubHeader caption="Opacity" />
-								<li><Slider min={ 0 } max={ 1 } editable value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } /></li>
-								<ListDivider />
-								<ListSubHeader caption="Line Width" />
-								<li><Slider min={ 0 } max={ 5 } step={ 1 } editable value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } /></li>
-								<ListDivider />
-								<ListSubHeader caption="Tool Colours" />
-								<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
-								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
-							</List>
-						</Tab>
-						<Tab label="Layers">
-							<LayerPanel />
-						</Tab>
-						<Tab label="Map">
-							<section>
-								<Input type="text" label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } className="map-input" />
-								<div onClick={ this.copyURL.bind(this) }><Input type="text" label="Public URL" icon="file_copy" value={ this.props.map.url } className="map-input icon-after readonly" /></div>
-							</section>
-						</Tab>
-					</Tabs>
-				</NavDrawer>
+				{ this.props.mode == MODE.EDIT ?
+					<NavDrawer pinned={ true } className="drawer">
+						<List selectable>
+							<ListItem rightIcon="chevron_left" onClick={ this.toggleExpanded.bind(this) } />
+							<ListDivider />
+							<ListSubHeader caption="Tools" />
+							{ this.tools.map(t => <ListItem caption={ t.name } rightIcon={ t === this.state.activeTool ? "check_box" : null } className={ t === this.state.activeTool ? "active" : null } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
+						</List>
+						<Tabs index={ this.state.tabIndex } onChange={ this.setSimpleState.bind(this, "tabIndex") }>
+							<Tab label="Tools">
+								<List selectable>
+									<ListSubHeader caption="Opacity" />
+									<li><Slider min={ 0 } max={ 1 } editable value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } /></li>
+									<ListDivider />
+									<ListSubHeader caption="Line Width" />
+									<li><Slider min={ 0 } max={ 5 } step={ 1 } editable value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } /></li>
+									<ListDivider />
+									<ListSubHeader caption="Tool Colours" />
+									<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
+									<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
+								</List>
+							</Tab>
+							<Tab label="Layers">
+								<LayerPanel />
+							</Tab>
+							<Tab label="Map">
+								<section>
+									<Input type="text" label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } className="map-input" />
+									<div onClick={ this.copyURL.bind(this) }><Input type="text" label="Public URL" icon="file_copy" value={ this.props.map.url } className="map-input icon-after readonly" /></div>
+								</section>
+							</Tab>
+						</Tabs>
+					</NavDrawer>
+				: null }
 				<Panel className="panel">
 					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" fixed>
 						{ this.state.mapName }

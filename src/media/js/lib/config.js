@@ -8,6 +8,11 @@ export const DEFAULT_MAP = "Map 1";
 export const MAP_URL_LEN = 5;
 export const NODE_ID_LEN = 5;
 
+export const MODE = {
+	VIEW: "view",
+	EDIT: "edit"
+};
+
 // keys for local storage
 export const STORAGE_KEYS = {
 	MAP: "sunstone-map",
@@ -20,6 +25,7 @@ export const STORAGE_KEYS = {
 export const ACTION_KEYS = {
 	MAP_NAME_SET: "set-map-name",
 	MAP_DATA: "map-data",
+	MAP_NODES: "map-nodes",
 
 	NODE_SET: "set-node",
 	NODE_DELETE: "delete-node"

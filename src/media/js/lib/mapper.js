@@ -22,7 +22,7 @@ const mapper = {
 			ref.once("value").then(snapshot => {
 				let data = snapshot.val();
 
-				dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data.nodes ? Object.values(data.nodes) : []);
+				dispatcher.dispatch(ACTION_KEYS.MAP_NODES, data.nodes ? Object.values(data.nodes) : []);
 			});
 		}
 		else {
@@ -46,6 +46,18 @@ const mapper = {
 		}
 
 		return map;
+	},
+
+	getMap(id) {
+		let ref = database.ref(replaceId(STORAGE_KEYS.MAP_ID, id));
+
+		ref.on("value", snapshot => {
+			let data = snapshot.val();
+
+			data.nodes = data.nodes ? Object.values(data.nodes) : [];
+
+			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
+		});
 	},
 
 	setMapName(name) {

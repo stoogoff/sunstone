@@ -26,7 +26,7 @@ class App extends React.Component {
 
 		// load the default map
 		this.state = {
-			map: mapper.getCurrentMap(),
+			map: mapper.getMap(window.location.hash.substring(1)),
 			nodes: null
 		};
 
@@ -34,17 +34,10 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.registered[ACTION_KEYS.MAP_NAME_SET] = dispatcher.register(ACTION_KEYS.MAP_NAME_SET, name => {
-			mapper.setMapName(name);
-		});
-
-		this.registered[ACTION_KEYS.NODE_SET] = dispatcher.register(ACTION_KEYS.NODE_SET, props => {
-			mapper.addNode(props);
-		});
-
-		this.registered[ACTION_KEYS.MAP_NODES] = dispatcher.register(ACTION_KEYS.MAP_NODES, nodes => {
+		this.registered[ACTION_KEYS.MAP_DATA] = dispatcher.register(ACTION_KEYS.MAP_DATA, map => {
 			this.setState({
-				nodes: nodes
+				map: map,
+				nodes: map.nodes
 			});
 		});
 	}
@@ -55,10 +48,13 @@ class App extends React.Component {
 
 	render() {
 		return <div>
-			<Editor map={ this.state.map } nodes={ this.state.nodes } mode={ MODE.EDIT } />
+			<Editor map={ this.state.map } nodes={ this.state.nodes } mode={ MODE.VIEW } />
 			<Dialog title="Loading map" active={ this.state.nodes == null }>
 				<ProgressBar type="linear" mode="indeterminate" />
-				<p>Loading map data for <strong>{ this.state.map.name }</strong>.</p>
+				{ this.state.map
+					? <p>Loading map data for <strong>{ this.state.map.name }</strong>.</p>
+					: <p>Loading map data.</p>
+				}
 			</Dialog>
 		</div>;
 	}
