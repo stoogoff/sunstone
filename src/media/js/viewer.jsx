@@ -23,9 +23,10 @@ class App extends React.Component {
 		super(props);
 
 		// load the default map
+		mapper.getPublicMap(window.location.hash.substring(1));
+
 		this.state = {
-			map: mapper.getPublidMap(window.location.hash.substring(1)),
-			nodes: null
+			realMap: null
 		};
 
 		this.registered = {};
@@ -34,8 +35,7 @@ class App extends React.Component {
 	componentDidMount() {
 		this.registered[ACTION_KEYS.MAP_DATA] = dispatcher.register(ACTION_KEYS.MAP_DATA, map => {
 			this.setState({
-				map: map,
-				nodes: map.nodes
+				realMap: map
 			});
 		});
 	}
@@ -46,13 +46,10 @@ class App extends React.Component {
 
 	render() {
 		return <div>
-			<Editor map={ this.state.map } nodes={ this.state.nodes } mode={ MODE.VIEW } />
-			<Dialog title="Loading map" active={ this.state.nodes == null }>
+			<Editor map={ this.state.realMap } mode={ MODE.VIEW } />
+			<Dialog title="Loading map" active={ this.state.realMap == null }>
 				<ProgressBar type="linear" mode="indeterminate" />
-				{ this.state.map
-					? <p>Loading map data for <strong>{ this.state.map.name }</strong>.</p>
-					: <p>Loading map data.</p>
-				}
+				<p>Loading map data.</p>
 			</Dialog>
 		</div>;
 	}

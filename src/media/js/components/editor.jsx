@@ -111,17 +111,15 @@ export default class Editor extends React.Component {
 			});
 		}
 
-		if(this.props.nodes) {
-			draw(this.props.nodes);
+		if(this.props.map) {
+			draw(this.props.map);
 		}
 	}
 
 	componentWillUpdate(nextProps, nextState) {
-		if(nextProps.nodes != this.props.nodes) {
-			draw(nextProps.nodes);
-		}
-
 		if(nextProps.map != this.props.map) {
+			draw(nextProps.map);
+
 			this.setState({
 				mapName: nextProps.map ? nextProps.map.name : ""
 			});
@@ -226,7 +224,7 @@ export default class Editor extends React.Component {
 								</List>
 							</Tab>
 							<Tab label="Layers">
-								<LayerPanel />
+								<LayerPanel layers={ this.props.map.layers } />
 							</Tab>
 							<Tab label="Map">
 								<section>

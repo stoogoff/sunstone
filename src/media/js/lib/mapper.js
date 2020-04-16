@@ -2,8 +2,9 @@
 import { createId, replaceId } from "./utils";
 import { local } from "./local-store";
 import { sortByProperty } from "./list";
-import { DEFAULT_MAP, MAP_URL_LEN, STORAGE_KEYS, ACTION_KEYS } from "./config";
+import { DEFAULT_MAP, DEFAULT_LAYER, MAP_URL_LEN, STORAGE_KEYS, ACTION_KEYS } from "./config";
 import dispatcher from "./dispatcher";
+import Layer from "./layer";
 
 
 let database = firebase.database();
@@ -27,10 +28,13 @@ const mapper = {
 
 		// get existing map details from local storage and from firebase
 		if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
+			console.log("getting existing map from local storage")
 			map = local.get(STORAGE_KEYS.MAP_LOCAL);
+			console.log(map)
 		}
 		// create a new map and save it to local storage and firebase
 		else {
+			console.log("creating new map and saving")
 			let createRef = database.ref(STORAGE_KEYS.MAP_ROOT).push();
 
 			map = {
@@ -38,6 +42,7 @@ const mapper = {
 				id: createRef.key,
 				url: window.location.href + "view.html#" + createRef.key
 			};
+			console.log(map)
 
 			local.set(STORAGE_KEYS.MAP_LOCAL, map);
 
@@ -48,10 +53,27 @@ const mapper = {
 		let loadRef = database.ref(replaceId(STORAGE_KEYS.MAP_ID, map.id));
 
 		loadRef.once("value").then(snapshot => {
+			console.log("got snapshot", snapshot.val())
 			let data = convertMapData(snapshot.val());
+
+			// create first layer if one doesn't exist
+			// TODO this also needs to be saved to firebase
+			if(data.layers.length == 0) {
+				let layer = new Layer(DEFAULT_LAYER);
+
+				data.layers.push(layer);
+console.log("adding first layer", layer.payload())
+				mapper.addLayer(layer);
+			}
+			console.log("loaded map from fb, updating UI")
+			console.log(data);
 
 			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
 		});
+
+		// these will be updated once the fb map is loaded
+		//map.nodes = [];
+		//map.layers = [];
 
 		// return whatever info is availble now
 		return map;
@@ -64,12 +86,16 @@ const mapper = {
 		ref.on("value", snapshot => {
 			let data = convertMapData(snapshot.val());
 
+			// TODO remove publicly hidden layers
+			//data.layers = data.layers.filter(l => l.visible);
+			data.layers.forEach(l => l.public = true);
+
 			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
 		});
 	},
 
 	setMapName(name) {
-		let map = local.get(STORAGE_KEYS.MAP);
+		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
 
 		map.name = name;
 
@@ -83,13 +109,23 @@ const mapper = {
 	},
 
 	addLayer(layer) {
-		let map = local.get(STORAGE_KEYS.MAP);
+		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
 
-		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).set(layer);
+		console.log("addLayer")
+		console.log(map)
+		console.log(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id))
+		console.log(layer.payload())
+
+		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).set(layer.payload());
 	},
 
 	addNode(props) {
-		let map = local.get(STORAGE_KEYS.MAP);
+		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
+
+		console.log("addNode")
+		console.log(map)
+		console.log(replaceId(STORAGE_KEYS.MAP_NODES, map.id, props.id))
+		console.log(props)
 
 		database.ref(replaceId(STORAGE_KEYS.MAP_NODES, map.id, props.id)).set(props);
 	}

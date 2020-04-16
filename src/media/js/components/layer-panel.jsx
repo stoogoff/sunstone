@@ -26,66 +26,88 @@ export default class LayerPanel extends React.Component {
 		super(props);
 
 		this.state = {
-			layers: []
+			layers: this.props.layers
 		};
 	}
 
-	componentDidMount() {
+	/*componentDidMount() {
 		if(paper.project.layers.length === 0) {
 			this.addLayer();
 		}
 		else {
 			this.updateLayers();
 		}
-	}
+	}*/
 
 	addLayer() {
-		let layer = new Layer("Layer " + paper.project.layers.length)
+		let layer = new Layer("Layer " + (this.state.layers.length + 1));
 
 		layer.activate();
 
-		this.updateLayers();
+		let layers = this.state.layers;
+
+		layers.push(layer);
+
+		console.log("addLayer", layers)
+
+		// TODO set new layer
+		dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
+
+		this.setState({
+			layers: layers
+		});
 	}
 
 	clickHandler(layer, event) {
+		console.log("clickHandler")
+		console.log(layer)
+		console.log(event)
+		console.log(event.target)
+		console.log(event.target.innerHTML)
+
 		let target = event.target.innerHTML;
 		let publicChange = false;
 
 		// for visiblity, set the opacity of the layer as this is public visibility, not local
 		if(target == "visibility") {
-			layer.opacity = 0.3;
+			layer.visible = false;
 			publicChange = true;
 		}
 		else if(target == "visibility_off") {
-			layer.opacity = 1;
+			layer.visible = true;
 			publicChange = true;
 		}
 		else {
 			layer.activate();
 		}
 
-		// there's a public change to the layer so set the order
 		if(publicChange) {
 			// TODO what format does the layer information take?
-			//dispatcher.dispatch(ACTION_KEYS.LAYER_SET, {});
+			dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
 		}
 
-		this.updateLayers();
-	}
+		let layers = this.state.layers;
 
-	updateLayers() {
 		this.setState({
-			layers: paper.project.layers
+			layers: layers
 		});
 	}
 
+	updateLayers() {
+		/*this.setState({
+			layers: paper.project.layers
+		});*/
+	}
+
 	render() {
-		let activeLayer = paper.project.activeLayer;
+		if(!this.state.layers) {
+			return null;
+		}
 
 		return <div>
 			<Button icon="layers" label="Add layer" onClick={ this.addLayer.bind(this) } />
 			<List selectable>
-				{ this.state.layers.map((layer, index) => <LayerView layer={ layer } />)}
+				{ this.state.layers.map((layer, index) => <LayerView layer={ layer } onClick={ this.clickHandler.bind(this) } />)}
 			</List>
 		</div>;
 	}

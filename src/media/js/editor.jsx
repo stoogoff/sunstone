@@ -60,6 +60,12 @@ class App extends React.Component {
 	render() {
 		let map = this.state.realMap ? this.state.realMap : this.state.localMap;
 
+		console.log("App.render")
+		console.log("map", map)
+		console.log("realMap?", map === this.state.realMap)
+		console.log("localMap?", map === this.state.localMap)
+
+
 		return <div>
 			<Editor map={ map } mode={ MODE.EDIT } />
 			<Dialog title="Loading map" active={ this.state.realMap == null }>

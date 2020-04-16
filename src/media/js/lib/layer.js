@@ -6,17 +6,21 @@ export default class Layer {
 	constructor(name, id = null) {
 		this.name = name;
 		this.id = id || createId();
+		this.sort = 0;
+		this.public = false;
 		this._visible = true;
 
 		// create a paper layer for this layer
 		this._layer = new paper.Layer();
 		this._layer.name = this.name;
 
+		//paper.project.layers[this.id] = this._layer;
+
 		paper.project.layers.forEach((l, i) => {
 			if(this._layer == i) {
 				this.sort = i;
 			}
-		})
+		});
 	}
 
 	get visible() {
@@ -25,19 +29,42 @@ export default class Layer {
 
 	set visible(state) {
 		this._visible = state;
-		this._layer.opacity = state ? 1 : 0.3;
+
+		if(this.public) {
+			this._layer.visible = state;
+		}
+		else {
+			this._layer.opacity = state ? 1 : 0.3;
+		}
 	}
 
 	activate() {
 		this._layer.activate();
 	}
 
+	get active() {
+		return paper.project.activeLayer === this._layer;
+	}
+
+	payload() {
+		return {
+			id: this.id,
+			name: this.name,
+			visible: this.visible,
+			sort: this.sort
+		};
+	}
+
 	// create a layer from a payload
 	static from(object) {
 		let layer = new Layer(object.name, object.id);
 
+		if(object.public) {
+			layer.public = object.public;
+		}
+
 		layer.visible = object.visible;
-		lasyer.sort = object.sort;
+		layer.sort = object.sort;
 
 		return layer;
 	}

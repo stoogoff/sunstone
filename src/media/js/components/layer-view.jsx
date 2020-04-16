@@ -7,6 +7,12 @@ export default class LayerView extends React.Component {
 		super(props);
 	}
 
+	clickHandler(event) {
+		if(this.props.onClick) {
+			this.props.onClick(this.props.layer, event);
+		}
+	}
+
 	render() {
 		let layer = this.props.layer;
 
@@ -15,25 +21,22 @@ export default class LayerView extends React.Component {
 		}
 
 		let classes = [];
-		let visible = true;
 
-		if(layer === activeLayer) {
+		if(layer.active) {
 			classes.push("active");
 		}
 
-		if(layer.opacity == 1) {
+		if(layer.visible) {
 			classes.push("visible");
-			visible = true;
 		}
 		else {
 			classes.push("hidden");
-			visible = false;
 		}
 
-		return <ListItem caption={ (layer.name || `Layer ${index + 1}`) }
-			onClick={ this.clickHandler.bind(this, layer) }
+		return <ListItem caption={ layer.name }
+			onClick={ this.clickHandler.bind(this) }
 			className={ classes.join(" ") }
-			leftIcon={ visible ? "visibility" : "visibility_off" }
-			rightIcon={ layer === activeLayer ? "check_box" : null } />
+			leftIcon={ layer.visible ? "visibility" : "visibility_off" }
+			rightIcon={ layer.active ? "check_box" : null } />
 	}
 }
