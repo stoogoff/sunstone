@@ -28,13 +28,12 @@ const mapper = {
 
 		// get existing map details from local storage and from firebase
 		if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
-			console.log("getting existing map from local storage")
 			map = local.get(STORAGE_KEYS.MAP_LOCAL);
-			console.log(map)
+
+			console.log("getting existing map from local storage", map)
 		}
 		// create a new map and save it to local storage and firebase
 		else {
-			console.log("creating new map and saving")
 			let createRef = database.ref(STORAGE_KEYS.MAP_ROOT).push();
 
 			map = {
@@ -42,7 +41,8 @@ const mapper = {
 				id: createRef.key,
 				url: window.location.href + "view.html#" + createRef.key
 			};
-			console.log(map)
+
+			console.log("creating new map and saving", map)
 
 			local.set(STORAGE_KEYS.MAP_LOCAL, map);
 
@@ -53,7 +53,8 @@ const mapper = {
 		let loadRef = database.ref(replaceId(STORAGE_KEYS.MAP_ID, map.id));
 
 		loadRef.once("value").then(snapshot => {
-			console.log("got snapshot", snapshot.val())
+			console.log("loadRef got snapshot", snapshot.val())
+
 			let data = convertMapData(snapshot.val());
 
 			// create first layer if one doesn't exist
@@ -62,18 +63,12 @@ const mapper = {
 				let layer = new Layer(DEFAULT_LAYER);
 
 				data.layers.push(layer);
-console.log("adding first layer", layer.payload())
+
 				mapper.addLayer(layer);
 			}
-			console.log("loaded map from fb, updating UI")
-			console.log(data);
 
 			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
 		});
-
-		// these will be updated once the fb map is loaded
-		//map.nodes = [];
-		//map.layers = [];
 
 		// return whatever info is availble now
 		return map;
@@ -86,8 +81,6 @@ console.log("adding first layer", layer.payload())
 		ref.on("value", snapshot => {
 			let data = convertMapData(snapshot.val());
 
-			// TODO remove publicly hidden layers
-			//data.layers = data.layers.filter(l => l.visible);
 			data.layers.forEach(l => l.public = true);
 
 			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
@@ -106,6 +99,17 @@ console.log("adding first layer", layer.payload())
 		updates[replaceId(STORAGE_KEYS.MAP_NAME, map.id)] = name;
 
 		database.ref().update(updates);
+	},
+
+	deleteLayer(layer) {
+		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
+
+		console.log("deleteLayer")
+		console.log(map)
+		console.log(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id))
+		console.log(layer.payload())
+
+		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).remove();
 	},
 
 	addLayer(layer) {

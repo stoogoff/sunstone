@@ -46,6 +46,10 @@ class App extends React.Component {
 			mapper.addLayer(props);
 		});
 
+		this.registered[ACTION_KEYS.LAYER_DELETE] = dispatcher.register(ACTION_KEYS.LAYER_DELETE, props => {
+			mapper.deleteLayer(props);
+		});
+
 		this.registered[ACTION_KEYS.MAP_NODES] = dispatcher.register(ACTION_KEYS.MAP_DATA, map => {
 			this.setState({
 				realMap: map

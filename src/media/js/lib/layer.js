@@ -23,6 +23,7 @@ export default class Layer {
 		});
 	}
 
+	// get and set the public visibility state
 	get visible() {
 		return this._visible;
 	}
@@ -38,14 +39,22 @@ export default class Layer {
 		}
 	}
 
+	// activate the paper layer
 	activate() {
 		this._layer.activate();
 	}
 
+	// return true if the paper layer is active
 	get active() {
 		return paper.project.activeLayer === this._layer;
 	}
 
+	// delete this object from the map
+	remove() {
+		this._layer.remove();
+	}
+
+	// create the payload to send to the server
 	payload() {
 		return {
 			id: this.id,
