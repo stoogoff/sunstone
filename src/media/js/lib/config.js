@@ -6,7 +6,6 @@ export const COLOURS = ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '
 export const DEFAULT_MAP = "Map 1";
 
 export const MAP_URL_LEN = 5;
-export const NODE_ID_LEN = 5;
 
 export const MODE = {
 	VIEW: "view",
@@ -15,10 +14,12 @@ export const MODE = {
 
 // keys for local storage
 export const STORAGE_KEYS = {
-	MAP: "sunstone-map",
+	MAP_LOCAL: "sunstone-map",
+	MAP_ROOT: "/maps",
 	MAP_ID: "/maps/$ID$",
 	MAP_NAME: "/maps/$ID$/name",
-	MAP_NODES: "/maps/$ID$/nodes/$ID$"
+	MAP_NODES: "/maps/$ID$/nodes/$ID$",
+	MAP_LAYERS: "/maps/$ID$/layers/$ID$",
 };
 
 // keys for different actions
@@ -28,5 +29,8 @@ export const ACTION_KEYS = {
 	MAP_NODES: "map-nodes",
 
 	NODE_SET: "set-node",
-	NODE_DELETE: "delete-node"
+	NODE_DELETE: "delete-node",
+
+	LAYER_SET: "set-layer",
+	LAYER_DELETE: "delete-layer"
 };

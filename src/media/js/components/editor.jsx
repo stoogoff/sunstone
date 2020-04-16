@@ -61,10 +61,6 @@ export default class Editor extends React.Component {
 	constructor(props) {
 		super(props);
 
-		let database = firebase.database();
-
-		this.ref = database.ref("/maps/map1")
-
 		this.state = {
 			// tool states
 			activeTool: null,
@@ -87,11 +83,6 @@ export default class Editor extends React.Component {
 
 
 
-
-			// text to firebase vars test
-			text: "",
-			value: "",
-
 			// drawer state test
 			expanded: false,
 
@@ -112,7 +103,13 @@ export default class Editor extends React.Component {
 	}
 
 	componentDidMount() {
-		this.tools[0].activate();
+		let active = this.tools[0].activate();
+
+		if(active) {
+			this.setState({
+				activeTool: this.tools[0]
+			});
+		}
 
 		if(this.props.nodes) {
 			draw(this.props.nodes);
@@ -134,24 +131,6 @@ export default class Editor extends React.Component {
 	// START probably not needed
 	toggleExpanded() {
 		this.setState({ expanded: !this.state.expanded });
-	}
-
-	toggleSidebar() {
-		this.setState({ sidebarPinned: !this.state.sidebarPinned });
-	}
-
-	changeHandler(value) {
-		this.setState({
-			text: value
-		});
-	}
-
-	clickHandler() {
-		this.ref.set(this.state.text);
-
-		this.setState({
-			text: ""
-		});
 	}
 	// END
 

@@ -14,8 +14,15 @@ canvas#map
 	.panel
 		height: 100%
 
-	li.active
-		background-color: rgb(200,200,200)
+	li
+		&.active
+			background-color: rgb(200,200,200)
+
+		&.visible>span>span:first-child .material-icons
+			color: rgb(76, 175, 80)
+
+		&.hidden>span>span:first-child .material-icons
+			color: rgb(244, 67, 54)
 
 	.zoom
 		position: fixed
@@ -51,6 +58,8 @@ canvas#map
 			left: auto
 			right: -12px
 			cursor: pointer
+
+
 
 
 // drawer showing icons test

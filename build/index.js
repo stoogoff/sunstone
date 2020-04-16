@@ -109,7 +109,8 @@ Metalsmith(__dirname)
 	// remove all other JS files
 	.use(each((file, p, files) => {
 		if(!p.endsWith(EDITOR) && !p.endsWith(VIEWER)) {
-			delete files[path];
+
+			delete files[p];
 		}
 	}, ".js,.jsx"))
 

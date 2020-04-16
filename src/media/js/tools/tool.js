@@ -1,7 +1,6 @@
 
 import paper from "paper/dist/paper-core";
 import { createId } from "../lib/utils";
-import { NODE_ID_LEN } from "../lib/config";
 
 export default class Tool {
 	constructor(props) {
@@ -30,7 +29,7 @@ export default class Tool {
 
 	onComplete(props) {
 		if(this.completeHandler) {
-			props.id = createId(NODE_ID_LEN);
+			props.id = createId();
 
 			this.completeHandler(props);
 		}

@@ -15,10 +15,8 @@ import { ACTION_KEYS, MODE } from "./lib/config";
 import mapper from "./lib/mapper";
 
 
-// TODO there should be a facility for creating a new ID
-// TODO there should be a facility to ensure created map ids don't clash - so there needs to be a user prefix or something
-// TODO facility for multiple maps
 
+// TODO there should be a facility to ensure created map ids don't clash - so there needs to be a user prefix or something
 
 class App extends React.Component {
 	constructor(props) {
@@ -26,7 +24,7 @@ class App extends React.Component {
 
 		// load the default map
 		this.state = {
-			map: mapper.getMap(window.location.hash.substring(1)),
+			map: mapper.getPublidMap(window.location.hash.substring(1)),
 			nodes: null
 		};
 
