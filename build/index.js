@@ -96,7 +96,7 @@ Metalsmith(__dirname)
 	}))
 		
 	// use rollup to create JS bundle for viewer
-	.use(rollup({
+	/*.use(rollup({
 		input: "./src/media/js/viewer.jsx",
 		output: {
 			format: "cjs",
@@ -104,7 +104,7 @@ Metalsmith(__dirname)
 		},
 		plugins: rollupPlugins,
 		onwarn: rollupWarning
-	}))
+	}))*/
 
 	// remove all other JS files
 	.use(each((file, p, files) => {

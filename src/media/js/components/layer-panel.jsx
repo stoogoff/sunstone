@@ -8,7 +8,7 @@ import Dialog from 'react-toolbox/lib/dialog';
 
 import LayerView from "./layer-view.jsx";
 import dispatcher from "../lib/dispatcher";
-import { ACTION_KEYS } from "../lib/config";
+import { ACTION_KEYS, ICON } from "../lib/config";
 import Layer from "../lib/layer";
 import { findByProperty, sortByProperty } from "../lib/list";
 
@@ -105,7 +105,6 @@ console.log("layers after delete", layers.map(l => l.name))
 			layers[0].activate();
 		}
 
-
 		this.setState({
 			showDialogue: false,
 			deletingLayer: null,
@@ -116,10 +115,10 @@ console.log("layers after delete", layers.map(l => l.name))
 	clickHandler(layer, event) {
 		let target = event.target.innerHTML;
 
-		if(target == "visibility") {
+		if(target == ICON.VISIBLE) {
 			layer.visible = false;
 		}
-		else if(target == "visibility_off") {
+		else if(target == ICON.HIDDEN) {
 			layer.visible = true;
 		}
 		else {
@@ -127,7 +126,7 @@ console.log("layers after delete", layers.map(l => l.name))
 		}
 
 		// notify of the change
-		if(target == "visiblity" || target == "visibility_off") {
+		if(target == ICON.VISIBLE || target == ICON.HIDDEN) {
 			dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
 		}
 

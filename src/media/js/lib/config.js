@@ -8,9 +8,17 @@ export const DEFAULT_LAYER = "Layer 1";
 
 export const MAP_URL_LEN = 5;
 
+// the state the app is in, which dictates what actions can be performed
 export const MODE = {
 	VIEW: "view",
 	EDIT: "edit"
+};
+
+// icon names which unfortunately have to be used as actions
+export const ICON = {
+	VISIBLE: "visibility",
+	HIDDEN: "visibility_off",
+	MORE: "more_vert"
 };
 
 // keys for local storage

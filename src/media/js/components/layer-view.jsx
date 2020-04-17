@@ -1,24 +1,53 @@
 
 import React from "react";
+import { Menu, MenuItem } from 'react-toolbox/lib/menu';
 import { ListItem } from 'react-toolbox/lib/list';
-import { IconButton } from 'react-toolbox/lib/button';
+import { ICON } from "../lib/config";
 
 
 export default class LayerView extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			menuActive: false
+		};
 	}
 
 	clickHandler(event) {
+		console.log(event.target.innerHTML)
+
+		// handle icon actions here
+		if(event.target.innerHTML == ICON.MORE) {
+			this.showMenu();
+
+			return;
+		}
+
+		// pass everthing else up to the parent
 		if(this.props.onClick) {
 			this.props.onClick(this.props.layer, event);
 		}
 	}
 
-	buttonClickHandler(type) {
+	menuClickHandler(type) {
+		this.hideMenu();
+
 		if(this.props[type]) {
 			this.props[type](this.props.layer);
 		}
+	}
+
+	showMenu() {
+		this.setState({
+			menuActive: true
+		});
+	}
+
+	hideMenu() {
+		this.setState({
+			menuActive: false
+		});
 	}
 
 	render() {
@@ -46,19 +75,21 @@ export default class LayerView extends React.Component {
 		// can't move up if it's the first item
 		// can't move down if it's the last item
 
-		return <div>
+		console.log("LayerView", layer.name, this.state.menuActive)
+
+
+		return <div className="layer-item">
 			<ListItem caption={ layer.name }
 				onClick={ this.clickHandler.bind(this) }
 				className={ classes.join(" ") }
-				leftIcon={ layer.visible ? "visibility" : "visibility_off" }
-				rightIcon={ layer.active ? "check_box" : null } />
-			{ layer.active
-				? <div>
-					<IconButton icon="arrow_drop_up" label="Move Up" flat onClick={ this.buttonClickHandler.bind(this, "onMoveUp") } />
-					<IconButton icon="arrow_drop_down" label="Move Down" flat onClick={ this.buttonClickHandler.bind(this, "onMoveDown") } />
-					<IconButton icon="delete_forever" label="Delete" flat onClick={ this.buttonClickHandler.bind(this, "onDelete") } />
-				</div>
-				: null }
+				leftIcon={ layer.visible ? ICON.VISIBLE : ICON.HIDDEN }
+				rightIcon="more_vert" />
+			<Menu active={ this.state.menuActive } position="topRight">
+				<MenuItem icon="arrow_drop_up" caption="Move Up" onClick={ this.menuClickHandler.bind(this, "onMoveUp") } />
+				<MenuItem icon="arrow_drop_down" caption="Move Down" onClick={ this.menuClickHandler.bind(this, "onMoveDown") } />
+				<MenuItem icon="edit" caption="Rename" fonClick={ this.menuClickHandler.bind(this, "onRename") } />
+				<MenuItem icon="delete_forever" caption="Delete" fonClick={ this.menuClickHandler.bind(this, "onDelete") } />
+			</Menu>
 		</div>
 	}
 }

@@ -1,21 +1,40 @@
 
-import Emitter from "./emitter";
-
-// dispatcher is really just a global event emitter
-let emitter = new Emitter();
+// simple event dispatcher
+let state = {};
+let handler = {};
+let subscribers = {};
+let ref = 0;
 
 const dispatcher = {
-	register(action, method) {
-		return emitter.on(action, method);
+	addHandler(key, callback) {
+		handler[key] = callback;
 	},
 
-	unregister(action, reference) {
-		return emitter.off(action, reference);
+	removeHandler(key) {
+		delete handler[key];
 	},
 
-	dispatch(action, ...data) {
-		return emitter.emit(action, ...data);
+	dispatch(action, payload) {
+		let newState = {};
+
+		Object.keys(handler).forEach(key => {
+			newState[key] = handler[key](state[key], action, payload);
+		});
+
+		state = newState;
+
+		Object.values(subscribers).forEach(callback => callback(state));
 	},
+
+	subscribe(callback) {
+		subscribers[++ref] = callback;
+
+		return ref;
+	},
+
+	unsubscribe(ref) {
+		delete subscribers[ref];
+	}
 };
 
 export default dispatcher;

@@ -34,6 +34,7 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.registered[ACTION_KEYS.MAP_DATA] = dispatcher.register(ACTION_KEYS.MAP_DATA, map => {
+			console.log(map)
 			this.setState({
 				realMap: map
 			});

@@ -58,7 +58,6 @@ const mapper = {
 			let data = convertMapData(snapshot.val());
 
 			// create first layer if one doesn't exist
-			// TODO this also needs to be saved to firebase
 			if(data.layers.length == 0) {
 				let layer = new Layer(DEFAULT_LAYER);
 
@@ -81,6 +80,8 @@ const mapper = {
 		ref.on("value", snapshot => {
 			let data = convertMapData(snapshot.val());
 
+			// let each layer know it's a publicly viewed layer
+			// this changes the way visibility is handled
 			data.layers.forEach(l => l.public = true);
 
 			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
@@ -108,6 +109,8 @@ const mapper = {
 		console.log(map)
 		console.log(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id))
 		console.log(layer.payload())
+
+		// TODO deleting a layer should delete all nodes with a matching layer
 
 		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).remove();
 	},
