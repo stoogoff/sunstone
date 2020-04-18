@@ -8,8 +8,9 @@ import Dialog from 'react-toolbox/lib/dialog';
 
 import LayerView from "./layer-view.jsx";
 import dispatcher from "../lib/dispatcher";
+import { LAYER_HIDE, LAYER_SHOW } from "../lib/action-keys";
 import { ICON } from "../lib/config";
-import Layer from "../lib/layer";
+//import Layer from "../lib/layer";
 import { findByProperty, sortByProperty } from "../lib/list";
 
 
@@ -113,24 +114,24 @@ console.log("layers after delete", layers.map(l => l.name))
 	}
 
 	clickHandler(layer, event) {
-		/*let target = event.target.innerHTML;
+		let target = event.target.innerHTML;
 
 		if(target == ICON.VISIBLE) {
-			layer.visible = false;
+			dispatcher.dispatch(LAYER_HIDE, layer.id);
 		}
 		else if(target == ICON.HIDDEN) {
-			layer.visible = true;
+			dispatcher.dispatch(LAYER_SHOW, layer.id);
 		}
 		else {
-			layer.activate();
+			//layer.activate();
 		}
 
 		// notify of the change
-		if(target == ICON.VISIBLE || target == ICON.HIDDEN) {
+		/*if(target == ICON.VISIBLE || target == ICON.HIDDEN) {
 			dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
-		}
+		}*/
 
-		this.updateLayers();*/
+		//this.updateLayers();
 	}
 
 	updateLayers() {
@@ -155,7 +156,7 @@ console.log("layers after delete", layers.map(l => l.name))
 		return <div>
 			<Button icon="layers" label="Add layer" onClick={ this.addLayer.bind(this) } />
 			<List selectable>
-				{ this.state.layers.map((layer, index) => <LayerView
+				{ this.props.layers.map((layer, index) => <LayerView
 					layer={ layer }
 					onClick={ this.clickHandler.bind(this) }
 					onMoveUp={ this.moveUpHandler.bind(this) }

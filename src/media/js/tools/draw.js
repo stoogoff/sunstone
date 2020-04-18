@@ -15,28 +15,33 @@ let tools = {
 };
 
 // automatically draw a set of map nodes and layers
-export const draw = (map) => {
+export const draw = (layers, nodes) => {
 	// the harsh way, clear everything and redraw
-	paper.project.clear();
+	if(paper.project) {
+		paper.project.clear();
+	}
+	else {
+		
+	}
 
 	// draw all public layers
-	let newLayers = [];
+	/*let newLayers = [];
 
-	(map.layers || []).forEach(layer => {
+	(layers || []).forEach(layer => {
 		newLayers.push(Layer.from(layer));
 	});
 
-	map.layers = newLayers;
+	map.layers = newLayers;*/
 
-	(map.nodes || []).forEach(node => {
+	(nodes || []).forEach(node => {
 		if(node.type in tools) {
-			let layer = map.layers.find(l => l.name === node.layer);
+			let layer = layers.find(l => l.id === node.layer);
 
 			// only draw nodes on layers which exist
 			if(layer) {
-				layer.activate();
+				layer._layer.activate();
 
-				tools[node.type].auto(node);
+				tools[node.type].draw(node);
 			}
 		}
 		else {
@@ -45,7 +50,7 @@ export const draw = (map) => {
 	});
 
 	// activate the first layer so the drawing layer is consistent
-	if(map.layers && map.layers.length) {
-		map.layers[0].activate();
+	if(layers && layers.length) {
+		layers[0]._layers.activate();
 	}
 };

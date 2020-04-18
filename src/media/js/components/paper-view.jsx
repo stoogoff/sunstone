@@ -15,13 +15,13 @@ export default class PaperView extends React.Component {
 		this.scope.setup(this.canvas.current);
 
 		// force all layers to have a name
-		let count = 0;
+		/*let count = 0;
 
 		this.scope.project.layers.forEach(l => {
 			if(!l.name) {
 				l.name = "Layer " + (++count);
 			}
-		});
+		});*/
 	}
 
 	render() {

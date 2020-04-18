@@ -1,4 +1,5 @@
 
+// this should be removed but the viewer.jsx code still uses it
 import { createId, replaceId } from "./utils";
 import { local } from "./local-store";
 import { sortByProperty } from "./list";
@@ -24,7 +25,7 @@ function convertMapData(map) {
 const mapper = {
 	// load a default map, either from local storage, or create a new map and save it there
 	loadCurrentMap() {
-		let map;
+		/*let map;
 
 		// get existing map details from local storage and from firebase
 		if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
@@ -70,12 +71,12 @@ const mapper = {
 		});
 
 		// return whatever info is availble now
-		return map;
+		return map;*/
 	},
 
 	// get a publicly visibly map and watch it for changes
 	getPublicMap(id) {
-		let ref = database.ref(replaceId(STORAGE_KEYS.MAP_ID, id));
+		/*let ref = database.ref(replaceId(STORAGE_KEYS.MAP_ID, id));
 
 		ref.on("value", snapshot => {
 			let data = convertMapData(snapshot.val());
@@ -85,11 +86,11 @@ const mapper = {
 			data.layers.forEach(l => l.public = true);
 
 			dispatcher.dispatch(ACTION_KEYS.MAP_DATA, data);
-		});
+		});*/
 	},
 
 	setMapName(name) {
-		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
+		/*let map = local.get(STORAGE_KEYS.MAP_LOCAL);
 
 		map.name = name;
 
@@ -99,11 +100,11 @@ const mapper = {
 
 		updates[replaceId(STORAGE_KEYS.MAP_NAME, map.id)] = name;
 
-		database.ref().update(updates);
+		database.ref().update(updates);*/
 	},
 
 	deleteLayer(layer) {
-		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
+		/*let map = local.get(STORAGE_KEYS.MAP_LOCAL);
 
 		console.log("deleteLayer")
 		console.log(map)
@@ -112,29 +113,29 @@ const mapper = {
 
 		// TODO deleting a layer should delete all nodes with a matching layer
 
-		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).remove();
+		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).remove();*/
 	},
 
 	addLayer(layer) {
-		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
+		/*let map = local.get(STORAGE_KEYS.MAP_LOCAL);
 
 		console.log("addLayer")
 		console.log(map)
 		console.log(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id))
 		console.log(layer.payload())
 
-		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).set(layer.payload());
+		database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, map.id, layer.id)).set(layer.payload());*/
 	},
 
 	addNode(props) {
-		let map = local.get(STORAGE_KEYS.MAP_LOCAL);
+		/*let map = local.get(STORAGE_KEYS.MAP_LOCAL);
 
 		console.log("addNode")
 		console.log(map)
 		console.log(replaceId(STORAGE_KEYS.MAP_NODES, map.id, props.id))
 		console.log(props)
 
-		database.ref(replaceId(STORAGE_KEYS.MAP_NODES, map.id, props.id)).set(props);
+		database.ref(replaceId(STORAGE_KEYS.MAP_NODES, map.id, props.id)).set(props);*/
 	}
 }
 

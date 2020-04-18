@@ -17,7 +17,7 @@ import Avatar from 'react-toolbox/lib/avatar';
 import { Tab, Tabs } from 'react-toolbox/lib/tabs';
 import { Snackbar } from 'react-toolbox/lib/snackbar';
 
-// Sunstone imports
+// Sunstone components
 import PaperView from "../components/paper-view.jsx";
 import ColourPicker from "../components/colour-picker.jsx";
 import LayerPanel from "../components/layer-panel.jsx";
@@ -35,6 +35,7 @@ import { draw } from "../tools/draw";
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
 import { MODE } from "../lib/config";
+import { MAP_EDIT, NODE_CREATE } from "../lib/action-keys";
 
 /*
 
@@ -111,8 +112,11 @@ export default class Editor extends React.Component {
 			});
 		}
 
-		if(this.props.map) {
-			//draw(this.props.map);
+		console.log("componentDidMount")
+
+		if(this.props.nodes && this.props.nodes.length > 0 && this.props.layers && this.props.layers.length > 0) {
+			console.log("calling draw on this.props")
+			draw(this.props.layers, this.props.node);
 		}
 	}
 
@@ -123,6 +127,13 @@ export default class Editor extends React.Component {
 			this.setState({
 				mapName: nextProps.map ? nextProps.map.name : ""
 			});
+		}
+
+		console.log("componentWillUpdate")
+
+		if(nextProps.nodes != this.props.nodes && nextProps.layers != this.props.layers && nextProps.layers.length > 0) {
+			console.log("calling draw on nextProps")
+			draw(nextProps.layers, nextProps.node);
 		}
 	}
 
@@ -153,8 +164,10 @@ export default class Editor extends React.Component {
 		}
 
 		// once a tool has finished its operation it MAY need to send data somewhere
-		let activated = active.activate(this.getToolParams(), (props) => {
-			//dispatcher.dispatch(ACTION_KEYS.NODE_SET, props);
+		let activated = active.activate(this.getToolParams(), (payload) => {
+			payload.map = this.props.map.id;
+
+			dispatcher.dispatch(NODE_CREATE, payload);
 		});
 
 		if(activated) {
@@ -178,7 +191,7 @@ export default class Editor extends React.Component {
 	setMapName(name) {
 		this.setSimpleState("mapName", name);
 
-		//dispatcher.dispatch(ACTION_KEYS.MAP_NAME_SET, name);
+		dispatcher.dispatch(MAP_EDIT, { id: this.props.map.id, name: name });
 	}
 
 	updateActiveTool() {
@@ -202,6 +215,8 @@ export default class Editor extends React.Component {
 		if(!this.props.map) {
 			return null;
 		}
+
+		console.log("Editor.render")
 
 		return (
 			<Layout>
@@ -228,7 +243,7 @@ export default class Editor extends React.Component {
 								</List>
 							</Tab>
 							<Tab label="Layers">
-								<LayerPanel layers={ this.props.map.layers } />
+								<LayerPanel layers={ this.props.layers } />
 							</Tab>
 							<Tab label="Map">
 								<section>

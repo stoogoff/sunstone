@@ -12,7 +12,7 @@ export default class Circle extends Rectangle {
 		this._constructor = paper.Path.Ellipse;
 	}
 
-	static auto(packet) {
+	static draw(packet) {
 		let rectangle = new paper.Rectangle(packet.rectangle.x, packet.rectangle.y, packet.rectangle.w, packet.rectangle.h);
 		let path = new paper.Path.Ellipse(rectangle);
 

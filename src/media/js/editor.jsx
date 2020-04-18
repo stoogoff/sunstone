@@ -12,46 +12,20 @@ import Editor from "./components/editor.jsx";
 // various utils
 import dispatcher from "./lib/dispatcher";
 import { local } from "./lib/local-store";
-import { MODE } from "./lib/config";
-//import mapper from "./lib/mapper";
-import { STORAGE_KEYS, DEFAULT_MAP } from "./lib/config";
+import { MODE, STORAGE_KEYS, DEFAULT_MAP, DEFAULT_LAYER } from "./lib/config";
 
-import { MAP_CREATE, MAP_LOAD, MAP_SELECT } from "./lib/action-keys";
+import { MAP_CREATE, MAP_LOAD, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE } from "./lib/action-keys";
+
+import { createId } from "./lib/utils";
 
 import mapHandler from "./handlers/maps";
 import layerHandler from "./handlers/layers";
+import nodeHandler from "./handlers/nodes";
 
 
 // TODO there should be a facility for creating a new ID
 // TODO there should be a facility to ensure created map ids don't clash - so there needs to be a user prefix or something
 // TODO facility for multiple maps
-
-/*
-let database = firebase.database();
-
-let firebaseHandler = (state = [], action, payload) => {
-	if(action == MAP_CREATE) {
-		console.log("creating a map and saving it to fb")
-		let createRef = database.ref(STORAGE_KEYS.MAP_ROOT).push();
-
-		payload.id = createRef.key;
-		payload.url = window.location.href + "view.html#" + createRef.key;
-
-		createRef.set(payload);
-		local.set(STORAGE_KEYS.MAP_LOCAL, payload);
-	}
-	else if(action == MAP_LOAD) {
-		console.log("loading a map from fb")
-		console.log(payload)
-
-		// set up firebase to load map data from server
-
-		return [...state, payload];
-	}
-
-	return state;
-};*/
-
 
 
 class App extends React.Component {
@@ -60,8 +34,6 @@ class App extends React.Component {
 
 		// load the default map
 		this.state = {
-			//localMap: mapper.loadCurrentMap(),
-			//realMap: null
 			map: null,
 			layers: null,
 			nodes: null
@@ -72,20 +44,36 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.ref = dispatcher.subscribe((action, state) => {
-			console.log(action)
+			console.log("subscribe", action)
 			console.log(state)
 
-			if(state.maps && state.maps.length) {
+			// it would be great if this could just update the component state with the provided state and do nothig else
+
+			// if layers have loaded and the array is empty, create a new one
+			// otherwise, loading is complete and state should be set
+			if(action == LAYER_LOAD_COMPLETE && state.layers.length == 0) {
+				if(state.layers.length == 0) {
+					console.log("Creating empty layer")
+					dispatcher.dispatch(LAYER_CREATE, {
+						id: createId(),
+						name: DEFAULT_LAYER,
+						map: this.state.map.id,
+						visible: true
+					});
+				}
+			}
+			else {
 				this.setState({
-					map: state.maps[0]
+					map: state.maps ? state.maps[0] : null,
+					nodes: state.nodes,
+					layers: state.layers
 				});
 			}
-
 		});
 
-		//dispatcher.register("maps", firebaseHandler);
 		dispatcher.register("maps", mapHandler);
 		dispatcher.register("layers", layerHandler);
+		dispatcher.register("nodes", nodeHandler);
 		/*dispatcher.register("mapIndex", (state = -1, action, payload) => {
 			if(action == MAP_SELECT) {
 				console.log("selecting map", payload)
@@ -119,34 +107,11 @@ second visit
 			dispatcher.dispatch(MAP_LOAD, local.get(STORAGE_KEYS.MAP_LOCAL));
 		}
 		else {
+			console.log("no stored map so creating a new one")
 			dispatcher.dispatch(MAP_CREATE, {
 				name: DEFAULT_MAP
 			});
 		}
-
-		// otherwise create a new one
-
-		/*this.registered[ACTION_KEYS.MAP_NAME_SET] = dispatcher.register(ACTION_KEYS.MAP_NAME_SET, name => {
-			mapper.setMapName(name);
-		});
-
-		this.registered[ACTION_KEYS.NODE_SET] = dispatcher.register(ACTION_KEYS.NODE_SET, props => {
-			mapper.addNode(props);
-		});
-
-		this.registered[ACTION_KEYS.LAYER_SET] = dispatcher.register(ACTION_KEYS.LAYER_SET, props => {
-			mapper.addLayer(props);
-		});
-
-		this.registered[ACTION_KEYS.LAYER_DELETE] = dispatcher.register(ACTION_KEYS.LAYER_DELETE, props => {
-			mapper.deleteLayer(props);
-		});
-
-		this.registered[ACTION_KEYS.MAP_NODES] = dispatcher.register(ACTION_KEYS.MAP_DATA, map => {
-			this.setState({
-				realMap: map
-			});
-		});*/
 	}
 
 	componentWillUnmount() {
@@ -156,19 +121,16 @@ second visit
 	}
 
 	render() {
-		let map = this.state.map;
-
 		console.log("App.render")
-		console.log("map", map)
-		console.log("realMap?", map === this.state.realMap)
-		console.log("localMap?", map === this.state.localMap)
+		console.log("map", this.state.map)
+		console.log("layers", this.state.layers)
+		console.log("nodes", this.state.nodes)
 
+		let mapName = this.state.map ? this.state.map.name : null;
+		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
-		let mapName = map ? map.name : null;
-		let dialogueIsActive = this.state.map ? !!this.state.map.layers : false;
-console.log("dialogueIsActive", dialogueIsActive)
 		return <div>
-			<Editor map={ map } mode={ MODE.EDIT } />
+			<Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } mode={ MODE.EDIT } />
 			<Dialog title="Loading map" active={ dialogueIsActive }>
 				<ProgressBar type="linear" mode="indeterminate" />
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}

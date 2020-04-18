@@ -46,7 +46,7 @@ export default class Marker extends Tool {
 
 		this.onComplete({
 			type: this.name,
-			layer: marker.layer.name,
+			layer: marker.layer._externalId,
 			colour: this.colour,
 			point: {
 				x: event.point.x,
@@ -56,7 +56,7 @@ export default class Marker extends Tool {
 
 	}
 
-	static auto(packet) {
+	static draw(packet) {
 		createSymbol(packet.colour);
 
 		symbols[packet.colour].place(new paper.Point(packet.point.x, packet.point.y));

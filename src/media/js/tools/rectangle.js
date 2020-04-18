@@ -56,7 +56,7 @@ export default class Rectangle extends Tool {
 	onMouseUp(event) {
 		this.onComplete({
 			type: this.name,
-			layer: this.object.layer.name,
+			layer: this.object.layer._externalId,
 			background: this.background,
 			border: this.border,
 			width: this.width,
@@ -85,7 +85,7 @@ export default class Rectangle extends Tool {
 		}
 	}
 
-	static auto(packet) {
+	static draw(packet) {
 		let rectangle = new paper.Rectangle(packet.rectangle.x, packet.rectangle.y, packet.rectangle.w, packet.rectangle.h);
 		let path = new paper.Path.Rectangle(rectangle);
 

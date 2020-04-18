@@ -1,4 +1,5 @@
 
+// TODO this is obsolete, should be removed
 import paper from "paper/dist/paper-core";
 import { createId } from "./utils";
 

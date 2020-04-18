@@ -32,7 +32,7 @@ export default class Pen extends Tool {
 	onMouseUp(event) {
 		this.onComplete({
 			type: this.name,
-			layer: this.path.layer.name,
+			layer: this.path.layer._externalId,
 			colour: this.colour,
 			width: this.width,
 			opacity: this.opacity,
@@ -45,7 +45,7 @@ export default class Pen extends Tool {
 		});
 	}
 
-	static auto(packet) {
+	static draw(packet) {
 		let path = new paper.Path();
 
 		path.strokeColor = packet.colour;

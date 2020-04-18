@@ -15,3 +15,7 @@ export const replaceId = (key, ...props) => {
 
     return key;
 }
+
+export const next = (callback) => {
+	window.setTimeout(callback, 0);
+}
