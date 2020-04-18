@@ -30,16 +30,3 @@ export const STORAGE_KEYS = {
 	MAP_NODES: "/maps/$ID$/nodes/$ID$",
 	MAP_LAYERS: "/maps/$ID$/layers/$ID$",
 };
-
-// keys for different actions
-export const ACTION_KEYS = {
-	MAP_NAME_SET: "set-map-name",
-	MAP_DATA: "map-data",
-	MAP_NODES: "map-nodes",
-
-	NODE_SET: "set-node",
-	NODE_DELETE: "delete-node",
-
-	LAYER_SET: "set-layer",
-	LAYER_DELETE: "delete-layer"
-};

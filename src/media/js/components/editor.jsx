@@ -34,7 +34,7 @@ import { draw } from "../tools/draw";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
-import { ACTION_KEYS, MODE } from "../lib/config";
+import { MODE } from "../lib/config";
 
 /*
 
@@ -112,13 +112,13 @@ export default class Editor extends React.Component {
 		}
 
 		if(this.props.map) {
-			draw(this.props.map);
+			//draw(this.props.map);
 		}
 	}
 
 	componentWillUpdate(nextProps, nextState) {
 		if(nextProps.map != this.props.map) {
-			draw(nextProps.map);
+			//draw(nextProps.map);
 
 			this.setState({
 				mapName: nextProps.map ? nextProps.map.name : ""
@@ -154,7 +154,7 @@ export default class Editor extends React.Component {
 
 		// once a tool has finished its operation it MAY need to send data somewhere
 		let activated = active.activate(this.getToolParams(), (props) => {
-			dispatcher.dispatch(ACTION_KEYS.NODE_SET, props);
+			//dispatcher.dispatch(ACTION_KEYS.NODE_SET, props);
 		});
 
 		if(activated) {
@@ -178,7 +178,7 @@ export default class Editor extends React.Component {
 	setMapName(name) {
 		this.setSimpleState("mapName", name);
 
-		dispatcher.dispatch(ACTION_KEYS.MAP_NAME_SET, name);
+		//dispatcher.dispatch(ACTION_KEYS.MAP_NAME_SET, name);
 	}
 
 	updateActiveTool() {
@@ -199,6 +199,10 @@ export default class Editor extends React.Component {
 	}
 
 	render() {
+		if(!this.props.map) {
+			return null;
+		}
+
 		return (
 			<Layout>
 				{ this.props.mode == MODE.EDIT ?

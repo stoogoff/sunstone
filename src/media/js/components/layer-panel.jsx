@@ -8,7 +8,7 @@ import Dialog from 'react-toolbox/lib/dialog';
 
 import LayerView from "./layer-view.jsx";
 import dispatcher from "../lib/dispatcher";
-import { ACTION_KEYS, ICON } from "../lib/config";
+import { ICON } from "../lib/config";
 import Layer from "../lib/layer";
 import { findByProperty, sortByProperty } from "../lib/list";
 
@@ -25,7 +25,7 @@ export default class LayerPanel extends React.Component {
 	}
 
 	addLayer() {
-		let layer = new Layer("Layer " + (this.state.layers.length + 1));
+		/*let layer = new Layer("Layer " + (this.state.layers.length + 1));
 
 		layer.activate();
 
@@ -38,11 +38,11 @@ export default class LayerPanel extends React.Component {
 
 		this.setState({
 			layers: layers
-		});
+		});*/
 	}
 
 	sortLayers(layer, adjust) {
-		let currentSort = layer.sort + adjust;
+		/*let currentSort = layer.sort + adjust;
 		let layers = this.state.layers;
 
 console.log("sort", layer.sort)
@@ -65,7 +65,7 @@ console.log(layerAtSort)
 
 console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 
-		this.updateLayers();
+		this.updateLayers();*/
 	}
 
 	moveUpHandler(layer) {
@@ -79,15 +79,15 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 	}
 
 	deleteHandler(layer) {
-		// this needs to pop up a dialogue warning the user
+		/*// this needs to pop up a dialogue warning the user
 		this.setState({
 			showDialogue: true,
 			deletingLayer: layer
-		});
+		});*/
 	}
 
 	deleteLayer() {
-		let layer = this.state.deletingLayer;
+		/*let layer = this.state.deletingLayer;
 
 		// tell fb
 		dispatcher.dispatch(ACTION_KEYS.LAYER_DELETE, layer);
@@ -109,11 +109,11 @@ console.log("layers after delete", layers.map(l => l.name))
 			showDialogue: false,
 			deletingLayer: null,
 			layers: layers
-		});
+		});*/
 	}
 
 	clickHandler(layer, event) {
-		let target = event.target.innerHTML;
+		/*let target = event.target.innerHTML;
 
 		if(target == ICON.VISIBLE) {
 			layer.visible = false;
@@ -130,21 +130,21 @@ console.log("layers after delete", layers.map(l => l.name))
 			dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
 		}
 
-		this.updateLayers();
+		this.updateLayers();*/
 	}
 
 	updateLayers() {
-		let layers = this.state.layers;
+		/*let layers = this.state.layers;
 
 		this.setState({
 			layers: layers
-		});
+		});*/
 	}
 
 	hideDialogue() {
-		this.setState({
+		/*this.setState({
 			showDialogue: false
-		});
+		});*/
 	}
 
 	render() {
