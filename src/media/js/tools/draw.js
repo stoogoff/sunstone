@@ -7,6 +7,7 @@ import Marker from "./marker";
 //import Layer from "../lib/layer";
 //import { DEFAULT_LAYER } from "../lib/config";
 
+import { MODE } from "../lib/config";
 import { indexOfByProperty } from "../lib/list";
 
 
@@ -23,7 +24,7 @@ let lastDrawnNodes = {};
 
 
 // automatically draw a set of map nodes and layers
-export default (layers, nodes) => {
+export default (layers, nodes, mode) => {
 	console.log("draw");
 	console.log(layers);
 	console.log(nodes);
@@ -36,6 +37,7 @@ export default (layers, nodes) => {
 
 	// TODO currently this just draws everything that hasn't been drawn before
 	// TODO it needs to delete nodes it has referenced which are not in the nodes argument
+	// TODO draw order of nodes needs to be maintained somehow, currently it may be it's reversed or possibly random
 
 	nodes.forEach(node => {
 		if(node.type in tools) {
@@ -53,7 +55,7 @@ export default (layers, nodes) => {
 
 				// the node doesn't exist so draw it
 				if(index == -1) {
-					console.log("draw: node doesn't exist, drawing it")
+					console.log("draw: node doesn't exist, drawing it");
 					layer._layer.activate();
 
 					tools[node.type].draw(node);
@@ -73,6 +75,11 @@ export default (layers, nodes) => {
 			if(layer.active) {
 				layer._layer.activate();
 				activated = true;
+			}
+
+			// hide invisible layers in VIEW mode
+			if(mode == MODE.VIEW && !layer.visible) {
+				layer._layer.visible = false;
 			}
 		});
 	}

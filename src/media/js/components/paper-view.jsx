@@ -16,13 +16,13 @@ export default class PaperView extends React.Component {
 		this.scope.setup(this.canvas.current);
 
 		if(this.props.nodes && this.props.nodes.length > 0 && this.props.layers && this.props.layers.length > 0) {
-			draw(this.props.layers, this.props.nodes);
+			draw(this.props.layers, this.props.nodes, this.props.mode);
 		}
 	}
 
 	componentWillUpdate(nextProps, nextState) {
 		if(nextProps.nodes != this.props.nodes) {
-			draw(nextProps.layers, nextProps.nodes);
+			draw(nextProps.layers, nextProps.nodes, this.props.mode);
 		}
 	}
 

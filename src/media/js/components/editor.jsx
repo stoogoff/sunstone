@@ -29,12 +29,13 @@ import Marker from "../tools/marker";
 import Circle from "../tools/circle";
 import Rectangle from "../tools/rectangle";
 import Image from "../tools/image";
+import Delete from "../tools/delete";
 import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
 import { MODE } from "../lib/config";
-import { MAP_EDIT, NODE_CREATE } from "../lib/action-keys";
+import { MAP_EDIT, NODE_CREATE, NODE_DELETE } from "../lib/action-keys";
 
 /*
 
@@ -96,7 +97,7 @@ export default class Editor extends React.Component {
 
 		// add extra tools if not in view mode
 		if(this.props.mode == MODE.EDIT) {
-			this.tools = this.tools.concat([new Marker(), new Pen(), new Rectangle(), new Circle(), new Image()]);
+			this.tools = this.tools.concat([new Marker(), new Pen(), new Rectangle(), new Circle(), new Image(), new Delete()]);
 		}
 
 		this.zoom = [ZoomIn, ZoomOut];
@@ -150,7 +151,12 @@ export default class Editor extends React.Component {
 		let activated = active.activate(this.getToolParams(), (payload) => {
 			payload.map = this.props.map.id;
 
-			dispatcher.dispatch(NODE_CREATE, payload);
+			if(payload.type == NODE_DELETE) {
+				dispatcher.dispatch(NODE_DELETE, payload);
+			}
+			else {
+				dispatcher.dispatch(NODE_CREATE, payload);
+			}
 		});
 
 		if(activated) {
@@ -240,7 +246,7 @@ export default class Editor extends React.Component {
 					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" fixed>
 						{ this.state.mapName }
 					</AppBar>
-					<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } />
+					<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ this.props.mode } />
 				</Panel>
 				<Chip className="zoom">
 					<Avatar icon="zoom_in" />
