@@ -53,7 +53,7 @@ class App extends React.Component {
 			// otherwise, loading is complete and state should be set
 			if(action == LAYER_LOAD_COMPLETE && state.layers.length == 0) {
 				if(state.layers.length == 0) {
-					console.log("Creating empty layer")
+					console.log("App.componentDidMount: no layers, creating empty layer")
 					dispatcher.dispatch(LAYER_CREATE, {
 						id: createId(),
 						name: DEFAULT_LAYER,

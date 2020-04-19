@@ -8,10 +8,9 @@ import Dialog from 'react-toolbox/lib/dialog';
 
 import LayerView from "./layer-view.jsx";
 import dispatcher from "../lib/dispatcher";
-import { LAYER_HIDE, LAYER_SHOW } from "../lib/action-keys";
+import { LAYER_CREATE, LAYER_HIDE, LAYER_SHOW, LAYER_ACTIVATE } from "../lib/action-keys";
 import { ICON } from "../lib/config";
-//import Layer from "../lib/layer";
-import { findByProperty, sortByProperty } from "../lib/list";
+import { createId } from "../lib/utils";
 
 
 export default class LayerPanel extends React.Component {
@@ -19,27 +18,18 @@ export default class LayerPanel extends React.Component {
 		super(props);
 
 		this.state = {
-			layers: this.props.layers,
 			showDialogue: false,
 			deletingLayer: null
 		};
 	}
 
 	addLayer() {
-		/*let layer = new Layer("Layer " + (this.state.layers.length + 1));
-
-		layer.activate();
-
-		let layers = this.state.layers;
-
-		layers.push(layer);
-
-		// notify of the addition
-		dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
-
-		this.setState({
-			layers: layers
-		});*/
+		dispatcher.dispatch(LAYER_CREATE, {
+			id: createId(),
+			name: "Layer " + (this.props.layers.length + 1),
+			map: this.props.map.id,
+			visible: true
+		});
 	}
 
 	sortLayers(layer, adjust) {
@@ -123,15 +113,8 @@ console.log("layers after delete", layers.map(l => l.name))
 			dispatcher.dispatch(LAYER_SHOW, layer.id);
 		}
 		else {
-			//layer.activate();
+			dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
 		}
-
-		// notify of the change
-		/*if(target == ICON.VISIBLE || target == ICON.HIDDEN) {
-			dispatcher.dispatch(ACTION_KEYS.LAYER_SET, layer);
-		}*/
-
-		//this.updateLayers();
 	}
 
 	updateLayers() {
@@ -149,7 +132,7 @@ console.log("layers after delete", layers.map(l => l.name))
 	}
 
 	render() {
-		if(!this.state.layers) {
+		if(!this.props.layers) {
 			return null;
 		}
 

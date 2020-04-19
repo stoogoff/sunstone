@@ -24,7 +24,8 @@ export const LAYER_MOVE_UP = "move-up-layer";
 export const LAYER_MOVE_DOWN = "move-down-layer";
 export const LAYER_SHOW = "show-layer";
 export const LAYER_HIDE = "hide-layer";
+export const LAYER_ACTIVATE = "activate-layer";
 
-// TODO layer activate / deactivate
 
+// nodes can be created, deleted and moved
 export const NODE_CREATE = "create-node";

@@ -3,7 +3,7 @@ import { create, editById, deleteById, moveUpById, moveDownById, handlerCreator 
 import { 
 	LAYER_CREATE, LAYER_EDIT, LAYER_DELETE,
 	LAYER_MOVE_UP, LAYER_MOVE_DOWN, LAYER_LOAD_COMPLETE,
-	LAYER_SHOW, LAYER_HIDE } from "../lib/action-keys";
+	LAYER_SHOW, LAYER_HIDE, LAYER_ACTIVATE } from "../lib/action-keys";
 
 import { createId, replaceId } from "../lib/utils/";
 import { STORAGE_KEYS } from "../lib/config";
@@ -28,7 +28,6 @@ const LAYER_ACTIONS = {
 	[LAYER_MOVE_DOWN]: moveDownById
 };
 
-// TODO activate / deactivate layer
 
 LAYER_ACTIONS[LAYER_HIDE] = (state, id) => {
 	return state.map(layer => {
@@ -38,7 +37,9 @@ LAYER_ACTIONS[LAYER_HIDE] = (state, id) => {
 
 		let copied = {...layer, visible: false};
 
-		copied._layer.opacity = 0.3; // needs to be visibility false for public view
+		copied._layer.opacity = 0.3;
+
+		database.ref(replaceId(STORAGE_KEYS.LAYER_VISIBLE, copied.map, copied.id)).set(false);
 
 		return copied;
 	});
@@ -52,7 +53,9 @@ LAYER_ACTIONS[LAYER_SHOW] = (state, id) => {
 
 		let copied = {...layer, visible: true};
 
-		copied._layer.opacity = 1; // needs to be visibility false for public view (could be passed as part of payload)
+		copied._layer.opacity = 1;
+
+		database.ref(replaceId(STORAGE_KEYS.LAYER_VISIBLE, copied.map, copied.id)).set(true);
 
 		return copied;
 	});
@@ -61,7 +64,7 @@ LAYER_ACTIONS[LAYER_SHOW] = (state, id) => {
 // creating a layer also saves it to firebase and create a paper layer
 LAYER_ACTIONS[LAYER_CREATE] = (state, payload) => {
 	// save payload to firebase
-	database.ref(replaceId(STORAGE_KEYS.MAP_LAYERS, payload.map, payload.id)).set(payload);
+	database.ref(replaceId(STORAGE_KEYS.LAYER, payload.map, payload.id)).set(payload);
 
 	createPaperLayer(payload);
 
@@ -70,11 +73,33 @@ LAYER_ACTIONS[LAYER_CREATE] = (state, payload) => {
 	return create(state, payload);
 };
 
+// activate the supplied layer and mark all the others as in active
+LAYER_ACTIONS[LAYER_ACTIVATE] = (state, payload) => {
+	return state.map(layer => {
+		if(layer.id == payload) {
+			layer._layer.activate();
+
+			return {...layer, active: true};
+		}
+
+		return {...layer, active: false};
+	});
+}
+
 // layers loaded from firebase, so they need to create paper layers as well
 LAYER_ACTIONS[LAYER_LOAD_COMPLETE] = (state, payload) => {
 	payload.forEach(base => createPaperLayer(base));
 
-	return [...state, ...payload];
+	let layers = [...state, ...payload];
+	let activated = layers.filter(layer => layer.active);
+
+	// as we're loading layers, make sure one is active for drawing
+	if(activated.length == 0) {
+		layers[0].active = true;
+		layers[0]._layer.activate();
+	}
+
+	return layers;
 };
 
 

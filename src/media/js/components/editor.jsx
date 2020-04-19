@@ -225,7 +225,7 @@ export default class Editor extends React.Component {
 								</List>
 							</Tab>
 							<Tab label="Layers">
-								<LayerPanel layers={ this.props.layers } />
+								<LayerPanel map={ this.props.map } layers={ this.props.layers } />
 							</Tab>
 							<Tab label="Map">
 								<section>

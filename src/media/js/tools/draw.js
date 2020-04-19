@@ -32,15 +32,12 @@ export default (layers, nodes) => {
 		return;
 	}
 
+	// TODO draw needs to know about the view mode of the app so it can ignore hidden layers for public view
+
 	// TODO currently this just draws everything that hasn't been drawn before
 	// TODO it needs to delete nodes it has referenced which are not in the nodes argument
 
 	nodes.forEach(node => {
-		/*if(node.id in lastDrawnNodes) {
-			console.log(`draw: node '${node.id}' was previously drawn`)
-			return;
-		}*/
-
 		if(node.type in tools) {
 			console.log(`draw: got node '${node.id}'`)
 
@@ -61,8 +58,6 @@ export default (layers, nodes) => {
 
 					tools[node.type].draw(node);
 				}
-
-				//lastDrawnNodes[node.id] = node;
 			}
 		}
 		else {
@@ -70,9 +65,15 @@ export default (layers, nodes) => {
 		}
 	});
 
-	// activate the first layer so the drawing layer is consistent
-	// TODO this should activate a specific layer, based on the layer's active property
-	/*if(layers && layers.length) {
-		layers[0]._layers.activate();
-	}*/
+	// re-activate the active drawing layer
+	if(layers) {
+		let activated = false;
+
+		layers.forEach(layer => {
+			if(layer.active) {
+				layer._layer.activate();
+				activated = true;
+			}
+		});
+	}
 };

@@ -9,7 +9,7 @@ import { replaceId } from "../lib/utils/";
 const NODE_ACTIONS = {};
 
 NODE_ACTIONS[NODE_CREATE] = (state, payload) => {
-	database.ref(replaceId(STORAGE_KEYS.MAP_NODES, payload.map, payload.id)).set(payload);
+	database.ref(replaceId(STORAGE_KEYS.NODE, payload.map, payload.id)).set(payload);
 
 	return [...state, payload];
 };
