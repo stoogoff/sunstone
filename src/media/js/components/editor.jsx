@@ -30,7 +30,6 @@ import Circle from "../tools/circle";
 import Rectangle from "../tools/rectangle";
 import Image from "../tools/image";
 import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
-import { draw } from "../tools/draw";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
@@ -111,29 +110,13 @@ export default class Editor extends React.Component {
 				activeTool: this.tools[0]
 			});
 		}
-
-		console.log("componentDidMount")
-
-		if(this.props.nodes && this.props.nodes.length > 0 && this.props.layers && this.props.layers.length > 0) {
-			console.log("calling draw on this.props")
-			draw(this.props.layers, this.props.node);
-		}
 	}
 
 	componentWillUpdate(nextProps, nextState) {
 		if(nextProps.map != this.props.map) {
-			//draw(nextProps.map);
-
 			this.setState({
 				mapName: nextProps.map ? nextProps.map.name : ""
 			});
-		}
-
-		console.log("componentWillUpdate")
-
-		if(nextProps.nodes != this.props.nodes && nextProps.layers != this.props.layers && nextProps.layers.length > 0) {
-			console.log("calling draw on nextProps")
-			draw(nextProps.layers, nextProps.node);
 		}
 	}
 
@@ -213,10 +196,9 @@ export default class Editor extends React.Component {
 
 	render() {
 		if(!this.props.map) {
+			console.log("Editor.render: no map, returning early")
 			return null;
 		}
-
-		console.log("Editor.render")
 
 		return (
 			<Layout>
@@ -258,7 +240,7 @@ export default class Editor extends React.Component {
 					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" fixed>
 						{ this.state.mapName }
 					</AppBar>
-					<PaperView canvasId="map" />
+					<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } />
 				</Panel>
 				<Chip className="zoom">
 					<Avatar icon="zoom_in" />

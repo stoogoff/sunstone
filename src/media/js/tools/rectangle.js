@@ -1,6 +1,7 @@
 
 import paper from "paper/dist/paper-core";
 import Tool from "./tool";
+import { createId } from "../lib/utils";
 
 export default class Rectangle extends Tool {
 	constructor() {
@@ -51,10 +52,12 @@ export default class Rectangle extends Tool {
 		this.object.strokeColor = this.border;
 		this.object.strokeWidth = this.width;
 		this.object.opacity = this.opacity;
+		this.object._externalId = createId();
 	}
 
 	onMouseUp(event) {
 		this.onComplete({
+			id: this.object._externalId,
 			type: this.name,
 			layer: this.object.layer._externalId,
 			background: this.background,
@@ -89,6 +92,7 @@ export default class Rectangle extends Tool {
 		let rectangle = new paper.Rectangle(packet.rectangle.x, packet.rectangle.y, packet.rectangle.w, packet.rectangle.h);
 		let path = new paper.Path.Rectangle(rectangle);
 
+		path._externalId = packet.id;
 		path.fillColor = packet.background;
 		path.strokeColor = packet.border;
 		path.strokeWidth = packet.width;

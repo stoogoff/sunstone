@@ -1,6 +1,7 @@
 
 import React from "react";
 import paper from "paper/dist/paper-core";
+import draw from "../tools/draw";
 
 
 export default class PaperView extends React.Component {
@@ -14,14 +15,15 @@ export default class PaperView extends React.Component {
 		this.scope = paper;
 		this.scope.setup(this.canvas.current);
 
-		// force all layers to have a name
-		/*let count = 0;
+		if(this.props.nodes && this.props.nodes.length > 0 && this.props.layers && this.props.layers.length > 0) {
+			draw(this.props.layers, this.props.nodes);
+		}
+	}
 
-		this.scope.project.layers.forEach(l => {
-			if(!l.name) {
-				l.name = "Layer " + (++count);
-			}
-		});*/
+	componentWillUpdate(nextProps, nextState) {
+		if(nextProps.nodes != this.props.nodes) {
+			draw(nextProps.layers, nextProps.nodes);
+		}
 	}
 
 	render() {

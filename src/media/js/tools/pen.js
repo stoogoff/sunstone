@@ -1,6 +1,7 @@
 
 import paper from "paper/dist/paper-core";
 import Tool from "./tool";
+import { createId } from "../lib/utils";
 
 export default class Pen extends Tool {
 	constructor() {
@@ -23,6 +24,7 @@ export default class Pen extends Tool {
 		this.path.strokeWidth = this.width;
 		this.path.opacity = this.opacity;
 		this.path.add(event.point);
+		this.path._externalId = createId();
 	}
 
 	onMouseDrag(event) {
@@ -31,6 +33,7 @@ export default class Pen extends Tool {
 
 	onMouseUp(event) {
 		this.onComplete({
+			id: this.path._externalId,
 			type: this.name,
 			layer: this.path.layer._externalId,
 			colour: this.colour,
@@ -48,6 +51,7 @@ export default class Pen extends Tool {
 	static draw(packet) {
 		let path = new paper.Path();
 
+		path._externalId = packet.id;
 		path.strokeColor = packet.colour;
 		path.strokeWidth = packet.width;
 		path.opacity = packet.opacity;

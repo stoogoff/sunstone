@@ -59,8 +59,8 @@ MAP_ACTIONS[MAP_CREATE] = (state, payload) => {
 	local.set(STORAGE_KEYS.MAP_LOCAL, payload);
 
 	next(() => {
-		dispatcher.dispatch(NODE_LOAD_COMPLETE, []);
 		dispatcher.dispatch(LAYER_LOAD_COMPLETE, []);
+		dispatcher.dispatch(NODE_LOAD_COMPLETE, []);
 	});
 
 	return [...state, payload];
@@ -75,8 +75,8 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 	loadRef.once("value").then(snapshot => {
 		let map = convertMapData(snapshot.val());
 
-		dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
 		dispatcher.dispatch(LAYER_LOAD_COMPLETE, map.layers);
+		dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
 	});
 
 	return [...state, payload];

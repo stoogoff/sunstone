@@ -1,6 +1,7 @@
 
 import paper from "paper/dist/paper-core";
 import Tool from "./tool";
+import { createId } from "../lib/utils";
 
 let imported, symbols = {};
 
@@ -38,6 +39,8 @@ export default class Marker extends Tool {
 	onMouseDown(event) {
 		let marker = symbols[this.colour].place(event.point);
 
+		marker._externalId = createId();
+
 		/*marker.name = currentMap.addObject(activeLayer, {
 			"x": event.point.x,
 			"y": event.point.y,
@@ -45,6 +48,7 @@ export default class Marker extends Tool {
 		});*/
 
 		this.onComplete({
+			id: marker._externalId,
 			type: this.name,
 			layer: marker.layer._externalId,
 			colour: this.colour,
@@ -59,6 +63,8 @@ export default class Marker extends Tool {
 	static draw(packet) {
 		createSymbol(packet.colour);
 
-		symbols[packet.colour].place(new paper.Point(packet.point.x, packet.point.y));
+		let marker = symbols[packet.colour].place(new paper.Point(packet.point.x, packet.point.y));
+
+		marker._externalId = packet.id;
 	}
 }

@@ -20,5 +20,6 @@ export default class Circle extends Rectangle {
 		path.strokeColor = packet.border;
 		path.strokeWidth = packet.width;
 		path.opacity = packet.opacity;
+		path._externalId = packet.id;
 	}
 }
