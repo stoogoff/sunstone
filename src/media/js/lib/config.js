@@ -22,6 +22,11 @@ export const ICON = {
 	MORE: "more_vert"
 };
 
+// layer visibility
+export const VISIBILITY = {
+	HIDDEN: 0.3,
+	VISIBLE: 1
+};
 
 // keys for local storage
 export const STORAGE_KEYS = {

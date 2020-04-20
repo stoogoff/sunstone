@@ -56,12 +56,43 @@ let rollupPlugins = [
 	resolve({
 		browser: true
 	}),
-	commonjs()
+	commonjs({
+		namedExports: {
+			"node_modules/react-dom/index.js": ["render", "createPortal", "findDOMNode"],
+			"node_modules/react-is/index.js": ["isForwardRef", "isValidElementType"],
+			"node_modules/prop-types/index.js": [
+				"bool",
+				"element",
+				"func",
+				"object",
+				"oneOfType",
+				"shape",
+				"string"
+			],
+			"node_modules/react/index.js": [
+				"Children",
+				"cloneElement",
+				"Component",
+				"createElement",
+				"createRef",
+				"Fragment",
+				"isValidElement",
+				"PureComponent",
+				"useCallback",
+				"useEffect",
+				"useRef"
+			]
+		}
+	})
 ];
 
 let rollupWarning = (warning) => {
 	// should intercept ... but doesn't in some rollup versions
 	if(warning.code === 'THIS_IS_UNDEFINED') {
+		return;
+	}
+
+	if(warning.code === "CIRCULAR_DEPENDENCY" && warning.importer.includes("semantic-ui-react")) {
 		return;
 	}
 

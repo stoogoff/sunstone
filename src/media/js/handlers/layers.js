@@ -6,7 +6,7 @@ import {
 	LAYER_SHOW, LAYER_HIDE, LAYER_ACTIVATE } from "../lib/action-keys";
 
 import { createId, replaceId } from "../lib/utils/";
-import { STORAGE_KEYS } from "../lib/config";
+import { STORAGE_KEYS, VISIBILITY } from "../lib/config";
 import database from "../lib/firebase";
 import paper from "paper/dist/paper-core";
 
@@ -17,7 +17,10 @@ function createPaperLayer(layer) {
 	layer._layer.name = layer.name;
 	layer._layer._externalId = layer.id;
 
-	// TODO handle initial visibility
+	// handle initial visibility
+	if(!layer.visible) {
+		layer._layer.opacity = VISIBILITY.HIDDEN;
+	}
 }
 
 
@@ -37,7 +40,7 @@ LAYER_ACTIONS[LAYER_HIDE] = (state, id) => {
 
 		let copied = {...layer, visible: false};
 
-		copied._layer.opacity = 0.3;
+		copied._layer.opacity = VISIBILITY.HIDDEN;
 
 		database.ref(replaceId(STORAGE_KEYS.LAYER_VISIBLE, copied.map, copied.id)).set(false);
 
@@ -53,7 +56,7 @@ LAYER_ACTIONS[LAYER_SHOW] = (state, id) => {
 
 		let copied = {...layer, visible: true};
 
-		copied._layer.opacity = 1;
+		copied._layer.opacity = VISIBILITY.VISIBLE;
 
 		database.ref(replaceId(STORAGE_KEYS.LAYER_VISIBLE, copied.map, copied.id)).set(true);
 

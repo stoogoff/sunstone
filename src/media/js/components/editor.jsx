@@ -6,16 +6,25 @@ import { CirclePicker } from "react-color";
 // react toolbox ui imports
 import AppBar from 'react-toolbox/lib/app_bar';
 import Checkbox from 'react-toolbox/lib/checkbox';
-import { IconButton, Button } from 'react-toolbox/lib/button';
+import { IconButton } from 'react-toolbox/lib/button';
 import { Layout, NavDrawer, Panel } from 'react-toolbox/lib/layout';
 import Input from 'react-toolbox/lib/input';
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
-import Chip from 'react-toolbox/lib/chip';
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
 import Slider from 'react-toolbox/lib/slider';
 import Avatar from 'react-toolbox/lib/avatar';
 import { Tab, Tabs } from 'react-toolbox/lib/tabs';
 import { Snackbar } from 'react-toolbox/lib/snackbar';
+import Navigation from 'react-toolbox/lib/navigation';
+import FontIcon from 'react-toolbox/lib/font_icon';
+import Chip from 'react-toolbox/lib/chip';
+
+
+// semantic-ui imports
+// TODO switch everything over to this
+//import { Chip } from '@material-ui/core'
+import { Button, Menu, Grid } from 'semantic-ui-react';
+
 
 // Sunstone components
 import PaperView from "../components/paper-view.jsx";
@@ -36,11 +45,12 @@ import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
 import dispatcher  from "../lib/dispatcher";
 import { MODE } from "../lib/config";
 import { MAP_EDIT, NODE_CREATE, NODE_DELETE } from "../lib/action-keys";
+import { findByProperty } from "../lib/list";
 
 /*
 
 selection tool
-deleting of selected objects
+DONE deleting of selected objects
 editing of selected objects
 editing of common state of multiple objects (maybe)
 
@@ -206,16 +216,17 @@ export default class Editor extends React.Component {
 			return null;
 		}
 
+		let activeLayer = this.props.layers ? this.props.layers.find(findByProperty("active", true)) :null;
+
 		return (
-			<Layout>
+			<Grid>
 				{ this.props.mode == MODE.EDIT ?
-					<NavDrawer pinned={ true } className="drawer">
-						<List selectable>
-							<ListItem rightIcon="chevron_left" onClick={ this.toggleExpanded.bind(this) } />
-							<ListDivider />
+					<Grid.Column>
+						<Menu vertical>
 							<ListSubHeader caption="Tools" />
-							{ this.tools.map(t => <ListItem caption={ t.name } rightIcon={ t === this.state.activeTool ? "check_box" : null } className={ t === this.state.activeTool ? "active" : null } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }/>)}
-						</List>
+							{ this.tools.map(t => <Menu.Item caption={ t.name } rightIcon={ t === this.state.activeTool ? "check_box" : null } className={ t === this.state.activeTool ? "active" : null } leftIcon={ t.icon } onClick={ this.activateTool.bind(this, t.name) }>{ t.name }</Menu.Item>)}
+						</Menu>
+						<Button icon="like" />
 						<Tabs index={ this.state.tabIndex } onChange={ this.setSimpleState.bind(this, "tabIndex") }>
 							<Tab label="Tools">
 								<List selectable>
@@ -240,14 +251,18 @@ export default class Editor extends React.Component {
 								</section>
 							</Tab>
 						</Tabs>
-					</NavDrawer>
+					</Grid.Column>
 				: null }
-				<Panel className="panel">
-					<AppBar leftIcon='menu' onLeftIconClick={ this.toggleExpanded.bind(this) } title="Sunstone" fixed>
-						{ this.state.mapName }
-					</AppBar>
+				<Grid.Column>
+					<Menu>
+						{ activeLayer ? <Menu.Item>{ activeLayer.name }</Menu.Item>: null }
+						<Menu.Item>{ this.state.foreground }</Menu.Item>
+						<Menu.Item>{ this.state.background }</Menu.Item>
+						<Menu.Item>{ this.state.mapName }</Menu.Item>
+					</Menu>
 					<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ this.props.mode } />
-				</Panel>
+				</Grid.Column>
+
 				<Chip className="zoom">
 					<Avatar icon="zoom_in" />
 					{ this.zoom.map(z => <IconButton icon={ z.icon } onClick={ z.activate.bind(z) } />)}
@@ -258,6 +273,7 @@ export default class Editor extends React.Component {
 						<MenuItem caption="50%" onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) } />
 					</IconMenu>
 				</Chip>
+
 				<Snackbar
 					action="Dismiss"
 					label={ this.state.copyMessage }
@@ -266,7 +282,7 @@ export default class Editor extends React.Component {
 					onTimeout={ this.setSimpleState.bind(this, "copyActive", false) }
 					onClick={ this.setSimpleState.bind(this, "copyActive", false) }
 					type="accept" />
-			</Layout>
+			</Grid>
 		);
 	}
 }
