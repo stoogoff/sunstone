@@ -7,7 +7,7 @@ export default class Circle extends Rectangle {
 		super();
 
 		this.name = "Circle";
-		this.icon = "panorama_fish_eye";
+		this.icon = "circle";
 
 		this._constructor = paper.Path.Ellipse;
 	}

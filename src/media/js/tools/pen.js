@@ -8,7 +8,7 @@ export default class Pen extends Tool {
 		super();
 
 		this.name = "Pen";
-		this.icon = "create";
+		this.icon = "paint-brush";
 		this.colour = "black";
 	}
 

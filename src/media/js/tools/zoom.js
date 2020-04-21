@@ -24,7 +24,7 @@ const boundsCheckZoom = (zoom) => {
 
 export const ZoomIn = {
 	name: "Zoom In",
-	icon: "add",
+	icon: "plus",
 
 	activate() {
 		currentZoom += STEP;
@@ -35,7 +35,7 @@ export const ZoomIn = {
 
 export const ZoomOut = {
 	name: "Zoom Out",
-	icon: "remove",
+	icon: "minus",
 
 	activate() {
 		currentZoom -= STEP;
@@ -46,7 +46,7 @@ export const ZoomOut = {
 
 export const ZoomTo = {
 	name: "Zoom To",
-	icon: "remove",
+	icon: "zoom out",
 
 	activate(level) {
 		currentZoom = level;

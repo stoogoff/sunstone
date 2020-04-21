@@ -17,8 +17,8 @@ export const MODE = {
 
 // icon names which unfortunately have to be used as actions
 export const ICON = {
-	VISIBLE: "visibility",
-	HIDDEN: "visibility_off",
+	VISIBLE: "eye",
+	HIDDEN: "eye slash",
 	MORE: "more_vert"
 };
 

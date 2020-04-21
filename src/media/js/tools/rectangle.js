@@ -8,7 +8,7 @@ export default class Rectangle extends Tool {
 		super();
 
 		this.name = "Rectangle";
-		this.icon = "crop_square";
+		this.icon = "square";
 		this.border = "black";
 		this.background = "white";
 		this.forceSquare = false;

@@ -7,8 +7,32 @@
 <!-- link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" / -->
 <!-- link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" / -->
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
+<!-- link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" / -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css" />
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <link rel="stylesheet" href="{{ VERSION }}/media/css/styles.css" />
+<style>
+
+
+</style>
+<script>
+
+let open = false;
+
+function toggle() {
+	let toolbar = document.getElementById("tools");
+
+	if(open) {
+		toolbar.className = "is-closed has-background-light";
+		open = false;
+	}
+	else {
+		toolbar.className = "is-open has-background-light";
+		open = true;
+	}
+}
+
+</script>
 </head>
 <body>
 

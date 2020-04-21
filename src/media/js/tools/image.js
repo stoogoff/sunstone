@@ -10,6 +10,6 @@ export default class Image extends Tool {
 		super();
 
 		this.name = "Image";
-		this.icon = "insert_photo";
+		this.icon = "images";
 	}
 }

@@ -8,7 +8,7 @@ export default class Pan extends Tool {
 		super();
 
 		this.name = "Pan";
-		this.icon = "pan_tool";
+		this.icon = "location-arrow";
 
 		this._tool.distanceThreshold = 8;
 	}

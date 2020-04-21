@@ -26,7 +26,7 @@ export default class Marker extends Tool {
 		super();
 
 		this.name = "Marker";
-		this.icon = "room";
+		this.icon = "map-marker-alt";
 		this.colour = "black";
 	}
 

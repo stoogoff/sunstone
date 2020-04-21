@@ -17,7 +17,7 @@ export default class Delete extends Tool {
 		super();
 
 		this.name = "Delete";
-		this.icon = "delete";
+		this.icon = "eraser";
 
 		this._tool.distanceThreshold = 8;
 
