@@ -4,6 +4,8 @@ import { Menu, MenuItem } from 'react-toolbox/lib/menu';
 import { ListItem } from 'react-toolbox/lib/list';
 import { ICON } from "../lib/config";
 
+import Button from "./button.jsx";
+
 
 export default class LayerView extends React.Component {
 	constructor(props) {
@@ -57,7 +59,7 @@ export default class LayerView extends React.Component {
 			return null;
 		}
 
-		let classes = [];
+		/*let classes = [];
 
 		if(layer.active) {
 			classes.push("active");
@@ -68,7 +70,7 @@ export default class LayerView extends React.Component {
 		}
 		else {
 			classes.push("hidden");
-		}
+		}*/
 
 		// TODO delete, rename, reorder
 		// can't delete if this is the last layer (disable button)
@@ -77,8 +79,20 @@ export default class LayerView extends React.Component {
 
 		console.log("LayerView", layer.name, this.state.menuActive)
 
+			//leftIcon="ellipsis-v"
 
-		return <div className="layer-item">
+		return <Button as="li" label={ layer.name } warning={ layer.active }
+			rightIcon={ layer.visible ? ICON.VISIBLE : ICON.HIDDEN }
+			onClick={ alert.bind(window, "onClick") }
+			onRightIconClick={ alert.bind(window, "onRightClick") }
+		/>
+	}
+}
+
+/*
+
+
+<div className="layer-item">
 			<ListItem caption={ layer.name }
 				onClick={ this.clickHandler.bind(this) }
 				className={ classes.join(" ") }
@@ -91,5 +105,5 @@ export default class LayerView extends React.Component {
 				<MenuItem icon="delete_forever" caption="Delete" fonClick={ this.menuClickHandler.bind(this, "onDelete") } />
 			</Menu>
 		</div>
-	}
-}
+
+		*/

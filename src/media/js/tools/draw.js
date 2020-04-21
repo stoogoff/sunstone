@@ -4,12 +4,13 @@ import Pen from "./pen";
 import Rectangle from "./rectangle";
 import Circle from "./circle";
 import Marker from "./marker";
-//import Layer from "../lib/layer";
-//import { DEFAULT_LAYER } from "../lib/config";
+import getLogger from "../lib/logger";
 
 import { MODE } from "../lib/config";
 import { indexOfByProperty } from "../lib/list";
 
+
+let logger = getLogger("draw");
 
 
 let tools = {
@@ -25,9 +26,8 @@ let lastDrawnNodes = {};
 
 // automatically draw a set of map nodes and layers
 export default (layers, nodes, mode) => {
-	console.log("draw");
-	console.log(layers);
-	console.log(nodes);
+	logger.log(layers);
+	logger.log(nodes);
 
 	if(!nodes) {
 		return;
@@ -41,21 +41,21 @@ export default (layers, nodes, mode) => {
 
 	nodes.forEach(node => {
 		if(node.type in tools) {
-			console.log(`draw: got node '${node.id}'`)
+			logger.info(`got node '${node.id}'`)
 
 			let layer = layers.find(l => l.id === node.layer);
 
 			// only draw nodes on layers which exist
 			if(layer) {
-				console.log(`draw: got layer '${layer.id}'`)
+				logger.info(`got layer '${layer.id}'`)
 
 				let index = indexOfByProperty(layer._layer.children, "_externalId", node.id);
 
-				console.log(`draw: got index '${index}'`)
+				logger.info(`got index '${index}'`)
 
 				// the node doesn't exist so draw it
 				if(index == -1) {
-					console.log("draw: node doesn't exist, drawing it");
+					logger.info("node doesn't exist, drawing it");
 					layer._layer.activate();
 
 					tools[node.type].draw(node);
@@ -63,7 +63,7 @@ export default (layers, nodes, mode) => {
 			}
 		}
 		else {
-			console.error(`draw: '${node.type}' not found in tools.`);
+			logger.error(`'${node.type}' not found in tools.`);
 		}
 	});
 

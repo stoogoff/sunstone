@@ -18,8 +18,8 @@ export const MODE = {
 // icon names which unfortunately have to be used as actions
 export const ICON = {
 	VISIBLE: "eye",
-	HIDDEN: "eye slash",
-	MORE: "more_vert"
+	HIDDEN: "eye-slash",
+	MORE: "ellipsis-v"
 };
 
 // layer visibility

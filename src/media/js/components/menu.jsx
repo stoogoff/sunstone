@@ -1,5 +1,7 @@
 
 import React from "react";
+import Button from "./button.jsx";
+import { TYPES, SIZES, BUTTON } from "../lib/utils";
 
 
 export default class Menu extends React.Component {
@@ -19,8 +21,7 @@ export default class Menu extends React.Component {
 
 	render() {
 		let icon = this.props.up ? "fas fa-angle-up" : "fas fa-angle-down";
-		let classList = ["dropdown"];
-		let btnClassList = ["button"];
+		let classList = ["dropdown", ...(this.props.className || [])];
 
 		if(this.state.active) {
 			classList.push("is-active");
@@ -32,18 +33,13 @@ export default class Menu extends React.Component {
 			}
 		});
 
-		["white", "light", "dark", "black", "text", "primary", "link", "info", "success", "warning", "danger", "small"].forEach(prop => {
-			if("button-" + prop in this.props) {
-				btnClassList.push("is-" + prop);
-			}
-		});
+		let btnPropsList = [...TYPES, ...SIZES, ...BUTTON].filter(prop => "button-" + prop in this.props && this.props["button-" + prop]).reduce((a,b) => (a[b] = true, a), {});
+
+		// TODO an invisible modal or something to close the menu when clicking away from it
 
 		return <div className={ classList.join(" ") }>
 			<div className="dropdown-trigger">
-				<button className={ btnClassList.join(" ") } aria-haspopup="true" aria-controls="dropdown-menu" onClick={ this.toggleActive.bind(this) }>
-					{ this.props.label ? <span>{ this.props.label }</span> : null }
-					<span className="icon is-small"><i className={ icon }></i></span>
-				</button>
+				<Button rightIcon={ icon } label={ this.props.label } onClick={ this.toggleActive.bind(this) } { ...btnPropsList } />
 			</div>
 			<div className="dropdown-menu" role="menu">
 				<div className="dropdown-content">

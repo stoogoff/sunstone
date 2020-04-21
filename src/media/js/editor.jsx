@@ -6,6 +6,10 @@ import ReactDOM from "react-dom";
 import Dialog from 'react-toolbox/lib/dialog';
 import ProgressBar from 'react-toolbox/lib/progress_bar';
 
+
+
+import Modal from "./components/modal.jsx";
+
 // base component
 import Editor from "./components/editor.jsx";
 
@@ -28,6 +32,19 @@ import nodeHandler from "./handlers/nodes";
 // TODO facility for multiple maps
 
 
+
+import getLogger from "./lib/logger";
+
+
+
+
+const logger = getLogger("app");
+
+
+
+
+
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -44,8 +61,8 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.ref = dispatcher.subscribe((action, state) => {
-			console.log("subscribe", action)
-			console.log(state)
+			logger.log("subscribe", action)
+			logger.log(state)
 
 			// it would be great if this could just update the component state with the provided state and do nothig else
 
@@ -53,7 +70,7 @@ class App extends React.Component {
 			// otherwise, loading is complete and state should be set
 			if(action == LAYER_LOAD_COMPLETE && state.layers.length == 0) {
 				if(state.layers.length == 0) {
-					console.log("App.componentDidMount: no layers, creating empty layer")
+					logger.log("componentDidMount: no layers, creating empty layer")
 					dispatcher.dispatch(LAYER_CREATE, {
 						id: createId(),
 						name: DEFAULT_LAYER,
@@ -76,7 +93,7 @@ class App extends React.Component {
 		dispatcher.register("nodes", nodeHandler);
 		/*dispatcher.register("mapIndex", (state = -1, action, payload) => {
 			if(action == MAP_SELECT) {
-				console.log("selecting map", payload)
+				logger.log("selecting map", payload)
 				return payload;
 			}
 		})*/
@@ -101,13 +118,13 @@ second visit
 
 		// if there is a map in the local store, select it
 		if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
-			console.log("a map exists in local storage")
+			logger.log("a map exists in local storage")
 			//dispatcher.dispatch(MAP_SELECT, 0);
-			console.log("from store", local.get(STORAGE_KEYS.MAP_LOCAL))
+			logger.log("from store", local.get(STORAGE_KEYS.MAP_LOCAL))
 			dispatcher.dispatch(MAP_LOAD, local.get(STORAGE_KEYS.MAP_LOCAL));
 		}
 		else {
-			console.log("no stored map so creating a new one")
+			logger.log("no stored map so creating a new one")
 			dispatcher.dispatch(MAP_CREATE, {
 				name: DEFAULT_MAP
 			});
@@ -121,25 +138,33 @@ second visit
 	}
 
 	render() {
-		console.log("App.render")
-		console.log("map", this.state.map)
-		console.log("layers", this.state.layers)
-		console.log("nodes", this.state.nodes)
+		logger.log("App.render")
+		logger.log("map", this.state.map)
+		logger.log("layers", this.state.layers)
+		logger.log("nodes", this.state.nodes)
 
 		let mapName = this.state.map ? this.state.map.name : null;
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
 		return <div>
 			<Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } mode={ MODE.EDIT } />
-			<Dialog title="Loading map" active={ dialogueIsActive }>
-				<ProgressBar type="linear" mode="indeterminate" />
+			<Modal title="Loading map" active={ dialogueIsActive }>
+				<progress class="progress is-small is-warning" max="100"></progress>
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}
-			</Dialog>
+			</Modal>
 		</div>;
 	}
 }
 
 /*
+
+
+			<Dialog title="Loading map" active={ dialogueIsActive }>
+				<ProgressBar type="linear" mode="indeterminate" />
+				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}
+			</Dialog>
+
+
 import {
 
 Menu,

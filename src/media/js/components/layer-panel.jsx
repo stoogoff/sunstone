@@ -2,10 +2,12 @@
 import React from "react";
 import paper from "paper/dist/paper-core";
 import { List, ListItem } from 'react-toolbox/lib/list';
-import { Button } from 'react-toolbox/lib/button';
-import Dialog from 'react-toolbox/lib/dialog';
+//import { Button } from 'react-toolbox/lib/button';
+//import Dialog from 'react-toolbox/lib/dialog';
 
 
+import Button from "./button.jsx";
+import Modal from "./modal.jsx";
 import LayerView from "./layer-view.jsx";
 import dispatcher from "../lib/dispatcher";
 import { LAYER_CREATE, LAYER_HIDE, LAYER_SHOW, LAYER_ACTIVATE } from "../lib/action-keys";
@@ -103,18 +105,12 @@ console.log("layers after delete", layers.map(l => l.name))
 		});*/
 	}
 
-	clickHandler(layer, event) {
-		let target = event.target.innerHTML;
+	onVisibilityClick(layer, event) {
+		dispatcher.dispatch(layer.visible ? LAYER_HIDE : LAYER_SHOW, layer.id);
+	}
 
-		if(target == ICON.VISIBLE) {
-			dispatcher.dispatch(LAYER_HIDE, layer.id);
-		}
-		else if(target == ICON.HIDDEN) {
-			dispatcher.dispatch(LAYER_SHOW, layer.id);
-		}
-		else {
-			dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
-		}
+	onClick(layer, event) {
+		dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
 	}
 
 	updateLayers() {
@@ -137,21 +133,34 @@ console.log("layers after delete", layers.map(l => l.name))
 		}
 
 		return <div>
-			<Button icon="layers" label="Add layer" onClick={ this.addLayer.bind(this) } />
-			<List selectable>
-				{ this.props.layers.map((layer, index) => <LayerView
+			<Button leftIcon="layer-group" label="Add layer" onClick={ this.addLayer.bind(this) } before />
+			<ul className="menu">
+				{ this.props.layers.map(layer => <Button as="li" label={ layer.name }
+					warning={ layer.active }
+					leftIcon={ ICON.MORE }
+					rightIcon={ layer.visible ? ICON.VISIBLE : ICON.HIDDEN }
+					onClick={ this.onClick.bind(this, layer) }
+					onRightIconClick={ this.onVisibilityClick.bind(this, layer) } />)}
+			</ul>
+			<Modal active={ this.state.showDialogue } title="Delete Layer">
+				<p>Are you sure you want to delete this layer? This action can't be undone.</p>
+				<Button label="OK" onClick={ this.deleteLayer.bind(this) } />
+				<Button label="Cancel" onClick={ this.hideDialogue.bind(this) } />
+			</Modal>
+		</div>;
+	}
+}
+
+/*
+
+
+<LayerView
 					layer={ layer }
 					onClick={ this.clickHandler.bind(this) }
 					onMoveUp={ this.moveUpHandler.bind(this) }
 					onMoveDown={ this.moveDownHandler.bind(this) }
 					onDelete={ this.deleteHandler.bind(this) }
-				/>)}
-			</List>
-			<Dialog active={ this.state.showDialogue } title="Delete Layer">
-				<p>Are you sure you want to delete this layer? This action can't be undone.</p>
-				<Button label="OK" onClick={ this.deleteLayer.bind(this) } />
-				<Button label="Cancel" onClick={ this.hideDialogue.bind(this) } />
-			</Dialog>
-		</div>;
-	}
-}
+				/>
+
+
+				*/

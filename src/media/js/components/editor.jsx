@@ -3,33 +3,11 @@
 import React from "react";
 import { CirclePicker } from "react-color";
 
-// react toolbox ui imports
-//import AppBar from 'react-toolbox/lib/app_bar';
-//import Checkbox from 'react-toolbox/lib/checkbox';
-//import { IconButton } from 'react-toolbox/lib/button';
-//import { Layout, NavDrawer, Panel } from 'react-toolbox/lib/layout';
-//import Input from 'react-toolbox/lib/input';
-//import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
-//import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu';
-//import Slider from 'react-toolbox/lib/slider';
-//import Avatar from 'react-toolbox/lib/avatar';
-//import { Tab, Tabs } from 'react-toolbox/lib/tabs';
-//import { Snackbar } from 'react-toolbox/lib/snackbar';
-//import Navigation from 'react-toolbox/lib/navigation';
-//import FontIcon from 'react-toolbox/lib/font_icon';
-//import Chip from 'react-toolbox/lib/chip';
-
-
-// semantic-ui imports
-// TODO switch everything over to this
-//import { Chip } from '@material-ui/core'
-//import { Button, Menu, Grid, Icon, Sidebar, Tab } from 'semantic-ui-react';
-
-
+// Sunstone components
 import Menu from "./menu.jsx";
 import Button from "./button.jsx";
-
-// Sunstone components
+import Tabs from "./tabs.jsx";
+import Message from "./message.jsx";
 import PaperView from "../components/paper-view.jsx";
 import ColourPicker from "../components/colour-picker.jsx";
 import LayerPanel from "../components/layer-panel.jsx";
@@ -94,16 +72,8 @@ export default class Editor extends React.Component {
 			copyMessage: "",
 			copyActive: false,
 
-
-
-
 			// drawer state test
 			expanded: false,
-
-			// original example state
-			drawerActive: false,
-			drawerPinned: false,
-			sidebarPinned: false
 		}
 
 		this.tools = [new Pan()];
@@ -193,9 +163,6 @@ export default class Editor extends React.Component {
 	toggleSimpleState(type) {
 		let currentState = this.state[type];
 
-		console.log("toggleSimpleState: " + currentState)
-
-
 		this.setState({
 			[type]: !currentState
 		});
@@ -226,73 +193,93 @@ export default class Editor extends React.Component {
 
 	render() {
 		if(!this.props.map) {
-			console.log("Editor.render: no map, returning early")
 			return null;
 		}
 
 		let activeLayer = this.props.layers ? this.props.layers.find(findByProperty("active", true)) :null;
 
-		return (
-			<div>
-				<header id="navbar" className="has-background-dark has-text-light level">
-					<div className="level-left">
-						<h1 className="has-text-light title is-4">
-							Sunstone
-						</h1>
-					</div>
-					<div id="menu" className="level-right">
-						{ activeLayer ? <div className="is-dark">
-							<span className="icon"><i className="fas fa-layer-group"></i></span>
-							{ activeLayer.name }
-						</div> : null }
-						<div className="button is-dark">
-							<span className="icon"><i className="fas fa-square" style={ {color: this.state.foreground} }></i></span>
-							<span>Foreground</span>
-						</div>
-						<Button label="Background" icon="square" dark />
-						<Menu label={ this.state.mapName } button-dark>
-							<Menu.Item>Second Map Name</Menu.Item>
-							<Menu.Item>Other dropdown item</Menu.Item>
-							<Menu.Divider />
-							<Menu.Item>With a divider</Menu.Item>
-						</Menu>
-					</div>
-				</header>
-				{ this.props.mode == MODE.EDIT ?
-					<nav id="tools" className={ "has-background-light " + (this.state.expanded ? "is-open" : "is-closed") }>
-						<ul className="menu">
-							<li className="button is-fullwidth is-outlined">
-								<span className="icon is-large" onClick={ this.toggleSimpleState.bind(this, "expanded") }><i className="fas fa-chevron-left"></i></span>
-							</li>
-							{ this.tools.map(t => {
-								let cls = "button is-fullwidth " + (t === this.state.activeTool ? "is-warning" : "is-outlined");
-
-								return <li className={ cls } onClick={ this.activateTool.bind(this, t.name) }>
-									<span>{ t.name }</span>
-									<span className="icon"><i className={ `fas fa-${t.icon}` }></i></span>
-								</li>
-							})}
-						</ul>
-					</nav>
-					: null }
-				<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ this.props.mode } />
-				<span id="zoom" className="tag is-medium" >
-					<span className="icon is-large"><i className="fas fa-2x fa-search-plus"></i></span>
-					{ this.zoom.map(z => <Button text small icon={ z.icon } onClick={ z.activate.bind(z) } />)}
-					<Menu up right button-text>
-						<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 5) }>500%</Menu.Item>
-						<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) }>250%</Menu.Item>
-						<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 1) }>100%</Menu.Item>
-						<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</Menu.Item>
+		return <div>
+			<header id="navbar" className="has-background-dark has-text-light level">
+				<div className="level-left">
+					<h1 className="has-text-light title is-4">Sunstone</h1>
+				</div>
+				<div id="menu" className="level-right">
+					{ activeLayer ? <div className="is-dark">
+						<span className="icon"><i className="fas fa-layer-group"></i></span>
+						{ activeLayer.name }
+					</div> : null }
+					<Button label="Foreground" leftIcon="square" dark style={ {color: this.state.foreground} } />
+					<Button label="Background" leftIcon="square" dark style={ {color: this.state.background} } />
+					<Menu label={ this.state.mapName } button-dark>
+						<Menu.Item>Second Map Name</Menu.Item>
+						<Menu.Item>Other dropdown item</Menu.Item>
+						<Menu.Divider />
+						<Menu.Item>With a divider</Menu.Item>
 					</Menu>
-				</span>
-			</div>
-		);
+				</div>
+			</header>
+			{ this.props.mode == MODE.EDIT ?
+				<nav id="tools" className={ "has-background-light " + (this.state.expanded ? "is-open" : "is-closed") }>
+					<ul className="menu">
+						<Button as="li"
+							onClick={ this.toggleSimpleState.bind(this, "expanded") }
+							rightIcon={ this.state.expanded ? "angle-double-left" : "angle-double-right" } />
+						{ this.tools.map(t => <Button as="li"
+							rightIcon={ t.icon }
+							warning={ t === this.state.activeTool }
+							label={ t.name }
+							onClick={ this.activateTool.bind(this, t.name) } />)}
+					</ul>
+					<Tabs index={ 1 }>
+						<Tabs.Tab label="Tools">Tools tab</Tabs.Tab>
+						<Tabs.Tab label="Layers">
+							<LayerPanel map={ this.props.map } layers={ this.props.layers } />
+						</Tabs.Tab>
+						<Tabs.Tab label="Map">
+							<section>
+								<div className="control">
+									<label class="label">Name</label>
+									<input type="text" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } className="input" />
+								</div>
+								<div className="control has-icons-right" onClick={ this.copyURL.bind(this) }>
+									<input type="text" pla="Public URL" icon="file_copy" value={ this.props.map.url } className="input" readonly />
+									<span className="icon is-small is-right"><i className="fas fa-copy"></i></span>
+								</div>
+							</section>
+						</Tabs.Tab>
+					</Tabs>
+				</nav>
+				: null }
+			<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ this.props.mode } />
+			<span id="zoom" className="tag is-medium" >
+				<span className="icon is-large"><i className="fas fa-2x fa-search-plus"></i></span>
+				{ this.zoom.map(z => <Button text small rightIcon={ z.icon } onClick={ z.activate.bind(z) } />)}
+				<Menu up right button-text>
+					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 5) }>500%</Menu.Item>
+					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) }>250%</Menu.Item>
+					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 1) }>100%</Menu.Item>
+					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</Menu.Item>
+				</Menu>
+			</span>
+			{ false ? <Message>{ this.state.copyMessage }</Message> : null }
+
+		</div>;
 	}
 }
 
 
 /*
+
+
+							<Snackbar
+					action="Dismiss"
+					label={ this.state.copyMessage }
+					active={ this.state.copyActive }
+					timeout={ 4000 }
+					onTimeout={ this.setSimpleState.bind(this, "copyActive", false) }
+					onClick={ this.setSimpleState.bind(this, "copyActive", false) }
+					type="accept" />
+
 
 
 					{ this.zoom.map(z => <button className="button is-small is-text" onClick={ z.activate.bind(z) }>
