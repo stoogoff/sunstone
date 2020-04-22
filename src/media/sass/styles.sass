@@ -9,6 +9,7 @@ body, html
 	width: 100%
 	height: 100%
 
+// id specific overrides
 #navbar h1
 	margin-left: 3.5rem
 
@@ -22,10 +23,10 @@ body, html
 
 	&.is-open
 		transform: translateX(0)
-		animation: slide-in 0.5s ease
+		animation: toolbar-slide-in 0.5s ease
 	&.is-closed
 		transform: translateX($menuTransform)	
-		animation: slide-out 0.75s ease
+		animation: toolbar-slide-out 0.75s ease
 
 	.menu .button
 		display: block
@@ -46,15 +47,55 @@ body, html
 	width: 100%
 	height: 100%
 
-@keyframes slide-in
+
+// general class overrides
+.message-container
+	position: fixed
+	bottom: 0
+	left: 0
+	right: 0
+	transform: translateY(100%)
+	animation: message-slide-out 0.75s ease
+
+	&.is-active
+		transform: translateY(0)
+		animation: message-slide-in 0.5s ease
+
+	.message
+		width: 60%
+		margin: 0 auto 2rem
+
+.tab-panel section
+	margin: 1rem
+
+.label
+	margin-bottom: 0 !important
+
+
+// animations
+@keyframes toolbar-slide-in
 	from
 		transform: translateX($menuTransform)
 	to
 		transform: translateX(0)
 
 
-@keyframes slide-out
+@keyframes toolbar-slide-out
 	from
 		transform: translateX(0)
 	to
 		transform: translateX($menuTransform)
+
+@keyframes message-slide-in
+	from
+		transform: translateY(100%)
+
+	to
+		transform: translateY(0)
+
+@keyframes message-slide-out
+	from
+		transform: translateY(0)
+
+	to
+		transform: translateY(100%)

@@ -11,6 +11,8 @@ import Message from "./message.jsx";
 import PaperView from "../components/paper-view.jsx";
 import ColourPicker from "../components/colour-picker.jsx";
 import LayerPanel from "../components/layer-panel.jsx";
+import { TextInput } from "../components/input/text.jsx";
+import RangeInput from "../components/input/range.jsx";
 
 // Sunstone tools
 import Pen from "../tools/pen";
@@ -150,6 +152,7 @@ export default class Editor extends React.Component {
 	}
 
 	setToolState(type, value) {
+		console.log("setToolState", type, value)
 		this.setSimpleState(type, value);
 		this.updateActiveTool();
 	}
@@ -231,20 +234,23 @@ export default class Editor extends React.Component {
 							onClick={ this.activateTool.bind(this, t.name) } />)}
 					</ul>
 					<Tabs index={ 1 }>
-						<Tabs.Tab label="Tools">Tools tab</Tabs.Tab>
+						<Tabs.Tab label="Tools">
+							<section>
+								<RangeInput label="Opacity" min={ 0 } max={ 1 } value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } />
+								<RangeInput label="Line Width" min={ 0 } max={ 5 } steps={ 5 } value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } />
+								<hr />
+								<h3 className="label">Tool Colours</h3>
+								<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
+								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
+							</section>
+						</Tabs.Tab>
 						<Tabs.Tab label="Layers">
 							<LayerPanel map={ this.props.map } layers={ this.props.layers } />
 						</Tabs.Tab>
 						<Tabs.Tab label="Map">
 							<section>
-								<div className="control">
-									<label class="label">Name</label>
-									<input type="text" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } className="input" />
-								</div>
-								<div className="control has-icons-right" onClick={ this.copyURL.bind(this) }>
-									<input type="text" pla="Public URL" icon="file_copy" value={ this.props.map.url } className="input" readonly />
-									<span className="icon is-small is-right"><i className="fas fa-copy"></i></span>
-								</div>
+								<TextInput label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } />
+								<TextInput label="Public URL" value={ this.props.map.url } onClick={ this.copyURL.bind(this) } rightIcon="copy" readOnly note="Click to copy public URL." />
 							</section>
 						</Tabs.Tab>
 					</Tabs>
@@ -261,8 +267,11 @@ export default class Editor extends React.Component {
 					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</Menu.Item>
 				</Menu>
 			</span>
-			{ false ? <Message>{ this.state.copyMessage }</Message> : null }
-
+			<Message active={ this.state.copyActive } primary
+				timeout={ 4000 }
+				onClose={ this.setSimpleState.bind(this, "copyActive", false) }>
+					{ this.state.copyMessage }
+			</Message>
 		</div>;
 	}
 }

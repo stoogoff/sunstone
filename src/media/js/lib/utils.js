@@ -16,11 +16,6 @@ export const replaceId = (key, ...props) => {
     return key;
 }
 
-export const next = (callback) => {
-	window.setTimeout(callback, 0);
-}
-
-
 export const TYPES = ["primary", "link", "info", "success", "warning", "danger"];
 export const SIZES = ["small", "normal", "medium", "large"]
 export const BUTTON = ["white", "light", "dark", "black", "text"];

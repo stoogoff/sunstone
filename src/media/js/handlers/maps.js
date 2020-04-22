@@ -5,7 +5,8 @@ import { sortByProperty } from "../lib/list";
 import { local } from "../lib/local-store"
 import dispatcher from "../lib/dispatcher";
 import database from "../lib/firebase";
-import { createId, replaceId, next } from "../lib/utils";
+import { createId, replaceId } from "../lib/utils";
+import { next } from "../lib/timer";
 import {
 	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD,
 	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE
