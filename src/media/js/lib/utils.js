@@ -18,7 +18,14 @@ export const replaceId = (key, ...props) => {
 
 export const TYPES = ["primary", "link", "info", "success", "warning", "danger"];
 export const SIZES = ["small", "normal", "medium", "large"]
-export const BUTTON = ["white", "light", "dark", "black", "text"];
+export const BUTTON = [
+	// button colour styles
+	"white", "light", "dark", "black", "text",
+	// button sizes
+	"fullwidth", "outlined", "inverted", "rounded", "loading",
+	// button states
+	"hovered", "focused", "active"
+];
 
 export const getClassList = (props, useTypes, useSizes, useButton) => {
 	let classList = [];

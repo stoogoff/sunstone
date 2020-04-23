@@ -55,6 +55,9 @@ export default class Editor extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// should the active drawing tool be updated?
+		this.toolNeedsUpdate = false;
+
 		this.state = {
 			// tool states
 			activeTool: null,
@@ -106,12 +109,6 @@ export default class Editor extends React.Component {
 		}
 	}
 
-	// START probably not needed
-	toggleExpanded() {
-		this.setState({ expanded: !this.state.expanded });
-	}
-	// END
-
 	copyURL() {
 		navigator.clipboard.writeText(this.props.map.url).then(() => {
 			this.setState({
@@ -152,9 +149,8 @@ export default class Editor extends React.Component {
 	}
 
 	setToolState(type, value) {
-		console.log("setToolState", type, value)
 		this.setSimpleState(type, value);
-		this.updateActiveTool();
+		this.toolNeedsUpdate = true;
 	}
 
 	setSimpleState(type, value) {
@@ -181,6 +177,8 @@ export default class Editor extends React.Component {
 		if(this.state.activeTool && this.state.activeTool.update) {
 			this.state.activeTool.update(this.getToolParams());
 		}
+
+		this.toolNeedsUpdate = false;
 	}
 
 	// the parameters which are sent to every tool
@@ -199,6 +197,11 @@ export default class Editor extends React.Component {
 			return null;
 		}
 
+		// update the active drawing tool
+		if(this.toolNeedsUpdate) {
+			this.updateActiveTool();
+		}
+
 		let activeLayer = this.props.layers ? this.props.layers.find(findByProperty("active", true)) :null;
 
 		return <div>
@@ -211,8 +214,8 @@ export default class Editor extends React.Component {
 						<span className="icon"><i className="fas fa-layer-group"></i></span>
 						{ activeLayer.name }
 					</div> : null }
-					<Button label="Foreground" leftIcon="square" dark style={ {color: this.state.foreground} } />
-					<Button label="Background" leftIcon="square" dark style={ {color: this.state.background} } />
+					<Button label="Foreground" leftIcon="square" dark leftIconColour={ this.state.foreground } />
+					<Button label="Background" leftIcon="square" dark leftIconColour={ this.state.background } />
 					<Menu label={ this.state.mapName } button-dark>
 						<Menu.Item>Second Map Name</Menu.Item>
 						<Menu.Item>Other dropdown item</Menu.Item>
@@ -238,7 +241,6 @@ export default class Editor extends React.Component {
 							<section>
 								<RangeInput label="Opacity" min={ 0 } max={ 1 } value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } />
 								<RangeInput label="Line Width" min={ 0 } max={ 5 } steps={ 5 } value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } />
-								<hr />
 								<h3 className="label">Tool Colours</h3>
 								<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
 								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />

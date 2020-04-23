@@ -19,7 +19,7 @@ export default (props) => {
 
 			evt.stopPropagation();
 		}
-	}
+	};
 
 	const onRightIconClick = (evt) => {
 		if(props.onRightIconClick) {
@@ -27,11 +27,14 @@ export default (props) => {
 
 			evt.stopPropagation();
 		}
-	}
+	};
+
+	const leftIconColour = props.leftIconColour ? { color: props.leftIconColour} : null;
+	const rightIconColour = props.rightIconColour ? { color: props.rightIconColour} : null;
 
 	return <Tag className={ classList.join(" ") } onClick={ onClick }>
-		{ props.leftIcon ? <span className="icon is-small" onClick={ onLeftIconClick }><i className={ `fas fa-${props.leftIcon}` }></i></span> : null }
+		{ props.leftIcon ? <span className="icon is-small" onClick={ onLeftIconClick }><i className={ `fas fa-${props.leftIcon}` } style={ leftIconColour }></i></span> : null }
 		{ props.label ? <span>{ props.label }</span> : null }
-		{ props.rightIcon ? <span className="icon is-small is-pulled-right" onClick={ onRightIconClick }><i className={ `fas fa-${props.rightIcon}` }></i></span> : null }
+		{ props.rightIcon ? <span className="icon is-small is-pulled-right" onClick={ onRightIconClick }><i className={ `fas fa-${props.rightIcon}` } style={ rightIconColour }></i></span> : null }
 	</Tag>
 };

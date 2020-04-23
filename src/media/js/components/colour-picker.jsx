@@ -1,8 +1,10 @@
 
 import React from "react";
 import { CirclePicker } from "react-color";
-import { List, ListItem } from 'react-toolbox/lib/list';
+
+import Button from "./button.jsx";
 import { COLOURS } from "../lib/config";
+
 
 export default class ColourPicker extends React.Component {
 	constructor(props) {
@@ -10,9 +12,10 @@ export default class ColourPicker extends React.Component {
 
 		this.colours = COLOURS;
 		this.state = {
-			open: false,
-			colour: this.props.colour || "white"
+			open: false
 		};
+
+		this.expander = React.createRef();
 	}
 
 	toggleColourPicker() {
@@ -27,15 +30,35 @@ export default class ColourPicker extends React.Component {
 		}
 
 		this.setState({
-			open: false,
-			colour: colour.hex
+			open: false
 		});
 	}
 
 	render() {
-		return <div className="colour-picker">
-			<ListItem caption={ this.props.caption } onClick={ this.toggleColourPicker.bind(this) } rightIcon={ this.state.open ? "check_box" : null } className={ this.state.open ? "active" : null }><span style={{ backgroundColor: this.state.colour }} className="colour-display"></span></ListItem>
-			{ this.state.open ? <ListItem><CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } /></ListItem> : null }
+		let colour = this.props.colour || this.colours[0];
+		let classList = ["colour-picker"];
+
+		if(this.state.open) {
+			classList.push("is-active");
+		}
+
+		if(this.expander.current) {
+			this.expander.current.style.maxHeight = this.state.open ? this.expander.current.scrollHeight + "px" : null;
+		}
+
+		return <div className={ classList.join(" ") }>
+			<Button label={ this.props.caption }
+				 onClick={ this.toggleColourPicker.bind(this) }
+				 leftIconColour={ this.props.colour }
+				 leftIcon="square"
+				 rightIcon={ this.state.open ? "chevron-down" : "chevron-right" }
+				 active={ this.state.open }
+				 light />
+			<div className="expander" ref={ this.expander }>
+				<div className="expander-container">
+					<CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } />
+				</div>
+			</div>
 		</div>;
 	}
 }
