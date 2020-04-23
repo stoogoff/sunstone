@@ -15,9 +15,11 @@ NODE_ACTIONS[NODE_CREATE] = (state, payload) => {
 };
 
 NODE_ACTIONS[NODE_DELETE] = (state, payload) => {
-	database.ref(replaceId(STORAGE_KEYS.NODE, payload.map, payload.id)).remove();
+	payload.ids.forEach(id => {
+		database.ref(replaceId(STORAGE_KEYS.NODE, payload.map, id)).remove();
+	});
 
-	return state.filter(node => node.id != payload.id);
+	return state.filter(node => payload.ids.indexOf(node.id) == -1);
 };
 
 // layers loaded from firebase, so they need to create paper layers as well

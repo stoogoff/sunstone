@@ -32,6 +32,14 @@ const LAYER_ACTIONS = {
 };
 
 
+LAYER_ACTIONS[LAYER_DELETE] = (state, payload) => {
+	console.log("layers: deleting layer", payload)
+
+	database.ref(replaceId(STORAGE_KEYS.LAYER, payload.map, payload.id)).remove();
+
+	return deleteById(state, payload.id);
+};
+
 LAYER_ACTIONS[LAYER_HIDE] = (state, id) => {
 	return state.map(layer => {
 		if(layer.id != id) {

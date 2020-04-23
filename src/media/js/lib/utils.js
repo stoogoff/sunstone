@@ -24,7 +24,7 @@ export const BUTTON = [
 	// button sizes
 	"fullwidth", "outlined", "inverted", "rounded", "loading",
 	// button states
-	"hovered", "focused", "active"
+	"hovered", "focused", "active", "disabled"
 ];
 
 export const getClassList = (props, useTypes, useSizes, useButton) => {

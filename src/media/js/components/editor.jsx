@@ -8,11 +8,11 @@ import Menu from "./menu.jsx";
 import Button from "./button.jsx";
 import Tabs from "./tabs.jsx";
 import Message from "./message.jsx";
-import PaperView from "../components/paper-view.jsx";
-import ColourPicker from "../components/colour-picker.jsx";
-import LayerPanel from "../components/layer-panel.jsx";
-import { TextInput } from "../components/input/text.jsx";
-import RangeInput from "../components/input/range.jsx";
+import PaperView from "./paper-view.jsx";
+import ColourPicker from "./colour-picker.jsx";
+import LayerPanel from "./layer-panel.jsx";
+import { TextInput } from "./input/text.jsx";
+import RangeInput from "./input/range.jsx";
 
 // Sunstone tools
 import Pen from "../tools/pen";
@@ -42,15 +42,7 @@ public state of objects for view version
 image upload tool (how to save this?)
 move object tool
 
-
-
 */
-
-
-
-
-
-
 export default class Editor extends React.Component {
 	constructor(props) {
 		super(props);
@@ -277,124 +269,3 @@ export default class Editor extends React.Component {
 		</div>;
 	}
 }
-
-
-/*
-
-
-							<Snackbar
-					action="Dismiss"
-					label={ this.state.copyMessage }
-					active={ this.state.copyActive }
-					timeout={ 4000 }
-					onTimeout={ this.setSimpleState.bind(this, "copyActive", false) }
-					onClick={ this.setSimpleState.bind(this, "copyActive", false) }
-					type="accept" />
-
-
-
-					{ this.zoom.map(z => <button className="button is-small is-text" onClick={ z.activate.bind(z) }>
-						<span className="icon is-small"><i className={ `fas fa-${z.icon}` }></i></span>
-					</button>)}
-
-
-					<div className="dropdown is-active is-up is-right">
-						<div className="dropdown-trigger">
-							<button className="button is-small is-text" aria-haspopup="true" aria-controls="dropdown-menu">
-								<span className="icon is-small"><i className="fas fa-chevron-up"></i></span>
-							</button>
-						</div>
-						<div className="dropdown-menu" role="menu">
-							<div className="dropdown-content">
-								<a className="dropdown-item" onClick={ ZoomTo.activate.bind(ZoomTo, 5) }>500%</a>
-								<a className="dropdown-item" onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) }>250%</a>
-								<a className="dropdown-item" onClick={ ZoomTo.activate.bind(ZoomTo, 1) }>100%</a>
-								<a className="dropdown-item" onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</a>
-							</div>
-						</div>
-					</div>
-
-
-							<Tab index={ this.state.tabIndex } onChange={ this.setSimpleState.bind(this, "tabIndex") }>
-								<Tab.Pane menuItem="Tools">
-									<List selectable>
-										<ListSubHeader caption="Opacity" />
-										<li><Slider min={ 0 } max={ 1 } editable value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } /></li>
-										<ListDivider />
-										<ListSubHeader caption="Line Width" />
-										<li><Slider min={ 0 } max={ 5 } step={ 1 } editable value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } /></li>
-										<ListDivider />
-										<ListSubHeader caption="Tool Colours" />
-										<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
-										<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
-									</List>
-								</Tab.Pane>
-								<Tab.Pane menuItem="Layers">
-									<LayerPanel map={ this.props.map } layers={ this.props.layers } />
-								</Tab.Pane>
-								<Tab.Pane menuItem="Map">
-									<section>
-										<Input type="text" label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } className="map-input" />
-										<div onClick={ this.copyURL.bind(this) }><Input type="text" label="Public URL" icon="file_copy" value={ this.props.map.url } className="map-input icon-after readonly" /></div>
-									</section>
-								</Tab.Pane>
-							</Tab>
-
-
-	<nav id="tools" class="has-background-light">
-		<ul class="menu">
-			<li class="button is-fullwidth is-outlined">
-				<span class="icon is-large" onclick="toggle()"><i class="fas fa-chevron-left"></i></span>
-			</li>
-			<li class="button is-fullwidth is-outlined">
-				<span>Pen</span>
-				<span class="icon"><i class="fas fa-paint-brush"></i></span>
-			</li>
-			<li class="button is-fullwidth is-warning"><!-- use is-primary variant for active state -->
-				<span>Marker</span>
-				<span class="icon"><i class="fas fa-brush"></i></span>
-			</li>
-		</ul>
-	</nav>
-	<canvas id="map"></canvas>
-	<span id="zoom" class="tag is-medium" >
-		<span class="icon is-large"><i class="fas fa-2x fa-search-plus"></i></span>
-		<button class="button is-small is-text">
-			<span class="icon is-small"><i class="fas fa-plus"></i></span>
-		</button>
-		<button class="button is-small is-text">
-			<span class="icon is-small"><i class="fas fa-minus"></i></span>
-		</button>
-		<div class="dropdown">
-			<div class="dropdown-trigger">
-				<button class="button is-small is-text" aria-haspopup="true" aria-controls="dropdown-menu">
-					<span class="icon is-small"><i class="fas fa-chevron-up"></i></span>
-				</button>
-			</div>
-		</div>
-	</span>
-
-
-
-
-				<Chip className="zoom">
-					<Avatar icon="zoom_in" />
-					{ this.zoom.map(z => <IconButton icon={ z.icon } onClick={ z.activate.bind(z) } />)}
-					<IconMenu icon="more_vert">
-						<MenuItem caption="500%" onClick={ ZoomTo.activate.bind(ZoomTo, 5) } />
-						<MenuItem caption="250%" onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) } />
-						<MenuItem caption="100%" onClick={ ZoomTo.activate.bind(ZoomTo, 1) } />
-						<MenuItem caption="50%" onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) } />
-					</IconMenu>
-				</Chip>
-
-				<Snackbar
-					action="Dismiss"
-					label={ this.state.copyMessage }
-					active={ this.state.copyActive }
-					timeout={ 4000 }
-					onTimeout={ this.setSimpleState.bind(this, "copyActive", false) }
-					onClick={ this.setSimpleState.bind(this, "copyActive", false) }
-					type="accept" />
-
-*/

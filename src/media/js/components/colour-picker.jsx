@@ -3,6 +3,7 @@ import React from "react";
 import { CirclePicker } from "react-color";
 
 import Button from "./button.jsx";
+import Expander from "./expander.jsx";
 import { COLOURS } from "../lib/config";
 
 
@@ -42,10 +43,6 @@ export default class ColourPicker extends React.Component {
 			classList.push("is-active");
 		}
 
-		if(this.expander.current) {
-			this.expander.current.style.maxHeight = this.state.open ? this.expander.current.scrollHeight + "px" : null;
-		}
-
 		return <div className={ classList.join(" ") }>
 			<Button label={ this.props.caption }
 				 onClick={ this.toggleColourPicker.bind(this) }
@@ -54,11 +51,9 @@ export default class ColourPicker extends React.Component {
 				 rightIcon={ this.state.open ? "chevron-down" : "chevron-right" }
 				 active={ this.state.open }
 				 light />
-			<div className="expander" ref={ this.expander }>
-				<div className="expander-container">
-					<CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } />
-				</div>
-			</div>
+			<Expander open={ this.state.open }>
+				<CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } />
+			</Expander>
 		</div>;
 	}
 }

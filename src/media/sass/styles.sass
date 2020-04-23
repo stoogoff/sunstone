@@ -28,7 +28,7 @@ body, html
 		transform: translateX($menuTransform)	
 		animation: toolbar-slide-out 0.75s ease
 
-	.menu .button
+	.menu li.button, .menu li>.button
 		display: block
 		border-top: 0
 		border-left: 0
@@ -43,19 +43,19 @@ body, html
 			.icon:not(.is-pulled-right) i
 				text-shadow: 1px 0 0 #363636, -1px 0 0 #363636, 0 1px 0 #363636, 0 -1px 0 #363636
 
-		.expander
-			background-color: rgb(232,232,232)
-			max-height: 0
-			overflow: hidden
-			transition: max-height 0.2s ease-out
-			border-radius: 0 0 4px 4px
-
-			.expander-container
-				margin: 0.5rem 0.5rem 1rem
-
 		&.is-active .button
 			border-bottom-left-radius: 0
 			border-bottom-right-radius: 0
+
+	.expander
+		background-color: rgb(232,232,232)
+		max-height: 0
+		overflow: hidden
+		transition: max-height 0.2s ease-out
+		border-radius: 0 0 4px 4px
+
+		.expander-container
+			margin: 0.5rem 0.5rem 1rem
 
 	.tabs-container
 		margin-top: 2rem
@@ -65,6 +65,11 @@ body, html
 		margin-top: 0.5rem
 		padding-top: 0.5rem
 
+	.field.has-addons .control
+		flex-grow: 1
+
+		.button
+			width: 100%
 
 #zoom
 	position: fixed

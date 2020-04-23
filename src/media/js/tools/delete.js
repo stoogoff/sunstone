@@ -18,50 +18,31 @@ export default class Delete extends Tool {
 
 		this.name = "Delete";
 		this.icon = "eraser";
+		this.deleteItems = [];
 
 		this._tool.distanceThreshold = 8;
-
-		this.hoverItem = null;
-		this.hoverItemOpacity = null;
-		this.deleteItem = null;
 	}
 
 	onMouseDown(event) {
-		let result = paper.project.hitTest(event.point, HIT_TEST);
-
-		if(result && result.item) {
-			//result.item.remove();
-			this.deleteItem = result.item;
-
-			console.log(`delete tool: deleting item with id '${result.item._externalId}'`)
-		}
+		this.deleteItems = [];
 	}
 
-	onMouseMove(event) {
-		if(this.hoverItem) {
-			this.hoverItem.opacity = this.hoverItemOpacity;
-			this.hoverItem = null;
-		}
-
+	onMouseDrag(event) {
 		let result = paper.project.hitTest(event.point, HIT_TEST);
 
 		if(result && result.item) {
-			this.hoverItem = result.item;
-			this.hoverItemOpacity = result.item.opacity;
-			this.hoverItem.opacity = 0.5;
+			this.deleteItems.push(result.item._externalId);
+
+			result.item.remove();
 		}
 	}
 
 	onMouseUp(event) {
-		// TODO dispatch delete node event
-		if(this.deleteItem) {
-			this.onComplete({
-				type: NODE_DELETE,
-				id: this.deleteItem._externalId
-			});
+		this.onComplete({
+			type: NODE_DELETE,
+			ids: this.deleteItems
+		});
 
-			this.deleteItem.remove();
-			this.deleteItem = null;
-		}
+		this.deleteItems = [];
 	}
 }
