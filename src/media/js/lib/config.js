@@ -37,4 +37,5 @@ export const STORAGE_KEYS = {
 	NODE: "/maps/$ID$/nodes/$ID$",
 	LAYER: "/maps/$ID$/layers/$ID$",
 	LAYER_VISIBLE: "/maps/$ID$/layers/$ID$/visible",
+	LAYER_NAME: "/maps/$ID$/layers/$ID$/name",
 };

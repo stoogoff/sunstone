@@ -3,7 +3,7 @@ import { create, editById, deleteById, moveUpById, moveDownById, handlerCreator 
 import { 
 	LAYER_CREATE, LAYER_EDIT, LAYER_DELETE,
 	LAYER_MOVE_UP, LAYER_MOVE_DOWN, LAYER_LOAD_COMPLETE,
-	LAYER_SHOW, LAYER_HIDE, LAYER_ACTIVATE } from "../lib/action-keys";
+	LAYER_SHOW, LAYER_HIDE, LAYER_ACTIVATE, LAYER_RENAME } from "../lib/action-keys";
 
 import { createId, replaceId } from "../lib/utils/";
 import { STORAGE_KEYS, VISIBILITY } from "../lib/config";
@@ -32,9 +32,15 @@ const LAYER_ACTIONS = {
 };
 
 
-LAYER_ACTIONS[LAYER_DELETE] = (state, payload) => {
-	console.log("layers: deleting layer", payload)
+LAYER_ACTIONS[LAYER_RENAME] = (state, payload) => {
+	console.log("layerEdit", payload)
 
+	database.ref(replaceId(STORAGE_KEYS.LAYER_NAME, payload.map, payload.id)).set(payload.name);
+
+	return editById(state, payload);
+};
+
+LAYER_ACTIONS[LAYER_DELETE] = (state, payload) => {
 	database.ref(replaceId(STORAGE_KEYS.LAYER, payload.map, payload.id)).remove();
 
 	return deleteById(state, payload.id);

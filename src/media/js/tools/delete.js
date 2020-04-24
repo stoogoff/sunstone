@@ -23,18 +23,24 @@ export default class Delete extends Tool {
 		this._tool.distanceThreshold = 8;
 	}
 
-	onMouseDown(event) {
-		this.deleteItems = [];
-	}
-
-	onMouseDrag(event) {
-		let result = paper.project.hitTest(event.point, HIT_TEST);
+	handleDelete(point) {
+		let result = paper.project.hitTest(point, HIT_TEST);
 
 		if(result && result.item) {
 			this.deleteItems.push(result.item._externalId);
 
 			result.item.remove();
 		}
+	}
+
+	onMouseDown(event) {
+		this.deleteItems = [];
+
+		this.handleDelete(event.point);
+	}
+
+	onMouseDrag(event) {
+		this.handleDelete(event.point);
 	}
 
 	onMouseUp(event) {

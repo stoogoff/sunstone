@@ -17,7 +17,7 @@ export const replaceId = (key, ...props) => {
 }
 
 export const TYPES = ["primary", "link", "info", "success", "warning", "danger"];
-export const SIZES = ["small", "normal", "medium", "large"]
+export const SIZES = ["small", "normal", "medium", "large", "left", "right", "pulled-left", "pulled-right"]
 export const BUTTON = [
 	// button colour styles
 	"white", "light", "dark", "black", "text",

@@ -20,8 +20,9 @@ export default class Menu extends React.Component {
 	}
 
 	render() {
-		let icon = this.props.up ? "fas fa-angle-up" : "fas fa-angle-down";
-		let classList = ["dropdown", ...(this.props.className || [])];
+		const leftIcon = this.props.leftIcon ? this.props.leftIcon : null;
+		const rightIcon = this.props.up ? "fas fa-angle-up" : "fas fa-angle-down";
+		const classList = ["dropdown", ...(this.props.className || [])];
 
 		if(this.state.active) {
 			classList.push("is-active");
@@ -33,13 +34,14 @@ export default class Menu extends React.Component {
 			}
 		});
 
-		let btnPropsList = [...TYPES, ...SIZES, ...BUTTON].filter(prop => "button-" + prop in this.props && this.props["button-" + prop]).reduce((a,b) => (a[b] = true, a), {});
+		const btnPropsList = [...TYPES, ...SIZES, ...BUTTON].filter(prop => "button-" + prop in this.props && this.props["button-" + prop]).reduce((a,b) => (a[b] = true, a), {});
 
 		// TODO an invisible modal or something to close the menu when clicking away from it
+		// TODO this barfs if there's only one child item
 
 		return <div className={ classList.join(" ") }>
 			<div className="dropdown-trigger">
-				<Button rightIcon={ icon } label={ this.props.label } onClick={ this.toggleActive.bind(this) } { ...btnPropsList } />
+				<Button leftIcon={ leftIcon } rightIcon={ rightIcon } label={ this.props.label } onClick={ this.toggleActive.bind(this) } { ...btnPropsList } />
 			</div>
 			<div className="dropdown-menu" role="menu">
 				<div className="dropdown-content">
@@ -60,9 +62,15 @@ export default class Menu extends React.Component {
 	}
 }
 
-Menu.Item = (props) => (
-	<a className="dropdown-item" onClick={ props.onClick }>{ props.children }</a>
-);
+Menu.Item = (props) => {
+	const classList = ["dropdown-item"];
+
+	if(props.active) {
+		classList.push("is-active");
+	}
+
+	return <a className={ classList.join(" ") } onClick={ props.onClick }>{ props.children }</a>;
+};
 
 Menu.Divider = () => (
 	<hr className="dropdown-divider" />

@@ -6,6 +6,7 @@ import { CirclePicker } from "react-color";
 // Sunstone components
 import Menu from "./menu.jsx";
 import Button from "./button.jsx";
+import Icon from "./icon.jsx";
 import Tabs from "./tabs.jsx";
 import Message from "./message.jsx";
 import PaperView from "./paper-view.jsx";
@@ -26,9 +27,10 @@ import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
-import { MODE } from "../lib/config";
-import { MAP_EDIT, NODE_CREATE, NODE_DELETE } from "../lib/action-keys";
+import { MODE, COLOURS } from "../lib/config";
+import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
+
 
 /*
 
@@ -108,6 +110,10 @@ export default class Editor extends React.Component {
 				copyActive: true
 			})
 		});
+	}
+
+	activateLayer(layer) {
+		dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
 	}
 
 	activateTool(key) {
@@ -202,10 +208,10 @@ export default class Editor extends React.Component {
 					<h1 className="has-text-light title is-4">Sunstone</h1>
 				</div>
 				<div id="menu" className="level-right">
-					{ activeLayer ? <div className="is-dark">
-						<span className="icon"><i className="fas fa-layer-group"></i></span>
-						{ activeLayer.name }
-					</div> : null }
+					{ this.state.activeTool ? <Icon icon={ this.state.activeTool.icon } /> : null }
+					{ activeLayer ? <Menu label={ activeLayer.name } button-dark>
+						{ this.props.layers.map(layer => <Menu.Item onClick={ this.activateLayer.bind(this, layer) } active={ layer.id == activeLayer.id }>{ layer.name }</Menu.Item>)}
+					</Menu> : null }
 					<Button label="Foreground" leftIcon="square" dark leftIconColour={ this.state.foreground } />
 					<Button label="Background" leftIcon="square" dark leftIconColour={ this.state.background } />
 					<Menu label={ this.state.mapName } button-dark>

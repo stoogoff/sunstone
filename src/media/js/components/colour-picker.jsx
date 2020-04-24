@@ -11,12 +11,9 @@ export default class ColourPicker extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.colours = COLOURS;
 		this.state = {
 			open: false
 		};
-
-		this.expander = React.createRef();
 	}
 
 	toggleColourPicker() {
@@ -52,7 +49,7 @@ export default class ColourPicker extends React.Component {
 				 active={ this.state.open }
 				 light />
 			<Expander open={ this.state.open }>
-				<CirclePicker colors={ this.colours } onChangeComplete={ this.setColour.bind(this) } />
+				<CirclePicker colors={ COLOURS } onChangeComplete={ this.setColour.bind(this) } />
 			</Expander>
 		</div>;
 	}

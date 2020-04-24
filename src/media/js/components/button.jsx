@@ -1,5 +1,6 @@
 
 import React from "react";
+import Icon from "./icon.jsx";
 import { getClassList } from "../lib/utils";
 
 
@@ -30,12 +31,9 @@ export default (props) => {
 		}
 	};
 
-	const leftIconColour = props.leftIconColour ? { color: props.leftIconColour} : null;
-	const rightIconColour = props.rightIconColour ? { color: props.rightIconColour} : null;
-
 	return <Tag className={ classList.join(" ") } onClick={ onClick } { ...props }>
-		{ props.leftIcon ? <span className="icon is-small" onClick={ onLeftIconClick }><i className={ `fas fa-${props.leftIcon}` } style={ leftIconColour }></i></span> : null }
+		{ props.leftIcon ? <Icon small onClick={ onLeftIconClick } icon={ props.leftIcon } colour={ props.leftIconColour } /> : null }
 		{ props.label ? <span>{ props.label }</span> : null }
-		{ props.rightIcon ? <span className="icon is-small is-pulled-right" onClick={ onRightIconClick }><i className={ `fas fa-${props.rightIcon}` } style={ rightIconColour }></i></span> : null }
+		{ props.rightIcon ? <Icon small pulled-right onClick={ onRightIconClick } icon={ props.rightIcon } colour={ props.rightIconColour } /> : null }
 	</Tag>
 };

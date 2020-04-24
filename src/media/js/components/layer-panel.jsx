@@ -6,16 +6,21 @@ import { TextInput } from "./input/text.jsx";
 import Modal from "./modal.jsx";
 import Expander from "./expander.jsx";
 import dispatcher from "../lib/dispatcher";
-import { LAYER_CREATE, LAYER_HIDE, LAYER_SHOW, LAYER_ACTIVATE, LAYER_DELETE } from "../lib/action-keys";
+import { LAYER_CREATE, LAYER_RENAME, LAYER_HIDE, LAYER_SHOW, LAYER_ACTIVATE, LAYER_DELETE } from "../lib/action-keys";
 import { ICON } from "../lib/config";
 import { createId } from "../lib/utils";
+import { throttle } from "../lib/timer";
 
 // TODO POSITION OF THE MODAL!
 export default class LayerPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// throttle updates to the server to every 250 milliseconds
+		this.update = throttle(this.renameLayerSend.bind(this));
+
 		this.state = {
+			layerName: "",
 			showDialogue: false,
 			deletingLayer: null,
 			openMenu: null
@@ -88,7 +93,8 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 		const openMenu = this.state.openMenu == layer.id ? null : layer.id;
 
 		this.setState({
-			openMenu
+			openMenu: openMenu,
+			layerName: layer.name
 		});
 	}
 
@@ -105,8 +111,18 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 		});
 	}
 
-	renameLayer(layer) {
+	renameLayer(layer, text) {
+		this.setState({
+			layerName: text
+		});
 
+		layer.name = text;
+
+		this.update(layer);
+	}
+
+	renameLayerSend(layer) {
+		dispatcher.dispatch(LAYER_RENAME, layer);
 	}
 
 	render() {
@@ -119,7 +135,7 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 				{ this.props.layers.map((layer, index) => <li>
 					<Button label={ layer.name }
 						warning={ layer.active }
-						leftIcon="chevron-right"
+						leftIcon={ this.state.openMenu == layer.id ? "chevron-down" : "chevron-right" }
 						rightIcon={ layer.visible ? ICON.VISIBLE : ICON.HIDDEN }
 						onClick={ this.onClick.bind(this, layer) }
 						onLeftIconClick={ this.toggleMenu.bind(this, layer) }
@@ -130,13 +146,12 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 								<div className="control"><Button leftIcon="sort-down" disabled={ index == this.props.layers.length - 1 } onClick={ this.moveLayerDown.bind(this, layer) } /></div>
 								<div className="control"><Button leftIcon="trash" onClick={ this.displayDeleteDialogue.bind(this, layer) } /></div>
 							</div>
-							<TextInput label={ "Rename " + layer.name } value={ layer.name } />
-							<Button label="Rename" fullwidth onClick={ this.renameLayer.bind(this, layer) } />
+							<TextInput label={ "Rename " + layer.name } value={ this.state.layerName } onChange={ this.renameLayer.bind(this, layer) } />
 						</Expander>
 				</li>)}
 			</ul>
 			<section><Button leftIcon="layer-group" label="Add Layer" onClick={ this.addLayer.bind(this) } /></section>
-			<Modal active={ this.state.showDialogue } title="Delete Layer">
+			<Modal active={ this.state.showDialogue } title="Delete Layer" closable close={ this.hideDialogue.bind(this) }>
 				<p>Are you sure you want to delete this layer? This action can't be undone.</p>
 				<Button label="OK" onClick={ this.deleteLayer.bind(this) } />
 				<Button label="Cancel" onClick={ this.hideDialogue.bind(this) } />

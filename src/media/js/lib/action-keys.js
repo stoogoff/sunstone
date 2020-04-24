@@ -19,6 +19,7 @@ export const LAYER_LOAD_COMPLETE = "layer-load-complete";
 // layers can be created and deleted, reordered and their visibility changed
 export const LAYER_CREATE = "create-layer";
 export const LAYER_EDIT = "edit-layer";
+export const LAYER_RENAME = "rename-layer";
 export const LAYER_DELETE = "delete-layer";
 export const LAYER_MOVE_UP = "move-up-layer";
 export const LAYER_MOVE_DOWN = "move-down-layer";

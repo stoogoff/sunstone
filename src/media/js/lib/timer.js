@@ -1,5 +1,5 @@
 
-export const throttle = (callback) => {
+export const throttle = (callback, cutoff) => {
 	let t = null;
 
 	return (value) => {
@@ -9,7 +9,7 @@ export const throttle = (callback) => {
 
 		t = window.setTimeout(() => {
 			callback(value);
-		}, 250);
+		}, cutoff || 250);
 	}
 }
 
