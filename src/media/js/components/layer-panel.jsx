@@ -130,7 +130,7 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 			return null;
 		}
 
-		return <div>
+		return <div className="layer-panel">
 			<ul className="menu">
 				{ this.props.layers.map((layer, index) => <li>
 					<Button label={ layer.name }

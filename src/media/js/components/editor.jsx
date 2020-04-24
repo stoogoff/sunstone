@@ -8,10 +8,11 @@ import Menu from "./menu.jsx";
 import Button from "./button.jsx";
 import Icon from "./icon.jsx";
 import Tabs from "./tabs.jsx";
-import Message from "./message.jsx";
+import Notification from "./notification.jsx";
 import PaperView from "./paper-view.jsx";
 import ColourPicker from "./colour-picker.jsx";
 import LayerPanel from "./layer-panel.jsx";
+import ImagePanel from "./image-panel.jsx";
 import { TextInput } from "./input/text.jsx";
 import RangeInput from "./input/range.jsx";
 
@@ -45,6 +46,11 @@ image upload tool (how to save this?)
 move object tool
 
 */
+
+
+const TAB_DEFAULT = 1;
+
+
 export default class Editor extends React.Component {
 	constructor(props) {
 		super(props);
@@ -56,7 +62,7 @@ export default class Editor extends React.Component {
 			// tool states
 			activeTool: null,
 			colourPicker: null,
-			tabIndex: 0,
+			tabIndex: TAB_DEFAULT,
 
 			// parameters to tools
 			foreground: "black",
@@ -157,12 +163,16 @@ export default class Editor extends React.Component {
 		});
 	}
 
-	toggleSimpleState(type) {
-		let currentState = this.state[type];
+	toggleSidebar() {
+		let updatedState = {
+			"expanded": !this.state.expanded
+		};
 
-		this.setState({
-			[type]: !currentState
-		});
+		if(!updatedState.expanded) {
+			updatedState.tabIndex = TAB_DEFAULT;
+		}
+
+		this.setState(updatedState);
 	}
 
 	setMapName(name) {
@@ -226,7 +236,7 @@ export default class Editor extends React.Component {
 				<nav id="tools" className={ "has-background-light " + (this.state.expanded ? "is-open" : "is-closed") }>
 					<ul className="menu">
 						<Button as="li"
-							onClick={ this.toggleSimpleState.bind(this, "expanded") }
+							onClick={ this.toggleSidebar.bind(this, "expanded") }
 							rightIcon={ this.state.expanded ? "angle-double-left" : "angle-double-right" } />
 						{ this.tools.map(t => <Button as="li"
 							rightIcon={ t.icon }
@@ -234,7 +244,7 @@ export default class Editor extends React.Component {
 							label={ t.name }
 							onClick={ this.activateTool.bind(this, t.name) } />)}
 					</ul>
-					<Tabs index={ 1 }>
+					<Tabs index={ this.state.tabIndex } onTabChange={ this.setSimpleState.bind(this, "tabIndex") }>
 						<Tabs.Tab label="Tools">
 							<section>
 								<RangeInput label="Opacity" min={ 0 } max={ 1 } value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } />
@@ -253,6 +263,9 @@ export default class Editor extends React.Component {
 								<TextInput label="Public URL" value={ this.props.map.url } onClick={ this.copyURL.bind(this) } rightIcon="copy" readOnly note="Click to copy public URL." />
 							</section>
 						</Tabs.Tab>
+						<Tabs.Tab label="Images">
+							<ImagePanel map={ this.props.map } images={ this.props.images } />
+						</Tabs.Tab>
 					</Tabs>
 				</nav>
 				: null }
@@ -267,11 +280,11 @@ export default class Editor extends React.Component {
 					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</Menu.Item>
 				</Menu>
 			</span>
-			<Message active={ this.state.copyActive } primary
+			<Notification active={ this.state.copyActive } primary
 				timeout={ 4000 }
 				onClose={ this.setSimpleState.bind(this, "copyActive", false) }>
 					{ this.state.copyMessage }
-			</Message>
+			</Notification>
 		</div>;
 	}
 }

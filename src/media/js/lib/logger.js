@@ -1,5 +1,7 @@
 
-const LOGGING = {};
+const LOGGING = {
+	"app": 15
+};
 
 
 export const LOG = 1;
@@ -25,15 +27,15 @@ export default function getLogger(module) {
 		}
 
 		if(LOGGING[module] & INFO) {
-			logger.log = (...args) => console.info(`${module}:`, ...args);
+			logger.info = (...args) => console.info(`${module}:`, ...args);
 		}
 
 		if(LOGGING[module] & WARN) {
-			logger.log = (...args) => console.warn(`${module}:`, ...args);
+			logger.warn = (...args) => console.warn(`${module}:`, ...args);
 		}
 
 		if(LOGGING[module] & ERROR) {
-			logger.log = (...args) => console.error(`${module}:`, ...args);
+			logger.error = (...args) => console.error(`${module}:`, ...args);
 		}
 	}
 

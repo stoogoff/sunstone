@@ -18,6 +18,7 @@ import { createId } from "./lib/utils";
 import mapHandler from "./handlers/maps";
 import layerHandler from "./handlers/layers";
 import nodeHandler from "./handlers/nodes";
+import imageHandler from "./handlers/images";
 
 import getLogger from "./lib/logger";
 
@@ -67,7 +68,8 @@ class App extends React.Component {
 				this.setState({
 					map: state.maps ? state.maps[0] : null,
 					nodes: state.nodes,
-					layers: state.layers
+					layers: state.layers,
+					images: state.images
 				});
 			}
 		});
@@ -75,6 +77,7 @@ class App extends React.Component {
 		dispatcher.register("maps", mapHandler);
 		dispatcher.register("layers", layerHandler);
 		dispatcher.register("nodes", nodeHandler);
+		dispatcher.register("images", imageHandler);
 		/*dispatcher.register("mapIndex", (state = -1, action, payload) => {
 			if(action == MAP_SELECT) {
 				logger.log("selecting map", payload)
@@ -131,7 +134,7 @@ second visit
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
 		return <div>
-			<Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } mode={ MODE.EDIT } />
+			<Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } mode={ MODE.EDIT } />
 			<Modal title="Loading map" active={ dialogueIsActive }>
 				<progress class="progress is-small is-warning" max="100"></progress>
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}

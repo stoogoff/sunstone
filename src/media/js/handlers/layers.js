@@ -7,7 +7,7 @@ import {
 
 import { createId, replaceId } from "../lib/utils/";
 import { STORAGE_KEYS, VISIBILITY } from "../lib/config";
-import database from "../lib/firebase";
+import { database } from "../lib/firebase";
 import paper from "paper/dist/paper-core";
 
 

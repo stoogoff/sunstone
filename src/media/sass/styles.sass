@@ -85,19 +85,19 @@ body, html
 
 
 // general class overrides
-.message-container
+.notification-container
 	position: fixed
 	bottom: 0
 	left: 0
 	right: 0
 	transform: translateY(100%)
-	animation: message-slide-out 0.75s ease
+	animation: notification-slide-out 0.75s ease
 
 	&.is-active
 		transform: translateY(0)
-		animation: message-slide-in 0.5s ease
+		animation: notification-slide-in 0.5s ease
 
-	.message
+	.notification
 		width: 60%
 		margin: 0 auto 2rem
 
@@ -106,6 +106,18 @@ body, html
 
 .label
 	margin-bottom: 0 !important
+
+.is-centred
+	text-align: center
+
+.image-panel .drop-zone
+	background-color: white
+	border-radius: 4px
+	padding: 0.5rem
+	border: 1px solid rgb(219,219,219)
+
+	.is-centred
+		margin-top: 1rem
 
 
 // animations
@@ -122,14 +134,14 @@ body, html
 	to
 		transform: translateX($menuTransform)
 
-@keyframes message-slide-in
+@keyframes notification-slide-in
 	from
 		transform: translateY(100%)
 
 	to
 		transform: translateY(0)
 
-@keyframes message-slide-out
+@keyframes notification-slide-out
 	from
 		transform: translateY(0)
 

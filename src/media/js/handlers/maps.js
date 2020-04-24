@@ -4,7 +4,7 @@ import { STORAGE_KEYS } from "../lib/config";
 import { sortByProperty } from "../lib/list";
 import { local } from "../lib/local-store"
 import dispatcher from "../lib/dispatcher";
-import database from "../lib/firebase";
+import { database } from "../lib/firebase";
 import { createId, replaceId } from "../lib/utils";
 import { next } from "../lib/timer";
 import {

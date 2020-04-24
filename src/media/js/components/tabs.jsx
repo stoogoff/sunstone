@@ -1,37 +1,29 @@
 
 import React from "react";
 
-export default class Tabs extends React.Component {
-	constructor(props) {
-		super(props);
+const Tabs = (props) => {
+	const setTab = (index) => {
+		if(props.onTabChange) {
+			props.onTabChange(index);
+		}
+	};
 
-		this.state = {
-			index: props.index || 0
-		};
-	}
-
-	setTab(index) {
-		this.setState({
-			index
-		});
-	}
-
-	render() {
-		return <div className="tabs-container">
-			<div className="tabs is-boxed">
-				<ul>
-					{ this.props.children.map((tab, index) => <li
-						onClick={ this.setTab.bind(this, index) }
-						className={ this.state.index == index ? "is-active" : null  }>
-							<a>{ tab.props.label }</a>
-					</li>)}
-				</ul>
-			</div>
-			{ this.props.children.filter((child, index) => this.state.index == index) }
-		</div>;
-	}
+	return <div className="tabs-container">
+		<div className="tabs is-boxed">
+			<ul>
+				{ props.children.map((tab, index) => <li
+					onClick={ setTab.bind(null, index) }
+					className={ props.index == index ? "is-active" : null  }>
+						<a>{ tab.props.label }</a>
+				</li>)}
+			</ul>
+		</div>
+		{ props.children.filter((child, index) => props.index == index) }
+	</div>;
 }
 
 Tabs.Tab = (props) => (
 	<div className="tab-panel">{ props.children }</div>
 );
+
+export default Tabs;

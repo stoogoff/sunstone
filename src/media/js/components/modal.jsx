@@ -29,3 +29,7 @@ export default (props) => {
 		{ props.closable ? <button className="modal-close is-large" aria-label="close" onClick={ onClose }></button> : null }
 	</div>, document.getElementById("modal"));
 };
+
+export const ModalBackground = (props) => (
+	ReactDOM.createPortal(<div className="modal-background"></div>)
+);

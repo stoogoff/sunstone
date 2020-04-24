@@ -1,6 +1,6 @@
 
 import { handlerCreator } from "./base";
-import database from "../lib/firebase";
+import { database } from "../lib/firebase";
 import { STORAGE_KEYS } from "../lib/config";
 import { NODE_CREATE, NODE_DELETE, NODE_LOAD_COMPLETE } from "../lib/action-keys";
 import { replaceId } from "../lib/utils/";

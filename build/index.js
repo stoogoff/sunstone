@@ -75,11 +75,15 @@ let rollupPlugins = [
 				"Component",
 				"createElement",
 				"createRef",
+				"forwardRef",
 				"Fragment",
 				"isValidElement",
 				"PureComponent",
 				"useCallback",
 				"useEffect",
+				"useImperativeHandle",
+				"useMemo",
+				"useReducer",
 				"useRef"
 			]
 		}
