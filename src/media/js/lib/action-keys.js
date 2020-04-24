@@ -14,6 +14,7 @@ export const MAP_LOAD = "load-map";
 // loading of nodes and layers
 export const NODE_LOAD_COMPLETE = "node-load-complete";
 export const LAYER_LOAD_COMPLETE = "layer-load-complete";
+export const IMAGE_LOAD_COMPLETE = "image-load-complete";
 
 
 // layers can be created and deleted, reordered and their visibility changed
@@ -35,3 +36,4 @@ export const NODE_DELETE = "delete-node";
 
 // images can be uploaded...
 export const IMAGE_UPLOAD = "create-image";
+export const IMAGE_LOAD = "load-image";

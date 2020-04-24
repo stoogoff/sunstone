@@ -16,3 +16,11 @@ export const throttle = (callback, cutoff) => {
 export const next = (callback) => {
 	window.setTimeout(callback, 0);
 }
+
+export const after = (times, callback) => {
+	return (...args) => {
+		if(--times == 0) {
+			callback(...args);
+		}
+	};
+}

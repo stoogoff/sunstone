@@ -24,5 +24,9 @@ export default (props) => {
 		iconClassList.push("fa-3x");
 	}
 
+	if(props.animated) {
+		iconClassList.push("fa-spin");
+	}
+
 	return <span className={ classList.join(" ") } onClick={ onClick }><i className={ iconClassList.join(" ") } style={ colour }></i></span>;
 };

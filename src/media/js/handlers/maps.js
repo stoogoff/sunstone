@@ -4,12 +4,12 @@ import { STORAGE_KEYS } from "../lib/config";
 import { sortByProperty } from "../lib/list";
 import { local } from "../lib/local-store"
 import dispatcher from "../lib/dispatcher";
-import { database } from "../lib/firebase";
+import { database, storage } from "../lib/firebase";
 import { createId, replaceId } from "../lib/utils";
 import { next } from "../lib/timer";
 import {
 	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD,
-	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE
+	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, IMAGE_LOAD, IMAGE_LOAD_COMPLETE
 } from "../lib/action-keys";
 
 
@@ -62,6 +62,7 @@ MAP_ACTIONS[MAP_CREATE] = (state, payload) => {
 	next(() => {
 		dispatcher.dispatch(LAYER_LOAD_COMPLETE, []);
 		dispatcher.dispatch(NODE_LOAD_COMPLETE, []);
+		dispatcher.dispatch(IMAGE_LOAD_COMPLETE, []);
 	});
 
 	return [...state, payload];
@@ -72,12 +73,17 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 	// set up firebase to load map data from server
 	// wait for the data to load
 	let loadRef = database.ref(replaceId(STORAGE_KEYS.MAP_ID, payload.id));
+	let imagesRef = storage.ref(replaceId(STORAGE_KEYS.MAP_IMAGES, payload.id))
 
 	loadRef.once("value").then(snapshot => {
 		let map = convertMapData(snapshot.val());
 
 		dispatcher.dispatch(LAYER_LOAD_COMPLETE, map.layers);
 		dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
+	});
+
+	imagesRef.listAll().then(response => {
+		dispatcher.dispatch(IMAGE_LOAD, response.items);
 	});
 
 	return [...state, payload];

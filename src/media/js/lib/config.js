@@ -34,6 +34,7 @@ export const STORAGE_KEYS = {
 	MAP_ROOT: "/maps",
 	MAP_ID: "/maps/$ID$",
 	MAP_NAME: "/maps/$ID$/name",
+	MAP_IMAGES: "images/$ID$",
 	NODE: "/maps/$ID$/nodes/$ID$",
 	LAYER: "/maps/$ID$/layers/$ID$",
 	LAYER_VISIBLE: "/maps/$ID$/layers/$ID$/visible",
