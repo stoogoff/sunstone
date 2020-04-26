@@ -227,7 +227,7 @@ export default class Editor extends React.Component {
 
 		let activeLayer = this.getActiveLayer();
 
-		return <div>
+		return <div className="full-screen">
 			<header id="navbar" className="has-background-dark has-text-light level">
 				<div className="level-left">
 					<h1 className="has-text-light title is-4">Sunstone</h1>
@@ -279,7 +279,7 @@ export default class Editor extends React.Component {
 							</section>
 						</Tabs.Tab>
 						<Tabs.Tab label="Images">
-							<ImagePanel map={ this.props.map } images={ this.props.images } onSelect={ this.setToolState.bind(this, "image") } />
+							<ImagePanel map={ this.props.map } images={ this.props.images } activeImage={ this.state.image ? this.state.image.path : null } onSelect={ this.setToolState.bind(this, "image") } />
 						</Tabs.Tab>
 					</Tabs>
 				</nav>

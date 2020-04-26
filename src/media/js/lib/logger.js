@@ -18,7 +18,7 @@ export default function getLogger(module) {
 		log: noop,
 		info: noop,
 		warn: noop,
-		info: noop
+		error: noop
 	};
 
 	if(module in LOGGING) {

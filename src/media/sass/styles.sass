@@ -8,10 +8,14 @@ body, html
 	padding: 0
 	width: 100%
 	height: 100%
+	overflow: hidden
 
 // id specific overrides
-#navbar h1
-	margin-left: 3.5rem
+#navbar
+	margin-bottom: 0
+
+	h1
+		margin-left: 3.5rem
 
 #tools
 	width: 300px
@@ -84,7 +88,11 @@ body, html
 	height: 100%
 
 
-// general class overrides
+// general classes and overrides
+.full-screen
+	width: 100%
+	height: 100%
+
 .notification-container
 	position: fixed
 	bottom: 0

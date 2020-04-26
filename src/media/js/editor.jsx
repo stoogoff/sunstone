@@ -133,7 +133,7 @@ second visit
 		let mapName = this.state.map ? this.state.map.name : null;
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
-		return <div>
+		return <div className="full-screen">
 			<Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } mode={ MODE.EDIT } />
 			<Modal title="Loading map" active={ dialogueIsActive }>
 				<progress class="progress is-small is-warning" max="100"></progress>

@@ -4,6 +4,7 @@ import Pen from "./pen";
 import Rectangle from "./rectangle";
 import Circle from "./circle";
 import Marker from "./marker";
+import Raster from "./raster";
 import getLogger from "../lib/logger";
 
 import { MODE } from "../lib/config";
@@ -18,6 +19,7 @@ let tools = {
 	"Rectangle": Rectangle,
 	"Circle": Circle,
 	"Marker": Marker,
+	"Image": Raster,
 };
 
 

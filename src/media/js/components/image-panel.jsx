@@ -18,8 +18,7 @@ export default class ImagePabel extends React.Component {
 
 		this.state = {
 			openMenu: false,
-			loading: false,
-			activeImage: ""
+			loading: false
 		};
 	}
 
@@ -40,10 +39,6 @@ export default class ImagePabel extends React.Component {
 	}
 
 	activateImage(image) {
-		this.setState({
-			activeImage: image.path
-		});
-
 		if(this.props.onSelect) {
 			this.props.onSelect(image);
 		}
@@ -90,7 +85,7 @@ export default class ImagePabel extends React.Component {
 			{ this.props.images ? <ul className="menu">
 				{ this.props.images.map(image => <li>
 					<Button label={ image.name }
-						warning={ this.state.activeImage == image.path }
+						warning={ this.props.activeImage == image.path }
 						leftIcon={ this.state.openMenu == image.path ? "chevron-down" : "chevron-right" }
 						onLeftIconClick={ this.toggleMenu.bind(this, image) }
 						onClick={ this.activateImage.bind(this, image) } />
