@@ -18,6 +18,7 @@ export default class Delete extends Tool {
 
 		this.name = "Delete";
 		this.icon = "eraser";
+		this.layerId = null;
 		this.deleteItems = [];
 
 		this._tool.distanceThreshold = 8;
@@ -26,11 +27,16 @@ export default class Delete extends Tool {
 	handleDelete(point) {
 		let result = paper.project.hitTest(point, HIT_TEST);
 
-		if(result && result.item) {
+		// TODO now only deletes from the active layer, should inform the user in some fashion as to why it isn't deleting an item
+		if(result && result.item && result.item.layer._externalId == this.layerId) {
 			this.deleteItems.push(result.item._externalId);
 
 			result.item.remove();
 		}
+	}
+
+	update(options) {
+		this.layerId = options.layer.id;
 	}
 
 	onMouseDown(event) {

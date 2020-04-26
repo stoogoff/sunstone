@@ -22,7 +22,7 @@ import Pan from "../tools/pan";
 import Marker from "../tools/marker";
 import Circle from "../tools/circle";
 import Rectangle from "../tools/rectangle";
-import Image from "../tools/image";
+import Raster from "../tools/raster";
 import Delete from "../tools/delete";
 import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
 
@@ -69,6 +69,7 @@ export default class Editor extends React.Component {
 			background: "white",
 			opacity: 1,
 			width: 1,
+			image: null,
 
 			// map properties
 			mapName: this.props.map ? this.props.map.name : "",
@@ -85,7 +86,7 @@ export default class Editor extends React.Component {
 
 		// add extra tools if not in view mode
 		if(this.props.mode == MODE.EDIT) {
-			this.tools = this.tools.concat([new Marker(), new Pen(), new Rectangle(), new Circle(), new Image(), new Delete()]);
+			this.tools = this.tools.concat([new Marker(), new Pen(), new Rectangle(), new Circle(), new Raster(), new Delete()]);
 		}
 
 		this.zoom = [ZoomIn, ZoomOut];
@@ -119,11 +120,13 @@ export default class Editor extends React.Component {
 	}
 
 	activateLayer(layer) {
+		this.toolNeedsUpdate = true;
+
 		dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
 	}
 
 	activateTool(key) {
-		let active = this.tools.find(f => f.name == key);
+		const active = this.tools.find(f => f.name == key);
 
 		if(this.state.activeTool === active) {
 			return;
@@ -134,7 +137,7 @@ export default class Editor extends React.Component {
 		}
 
 		// once a tool has finished its operation it MAY need to send data somewhere
-		let activated = active.activate(this.getToolParams(), (payload) => {
+		const activated = active.activate(this.getToolParams(), (payload) => {
 			payload.map = this.props.map.id;
 
 			if(payload.type == NODE_DELETE) {
@@ -146,9 +149,15 @@ export default class Editor extends React.Component {
 		});
 
 		if(activated) {
-			this.setState({
+			const updatedState = {
 				activeTool: active
-			});
+			};
+
+			if(active.name == Raster.NAME) {
+				updatedState.tabIndex = 3;
+			}
+
+			this.setState(updatedState);
 		}
 	}
 
@@ -197,7 +206,13 @@ export default class Editor extends React.Component {
 			background: this.state.background,
 			opacity: this.state.opacity,
 			width: this.state.width,
+			image: this.state.image,
+			layer: this.getActiveLayer(),
 		};
+	}
+
+	getActiveLayer() {
+		return this.props.layers ? this.props.layers.find(findByProperty("active", true)) :null;
 	}
 
 	render() {
@@ -210,7 +225,7 @@ export default class Editor extends React.Component {
 			this.updateActiveTool();
 		}
 
-		let activeLayer = this.props.layers ? this.props.layers.find(findByProperty("active", true)) :null;
+		let activeLayer = this.getActiveLayer();
 
 		return <div>
 			<header id="navbar" className="has-background-dark has-text-light level">
@@ -255,7 +270,7 @@ export default class Editor extends React.Component {
 							</section>
 						</Tabs.Tab>
 						<Tabs.Tab label="Layers">
-							<LayerPanel map={ this.props.map } layers={ this.props.layers } />
+							<LayerPanel map={ this.props.map } layers={ this.props.layers } onSelect={ this.activateLayer.bind(this) } />
 						</Tabs.Tab>
 						<Tabs.Tab label="Map">
 							<section>
@@ -264,7 +279,7 @@ export default class Editor extends React.Component {
 							</section>
 						</Tabs.Tab>
 						<Tabs.Tab label="Images">
-							<ImagePanel map={ this.props.map } images={ this.props.images } />
+							<ImagePanel map={ this.props.map } images={ this.props.images } onSelect={ this.setToolState.bind(this, "image") } />
 						</Tabs.Tab>
 					</Tabs>
 				</nav>

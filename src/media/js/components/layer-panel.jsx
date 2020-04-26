@@ -86,7 +86,10 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 	}
 
 	onClick(layer, event) {
-		dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
+		//dispatcher.dispatch(LAYER_ACTIVATE, layer.id);
+		if(this.props.onSelect) {
+			this.props.onSelect(layer);
+		}
 	}
 
 	toggleMenu(layer, event) {
