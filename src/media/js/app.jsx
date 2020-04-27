@@ -12,7 +12,7 @@ import dispatcher from "./lib/dispatcher";
 import { local } from "./lib/local-store";
 import { MODE, STORAGE_KEYS, DEFAULT_MAP, DEFAULT_LAYER } from "./lib/config";
 
-import { MAP_CREATE, MAP_LOAD, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE } from "./lib/action-keys";
+import { MAP_CREATE, MAP_LOAD, MAP_LOAD_UPDATES, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE } from "./lib/action-keys";
 
 import { createId } from "./lib/utils";
 
@@ -110,7 +110,7 @@ second visit
 			logger.log("loading a map to view")
 			logger.log("map id", mapId)
 
-			dispatcher.dispatch(MAP_LOAD, { id: mapId, autoload: true });
+			dispatcher.dispatch(MAP_LOAD_UPDATES, { id: mapId });
 		}
 		else if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
 			// if there is a map in the local store, select it

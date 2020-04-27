@@ -94,6 +94,28 @@ MAP_ACTIONS[MAP_LOAD_COMPLETE] = (state, payload) => {
 	return editById(state, payload;
 };
 
+MAP_ACTIONS[MAP_LOAD_UPDATES] = (state, payload) => {
+	// set up firebase to load map data from server
+	// wait for the data to load
+	let loadRef = database.ref(replaceId(STORAGE_KEYS.MAP_ID, payload.id));
+	let imagesRef = storage.ref(replaceId(STORAGE_KEYS.MAP_IMAGES, payload.id))
+
+	loadRef.on("value", snapshot => {
+		let map = convertMapData(snapshot.val());
+
+		dispatcher.dispatch(MAP_LOAD_COMPLETE, map);
+		// these need to be called to update correctly but not in the same way...
+		//dispatcher.dispatch(LAYER_LOAD_COMPLETE, map.layers);
+		//dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
+	});
+
+	imagesRef.listAll().then(response => {
+		dispatcher.dispatch(IMAGE_LOAD, response.items);
+	});
+
+	return [...state, payload];
+};
+
 
 // make default list based actions available
 export default handlerCreator(MAP_ACTIONS);
