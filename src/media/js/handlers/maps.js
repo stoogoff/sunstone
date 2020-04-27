@@ -8,7 +8,7 @@ import { database, storage } from "../lib/firebase";
 import { createId, replaceId } from "../lib/utils";
 import { next } from "../lib/timer";
 import {
-	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD,
+	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD, MAP_LOAD_COMPLETE,
 	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, IMAGE_LOAD, IMAGE_LOAD_COMPLETE
 } from "../lib/action-keys";
 
@@ -78,6 +78,7 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 	loadRef.once("value").then(snapshot => {
 		let map = convertMapData(snapshot.val());
 
+		dispatcher.dispatch(MAP_LOAD_COMPLETE, map);
 		dispatcher.dispatch(LAYER_LOAD_COMPLETE, map.layers);
 		dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
 	});
@@ -88,6 +89,11 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 
 	return [...state, payload];
 };
+
+MAP_ACTIONS[MAP_LOAD_COMPLETE] = (state, payload) => {
+	return editById(state, payload;
+};
+
 
 // make default list based actions available
 export default handlerCreator(MAP_ACTIONS);

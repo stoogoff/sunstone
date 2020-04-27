@@ -13,6 +13,7 @@ import PaperView from "./paper-view.jsx";
 import ColourPicker from "./colour-picker.jsx";
 import LayerPanel from "./layer-panel.jsx";
 import ImagePanel from "./image-panel.jsx";
+import ZoomPanel from "./zoom-panel.jsx";
 import { TextInput } from "./input/text.jsx";
 import RangeInput from "./input/range.jsx";
 
@@ -24,7 +25,7 @@ import Circle from "../tools/circle";
 import Rectangle from "../tools/rectangle";
 import Raster from "../tools/raster";
 import Delete from "../tools/delete";
-import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
+import Shape from "../tools/shape";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
@@ -42,7 +43,7 @@ editing of common state of multiple objects (maybe)
 
 public state of objects for view version
 
-image upload tool (how to save this?)
+DONE image upload tool (how to save this?)
 move object tool
 
 */
@@ -82,14 +83,16 @@ export default class Editor extends React.Component {
 			expanded: false,
 		}
 
-		this.tools = [new Pan()];
-
-		// add extra tools if not in view mode
-		if(this.props.mode == MODE.EDIT) {
-			this.tools = this.tools.concat([new Marker(), new Pen(), new Rectangle(), new Circle(), new Raster(), new Delete()]);
-		}
-
-		this.zoom = [ZoomIn, ZoomOut];
+		this.tools = [
+			new Pan(),
+			new Marker(),
+			new Pen(),
+			new Rectangle(),
+			new Circle(),
+			new Shape(),
+			new Raster(),
+			new Delete()
+		];
 	}
 
 	componentDidMount() {
@@ -247,54 +250,43 @@ export default class Editor extends React.Component {
 					</Menu>
 				</div>
 			</header>
-			{ this.props.mode == MODE.EDIT ?
-				<nav id="tools" className={ "has-background-light " + (this.state.expanded ? "is-open" : "is-closed") }>
-					<ul className="menu">
-						<Button as="li"
-							onClick={ this.toggleSidebar.bind(this, "expanded") }
-							rightIcon={ this.state.expanded ? "angle-double-left" : "angle-double-right" } />
-						{ this.tools.map(t => <Button as="li"
-							rightIcon={ t.icon }
-							warning={ t === this.state.activeTool }
-							label={ t.name }
-							onClick={ this.activateTool.bind(this, t.name) } />)}
-					</ul>
-					<Tabs index={ this.state.tabIndex } onTabChange={ this.setSimpleState.bind(this, "tabIndex") }>
-						<Tabs.Tab label="Tools">
-							<section>
-								<RangeInput label="Opacity" min={ 0 } max={ 1 } value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } />
-								<RangeInput label="Line Width" min={ 0 } max={ 5 } steps={ 5 } value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } />
-								<h3 className="label">Tool Colours</h3>
-								<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
-								<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
-							</section>
-						</Tabs.Tab>
-						<Tabs.Tab label="Layers">
-							<LayerPanel map={ this.props.map } layers={ this.props.layers } onSelect={ this.activateLayer.bind(this) } />
-						</Tabs.Tab>
-						<Tabs.Tab label="Map">
-							<section>
-								<TextInput label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } />
-								<TextInput label="Public URL" value={ this.props.map.url } onClick={ this.copyURL.bind(this) } rightIcon="copy" readOnly note="Click to copy public URL." />
-							</section>
-						</Tabs.Tab>
-						<Tabs.Tab label="Images">
-							<ImagePanel map={ this.props.map } images={ this.props.images } activeImage={ this.state.image ? this.state.image.path : null } onSelect={ this.setToolState.bind(this, "image") } />
-						</Tabs.Tab>
-					</Tabs>
-				</nav>
-				: null }
-			<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ this.props.mode } />
-			<span id="zoom" className="tag is-medium" >
-				<span className="icon is-large"><i className="fas fa-2x fa-search-plus"></i></span>
-				{ this.zoom.map(z => <Button text small rightIcon={ z.icon } onClick={ z.activate.bind(z) } />)}
-				<Menu up right button-text>
-					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 5) }>500%</Menu.Item>
-					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) }>250%</Menu.Item>
-					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 1) }>100%</Menu.Item>
-					<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</Menu.Item>
-				</Menu>
-			</span>
+			<nav id="tools" className={ "has-background-light " + (this.state.expanded ? "is-open" : "is-closed") }>
+				<ul className="menu">
+					<Button as="li"
+						onClick={ this.toggleSidebar.bind(this, "expanded") }
+						rightIcon={ this.state.expanded ? "angle-double-left" : "angle-double-right" } />
+					{ this.tools.map(t => <Button as="li"
+						rightIcon={ t.icon }
+						warning={ t === this.state.activeTool }
+						label={ t.name }
+						onClick={ this.activateTool.bind(this, t.name) } />)}
+				</ul>
+				<Tabs index={ this.state.tabIndex } onTabChange={ this.setSimpleState.bind(this, "tabIndex") }>
+					<Tabs.Tab label="Tools">
+						<section>
+							<RangeInput label="Opacity" min={ 0 } max={ 1 } value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } />
+							<RangeInput label="Line Width" min={ 0 } max={ 5 } steps={ 5 } value={ this.state.width } onChange={ this.setToolState.bind(this, "width") } />
+							<h3 className="label">Tool Colours</h3>
+							<ColourPicker caption="Foreground / Border" onSelection={ this.setToolState.bind(this, "foreground") } colour={ this.state.foreground } />
+							<ColourPicker caption="Background" onSelection={ this.setToolState.bind(this, "background") } colour={ this.state.background } />
+						</section>
+					</Tabs.Tab>
+					<Tabs.Tab label="Layers">
+						<LayerPanel map={ this.props.map } layers={ this.props.layers } onSelect={ this.activateLayer.bind(this) } />
+					</Tabs.Tab>
+					<Tabs.Tab label="Map">
+						<section>
+							<TextInput label="Name" value={ this.state.mapName } onChange={ this.setMapName.bind(this) } />
+							<TextInput label="Public URL" value={ this.props.map.url } onClick={ this.copyURL.bind(this) } rightIcon="copy" readOnly note="Click to copy public URL." />
+						</section>
+					</Tabs.Tab>
+					<Tabs.Tab label="Images">
+						<ImagePanel map={ this.props.map } images={ this.props.images } activeImage={ this.state.image ? this.state.image.path : null } onSelect={ this.setToolState.bind(this, "image") } />
+					</Tabs.Tab>
+				</Tabs>
+			</nav>
+			<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ MODE.EDIT } />
+			<ZoomPanel />
 			<Notification active={ this.state.copyActive } primary
 				timeout={ 4000 }
 				onClose={ this.setSimpleState.bind(this, "copyActive", false) }>

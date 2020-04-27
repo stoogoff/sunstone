@@ -25,7 +25,7 @@ export default class Marker extends Tool {
 	constructor() {
 		super();
 
-		this.name = "Marker";
+		this.name = Marker.NAME;
 		this.icon = "map-marker-alt";
 		this.colour = "black";
 	}
@@ -68,3 +68,5 @@ export default class Marker extends Tool {
 		marker._externalId = packet.id;
 	}
 }
+
+Marker.NAME = "Marker";

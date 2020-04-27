@@ -9,6 +9,7 @@ export const MAP_CREATE = "create-map";
 export const MAP_EDIT = "edit-map";
 export const MAP_DELETE = "delete-map";
 export const MAP_LOAD = "load-map";
+export const MAP_LOAD_COMPLETE = "map-load-complete";
 
 
 // loading of nodes and layers

@@ -7,10 +7,12 @@ export default class Rectangle extends Tool {
 	constructor() {
 		super();
 
-		this.name = "Rectangle";
+		this.name = Rectangle.NAME;
 		this.icon = "square";
 		this.border = "black";
 		this.background = "white";
+		this.width = 1;
+		this.opacity = 1;
 		this.forceSquare = false;
 
 		this._constructor = paper.Path.Rectangle;
@@ -99,3 +101,5 @@ export default class Rectangle extends Tool {
 		path.opacity = packet.opacity;
 	}
 }
+
+Rectangle.NAME = "Rectangle";

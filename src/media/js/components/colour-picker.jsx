@@ -43,9 +43,9 @@ export default class ColourPicker extends React.Component {
 		return <div className={ classList.join(" ") }>
 			<Button label={ this.props.caption }
 				 onClick={ this.toggleColourPicker.bind(this) }
-				 leftIconColour={ this.props.colour }
-				 leftIcon="square"
-				 rightIcon={ this.state.open ? "chevron-down" : "chevron-right" }
+				 rightIconColour={ this.props.colour }
+				 rightIcon="square"
+				 leftIcon={ this.state.open ? "chevron-down" : "chevron-right" }
 				 active={ this.state.open }
 				 light />
 			<Expander open={ this.state.open }>

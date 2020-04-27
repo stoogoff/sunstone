@@ -33,8 +33,7 @@ const VERSION = fs.readFileSync(path.join(__dirname, "VERSION"), "utf8");
 // building live or staging version?
 const LIVE = args[0] === "live";
 const OUTPUT = LIVE ? "../live" : "../staging";
-const EDITOR = "sunstone-editor.js";
-const VIEWER = "sunstone-viewer.js";
+const JS = "sunstone.js";
 
 
 console.log(`\n...BUILDING...\n\nVersion: ${VERSION}\nOutput: ${OUTPUT.replace("../", "")}\n`);
@@ -119,32 +118,20 @@ Metalsmith(__dirname)
 		outputDir: "media/css/"
 	}))
 
-	// use rollup to create JS bundle for editor
+	// use rollup to create JS bundle
 	.use(rollup({
-		input: "./src/media/js/editor.jsx",
+		input: "./src/media/js/app.jsx",
 		output: {
 			format: "cjs",
-			file: path.join(VERSION, "media", "js", EDITOR)
+			file: path.join(VERSION, "media", "js", JS)
 		},
 		plugins: rollupPlugins,
 		onwarn: rollupWarning
 	}))
-		
-	// use rollup to create JS bundle for viewer
-	/*.use(rollup({
-		input: "./src/media/js/viewer.jsx",
-		output: {
-			format: "cjs",
-			file: path.join(VERSION, "media", "js", VIEWER)
-		},
-		plugins: rollupPlugins,
-		onwarn: rollupWarning
-	}))*/
 
 	// remove all other JS files
 	.use(each((file, p, files) => {
-		if(!p.endsWith(EDITOR) && !p.endsWith(VIEWER)) {
-
+		if(!p.endsWith(JS)) {
 			delete files[p];
 		}
 	}, ".js,.jsx"))

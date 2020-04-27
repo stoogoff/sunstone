@@ -7,7 +7,7 @@ export default class Pen extends Tool {
 	constructor() {
 		super();
 
-		this.name = "Pen";
+		this.name = Pen.NAME;
 		this.icon = "paint-brush";
 		this.colour = "black";
 	}
@@ -59,3 +59,6 @@ export default class Pen extends Tool {
 		packet.points.forEach(point => path.add(new paper.Point(point.x, point.y)));
 	}
 }
+
+Pen.NAME = "Pen";
+

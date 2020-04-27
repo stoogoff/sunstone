@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 // components
 import Modal from "./components/modal.jsx";
 import Editor from "./components/editor.jsx";
+import Viewer from "./components/viewer.jsx";
 
 // various utils
 import dispatcher from "./lib/dispatcher";
@@ -102,11 +103,18 @@ second visit
 
 */
 
+		// viewing a map instead of editing
+		if(__MODE__ == MODE.VIEW) {
+			const mapId = window.location.hash.substring(1);
 
-		// if there is a map in the local store, select it
-		if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
+			logger.log("loading a map to view")
+			logger.log("map id", mapId)
+
+			dispatcher.dispatch(MAP_LOAD, { id: mapId, autoload: true });
+		}
+		else if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
+			// if there is a map in the local store, select it
 			logger.log("a map exists in local storage")
-			//dispatcher.dispatch(MAP_SELECT, 0);
 			logger.log("from store", local.get(STORAGE_KEYS.MAP_LOCAL))
 			dispatcher.dispatch(MAP_LOAD, local.get(STORAGE_KEYS.MAP_LOCAL));
 		}
@@ -125,16 +133,14 @@ second visit
 	}
 
 	render() {
-		logger.log("App.render")
-		logger.log("map", this.state.map)
-		logger.log("layers", this.state.layers)
-		logger.log("nodes", this.state.nodes)
-
 		let mapName = this.state.map ? this.state.map.name : null;
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
 		return <div className="full-screen">
-			<Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } mode={ MODE.EDIT } />
+			{ __MODE__ == MODE.VIEW
+				? <Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
+				: <Editor map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
+			}
 			<Modal title="Loading map" active={ dialogueIsActive }>
 				<progress class="progress is-small is-warning" max="100"></progress>
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}

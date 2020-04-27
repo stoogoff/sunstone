@@ -16,7 +16,7 @@ export default class Delete extends Tool {
 	constructor() {
 		super();
 
-		this.name = "Delete";
+		this.name = Delete.NAME;
 		this.icon = "eraser";
 		this.layerId = null;
 		this.deleteItems = [];
@@ -58,3 +58,5 @@ export default class Delete extends Tool {
 		this.deleteItems = [];
 	}
 }
+
+Delete.NAME = "Delete";

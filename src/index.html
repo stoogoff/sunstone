@@ -16,7 +16,6 @@
 <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-storage.js"></script>
-
 <script>
 	// Your web app's Firebase configuration
 	// TODO needs to be externalised
@@ -31,8 +30,11 @@
 	};
 	// Initialize Firebase
 	firebase.initializeApp(firebaseConfig);
+
+var __MODE__ = "edit";
+
 </script>
-<script src="{{ VERSION }}/media/js/sunstone-editor.js"></script>
+<script src="{{ VERSION }}/media/js/sunstone.js"></script>
 
 </body>
 </html>

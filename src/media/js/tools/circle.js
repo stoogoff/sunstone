@@ -6,7 +6,7 @@ export default class Circle extends Rectangle {
 	constructor() {
 		super();
 
-		this.name = "Circle";
+		this.name = Circle.NAME;
 		this.icon = "circle";
 
 		this._constructor = paper.Path.Ellipse;
@@ -23,3 +23,5 @@ export default class Circle extends Rectangle {
 		path._externalId = packet.id;
 	}
 }
+
+Circle.NAME = "Circle";
