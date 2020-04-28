@@ -1,5 +1,6 @@
 
 import React from "react";
+import Menu from "./menu.jsx";
 import PaperView from "./paper-view.jsx";
 import ZoomPanel from "./zoom-panel.jsx";
 import { MODE } from "../lib/config";
@@ -20,7 +21,11 @@ export default (props) => {
 				<h1 className="has-text-light title is-4">Sunstone</h1>
 			</div>
 			<div id="menu" className="level-right">
-				{ props.map.name }
+				<Menu label={ props.map.name } button-dark>
+					{ (props.maps || []).map(m => <Menu.Item active={ m.id == props.map.id }>{ m.name }</Menu.Item>) }
+					<Menu.Divider />
+					<Menu.Item>Create Map</Menu.Item>
+				</Menu>
 			</div>
 		</header>
 		<PaperView canvasId="map" layers={ props.layers } nodes={ props.nodes } mode={ MODE.VIEW } />

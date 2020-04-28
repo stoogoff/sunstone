@@ -22,9 +22,9 @@ NODE_ACTIONS[NODE_DELETE] = (state, payload) => {
 	return state.filter(node => payload.ids.indexOf(node.id) == -1);
 };
 
-// layers loaded from firebase, so they need to create paper layers as well
+// a new map has loaded so set the node data as the current state (MAYBE better to add if new, edit if exists rather than completely wipe)
 NODE_ACTIONS[NODE_LOAD_COMPLETE] = (state, payload) => {
-	return [...state, ...payload];
+	return payload;
 };
 
 

@@ -33,8 +33,6 @@ const LAYER_ACTIONS = {
 
 
 LAYER_ACTIONS[LAYER_RENAME] = (state, payload) => {
-	console.log("layerEdit", payload)
-
 	database.ref(replaceId(STORAGE_KEYS.LAYER_NAME, payload.map, payload.id)).set(payload.name);
 
 	return editById(state, payload);
@@ -104,19 +102,19 @@ LAYER_ACTIONS[LAYER_ACTIVATE] = (state, payload) => {
 }
 
 // layers loaded from firebase, so they need to create paper layers as well
+// override the current state (MAYBE better to add if new, edit if exists rather than completely wipe)
 LAYER_ACTIONS[LAYER_LOAD_COMPLETE] = (state, payload) => {
 	payload.forEach(base => createPaperLayer(base));
 
-	let layers = [...state, ...payload];
-	let activated = layers.filter(layer => layer.active);
+	let activated = payload.filter(layer => layer.active);
 
 	// as we're loading layers, make sure one is active for drawing
-	if(activated.length == 0) {
-		layers[0].active = true;
-		layers[0]._layer.activate();
+	if(activated.length == 0 && payload.length > 0) {
+		payload[0].active = true;
+		payload[0]._layer.activate();
 	}
 
-	return layers;
+	return payload;
 };
 
 

@@ -37,7 +37,6 @@ export default class Menu extends React.Component {
 		const btnPropsList = [...TYPES, ...SIZES, ...BUTTON].filter(prop => "button-" + prop in this.props && this.props["button-" + prop]).reduce((a,b) => (a[b] = true, a), {});
 
 		// TODO an invisible modal or something to close the menu when clicking away from it
-		// TODO this barfs if there's only one child item
 
 		return <div className={ classList.join(" ") }>
 			<div className="dropdown-trigger">
@@ -45,7 +44,7 @@ export default class Menu extends React.Component {
 			</div>
 			<div className="dropdown-menu" role="menu">
 				<div className="dropdown-content">
-					{ this.props.children.map(child => {
+					{ React.Children.map(this.props.children, child => {
 						return React.cloneElement(child, {
 							onClick: () => {
 								this.toggleActive();

@@ -28,13 +28,17 @@ const dispatcher = {
 		return true;
 	},
 
+	hydrate(key, value) {
+		state[key] = value;
+	},
+
 	// dispatch an action and payload to the relevent handlers
 	dispatch(action, payload) {
 		let newState = {...state};
 
 		Object.keys(handlers).forEach(key => {
 			Object.values(handlers[key]).forEach(handler => {
-				newState[key] = handler(newState[key], action, payload)
+				newState[key] = handler(newState[key], action, payload);
 			});
 		});
 
@@ -43,8 +47,8 @@ const dispatcher = {
 		Object.values(subscribers).forEach(callback => callback(action, state));
 	},
 
-	// subscribe to all updates OR a specific action update
-	subscribe(callback, action) {
+	// subscribe to all updates
+	subscribe(callback) {
 		subscribers[++ref] = callback;
 
 		return ref;

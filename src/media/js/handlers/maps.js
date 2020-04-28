@@ -1,14 +1,13 @@
 
-import { editById, deleteById, handlerCreator } from "./base";
+import { create, editById, deleteById, handlerCreator } from "./base";
 import { STORAGE_KEYS } from "../lib/config";
 import { sortByProperty } from "../lib/list";
-import { local } from "../lib/local-store"
 import dispatcher from "../lib/dispatcher";
 import { database, storage } from "../lib/firebase";
 import { createId, replaceId } from "../lib/utils";
 import { next } from "../lib/timer";
 import {
-	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD, MAP_LOAD_COMPLETE,
+	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD, MAP_LOAD_COMPLETE, MAP_SUBSCRIBE, MAP_UNSUBSCRIBE,
 	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, IMAGE_LOAD, IMAGE_LOAD_COMPLETE
 } from "../lib/action-keys";
 
@@ -35,8 +34,6 @@ MAP_ACTIONS[MAP_EDIT] = (state, payload) => {
 			return;
 		}
 
-		local.set(STORAGE_KEYS.MAP_LOCAL, map);
-
 		let updates = {};
 
 		updates[replaceId(STORAGE_KEYS.MAP_NAME, map.id)] = map.name;
@@ -55,13 +52,13 @@ MAP_ACTIONS[MAP_CREATE] = (state, payload) => {
 
 	payload.id = createRef.key;
 	payload.url = window.location.href + "view.html#" + createRef.key;
+	payload.nodes = [];
+	payload.layers = [];
 
 	createRef.set(payload);
-	local.set(STORAGE_KEYS.MAP_LOCAL, payload);
 
 	next(() => {
-		dispatcher.dispatch(LAYER_LOAD_COMPLETE, []);
-		dispatcher.dispatch(NODE_LOAD_COMPLETE, []);
+		dispatcher.dispatch(MAP_LOAD_COMPLETE, payload);
 		dispatcher.dispatch(IMAGE_LOAD_COMPLETE, []);
 	});
 
@@ -79,41 +76,41 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 		let map = convertMapData(snapshot.val());
 
 		dispatcher.dispatch(MAP_LOAD_COMPLETE, map);
-		dispatcher.dispatch(LAYER_LOAD_COMPLETE, map.layers);
-		dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
 	});
 
 	imagesRef.listAll().then(response => {
 		dispatcher.dispatch(IMAGE_LOAD, response.items);
 	});
 
-	return [...state, payload];
+	return editById(state, payload);
 };
 
 MAP_ACTIONS[MAP_LOAD_COMPLETE] = (state, payload) => {
-	return editById(state, payload;
+	next(() => {
+		dispatcher.dispatch(LAYER_LOAD_COMPLETE, payload.layers);
+		dispatcher.dispatch(NODE_LOAD_COMPLETE, payload.nodes);
+	});
+
+	return editById(state, payload);
 };
 
-MAP_ACTIONS[MAP_LOAD_UPDATES] = (state, payload) => {
+MAP_ACTIONS[MAP_SUBSCRIBE] = (state, payload) => {
 	// set up firebase to load map data from server
 	// wait for the data to load
-	let loadRef = database.ref(replaceId(STORAGE_KEYS.MAP_ID, payload.id));
-	let imagesRef = storage.ref(replaceId(STORAGE_KEYS.MAP_IMAGES, payload.id))
+	let loadRef = database.ref(replaceId(STORAGE_KEYS.MAP_ID, payload));
+	let imagesRef = storage.ref(replaceId(STORAGE_KEYS.MAP_IMAGES, payload))
 
 	loadRef.on("value", snapshot => {
 		let map = convertMapData(snapshot.val());
 
 		dispatcher.dispatch(MAP_LOAD_COMPLETE, map);
-		// these need to be called to update correctly but not in the same way...
-		//dispatcher.dispatch(LAYER_LOAD_COMPLETE, map.layers);
-		//dispatcher.dispatch(NODE_LOAD_COMPLETE, map.nodes);
 	});
 
 	imagesRef.listAll().then(response => {
 		dispatcher.dispatch(IMAGE_LOAD, response.items);
 	});
 
-	return [...state, payload];
+	return create(state, { id: payload });
 };
 
 

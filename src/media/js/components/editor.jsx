@@ -242,11 +242,10 @@ export default class Editor extends React.Component {
 					</Menu> : null }
 					<Button label="Foreground" leftIcon="square" dark leftIconColour={ this.state.foreground } />
 					<Button label="Background" leftIcon="square" dark leftIconColour={ this.state.background } />
-					<Menu label={ this.state.mapName } button-dark>
-						<Menu.Item>Second Map Name</Menu.Item>
-						<Menu.Item>Other dropdown item</Menu.Item>
+					<Menu label={ this.state.mapName } right button-dark>
+						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id }>{ m.name }</Menu.Item>) }
 						<Menu.Divider />
-						<Menu.Item>With a divider</Menu.Item>
+						<Menu.Item>Create Map</Menu.Item>
 					</Menu>
 				</div>
 			</header>

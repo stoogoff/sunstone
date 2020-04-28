@@ -11,6 +11,8 @@ export const MAP_DELETE = "delete-map";
 export const MAP_LOAD = "load-map";
 export const MAP_LOAD_UPDATES = "load-map-and-update";
 export const MAP_LOAD_COMPLETE = "map-load-complete";
+export const MAP_SUBSCRIBE = "subscribe-map-updates";
+export const MAP_UNSUBSCRIBE = "unsubscribe-map-upadtes";
 
 
 // loading of nodes and layers
