@@ -76,7 +76,6 @@ export default class Raster extends Tool {
 	}
 
 	static draw(packet) {
-		console.log("Raster::draw", packet)
 		let image = new paper.Raster({
 			source: packet.image.url,
 			position: new paper.Point(packet.position.x, packet.position.y)

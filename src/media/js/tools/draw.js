@@ -10,6 +10,7 @@ import getLogger from "../lib/logger";
 
 import { MODE } from "../lib/config";
 import { indexOfByProperty } from "../lib/list";
+import { VISIBILITY } from "../lib/config";
 
 
 let logger = getLogger("draw");
@@ -30,14 +31,15 @@ let lastDrawnNodes = {};
 
 // automatically draw a set of map nodes and layers
 export default (layers, nodes, mode) => {
-	logger.log(layers);
-	logger.log(nodes);
+	logger.warn("Begin drawing")
+	logger.log(paper.project)
+	logger.log("layers", layers);
+	logger.log("nodes", nodes);
+
 
 	if(!nodes) {
 		return;
 	}
-
-	// TODO draw needs to know about the view mode of the app so it can ignore hidden layers for public view
 
 	// TODO currently this just draws everything that hasn't been drawn before
 	// TODO it needs to delete nodes it has referenced which are not in the nodes argument
@@ -71,20 +73,27 @@ export default (layers, nodes, mode) => {
 		}
 	});
 
-	// re-activate the active drawing layer
 	if(layers) {
-		let activated = false;
+		const nodesById = nodes.map(node => node.id).reduce((acc, value) => { acc[value] = true; return acc; }, {});
 
 		layers.forEach(layer => {
+			// re-activate the active drawing layer
 			if(layer.active) {
 				layer._layer.activate();
-				activated = true;
 			}
 
-			// hide invisible layers in VIEW mode
-			if(mode == MODE.VIEW && !layer.visible) {
-				layer._layer.visible = false;
+			// hide/show invisible layers in VIEW mode
+			if(mode == MODE.VIEW) {
+				layer._layer.opacity = VISIBILITY.SHOW;
+				layer._layer.visible = layer.visible;
 			}
+
+			// remove a child from the layer if it no longer exists in the nodes array
+			layer._layer.children.forEach(child => {
+				if(!(child._externalId in nodesById)) {
+					child.remove();
+				}
+			});
 		});
 	}
 };

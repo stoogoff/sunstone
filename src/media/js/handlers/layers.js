@@ -5,7 +5,8 @@ import {
 	LAYER_MOVE_UP, LAYER_MOVE_DOWN, LAYER_LOAD_COMPLETE,
 	LAYER_SHOW, LAYER_HIDE, LAYER_ACTIVATE, LAYER_RENAME } from "../lib/action-keys";
 
-import { createId, replaceId } from "../lib/utils/";
+import { createId, replaceId } from "../lib/utils";
+import { findByProperty } from "../lib/list";
 import { STORAGE_KEYS, VISIBILITY } from "../lib/config";
 import { database } from "../lib/firebase";
 import paper from "paper/dist/paper-core";
@@ -13,14 +14,19 @@ import paper from "paper/dist/paper-core";
 
 // create a paper.Layer and attach it to the firebase layer
 function createPaperLayer(layer) {
-	layer._layer = new paper.Layer();
-	layer._layer.name = layer.name;
-	layer._layer._externalId = layer.id;
+	// don't create the paper layer if one with the same _externalId already exists
+	const existingLayer = paper.project.layers.find(findByProperty("_externalId", layer.id));
 
-	// handle initial visibility
-	if(!layer.visible) {
-		layer._layer.opacity = VISIBILITY.HIDDEN;
+	if(existingLayer) {
+		layer._layer = existingLayer;
 	}
+	else {
+		layer._layer = new paper.Layer();
+		layer._layer.name = layer.name;
+		layer._layer._externalId = layer.id;
+	}
+
+	layer._layer.opacity = layer.visible ? VISIBILITY.SHOW : VISIBILITY.HIDDEN;
 }
 
 

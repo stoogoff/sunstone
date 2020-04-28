@@ -8,9 +8,6 @@ import Icon from "./icon.jsx";
 import dispatcher from "../lib/dispatcher";
 import { IMAGE_UPLOAD } from "../lib/action-keys";
 
-// enable drop zone so images can be dropped and automatically uploaded DONE
-// list any uploaded images
-// tell the user they can do this DONE
 
 export default class ImagePabel extends React.Component {
 	constructor(props) {
@@ -46,8 +43,6 @@ export default class ImagePabel extends React.Component {
 
 	render() {
 		const readFiles = files => {
-			console.log(files);
-
 			files = files.filter(file => file.type.startsWith("image/")).map(file => ({ map: this.props.map.id, file: file }));
 
 	/*
@@ -70,8 +65,6 @@ export default class ImagePabel extends React.Component {
 
 			dispatcher.dispatch(IMAGE_UPLOAD, files);
 		};
-
-		//
 
 		return <section className="image-panel">
 			<Dropzone onDrop={ readFiles }>
