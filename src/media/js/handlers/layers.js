@@ -15,7 +15,7 @@ import paper from "paper/dist/paper-core";
 // create a paper.Layer and attach it to the firebase layer
 function createPaperLayer(layer) {
 	// don't create the paper layer if one with the same _externalId already exists
-	const existingLayer = paper.project.layers.find(findByProperty("_externalId", layer.id));
+	const existingLayer = paper.project && paper.project.layers ? paper.project.layers.find(findByProperty("_externalId", layer.id)) : null;
 
 	if(existingLayer) {
 		layer._layer = existingLayer;
@@ -88,8 +88,6 @@ LAYER_ACTIONS[LAYER_CREATE] = (state, payload) => {
 	database.ref(replaceId(STORAGE_KEYS.LAYER, payload.map, payload.id)).set(payload);
 
 	createPaperLayer(payload);
-
-	// TODO does paper activate a newly created layer by default?
 
 	return create(state, payload);
 };

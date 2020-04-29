@@ -79,6 +79,8 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 	});
 
 	imagesRef.listAll().then(response => {
+		console.warn(MAP_LOAD, "loading images")
+		console.log(response)
 		dispatcher.dispatch(IMAGE_LOAD, response.items);
 	});
 

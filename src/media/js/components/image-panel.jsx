@@ -5,9 +5,12 @@ import Dropzone from "react-dropzone";
 import Expander from "./expander.jsx";
 import Button from "./button.jsx";
 import Icon from "./icon.jsx";
+import { id, toDate } from "../lib/string";
+import { toByteString } from "../lib/number";
 import dispatcher from "../lib/dispatcher";
 import { IMAGE_UPLOAD } from "../lib/action-keys";
 
+// TODO deleting images
 
 export default class ImagePabel extends React.Component {
 	constructor(props) {
@@ -15,7 +18,9 @@ export default class ImagePabel extends React.Component {
 
 		this.state = {
 			openMenu: false,
-			loading: false
+			loading: false,
+			naturalWidth: 0,
+			naturalHeight: 0
 		};
 	}
 
@@ -28,11 +33,19 @@ export default class ImagePabel extends React.Component {
 	}
 
 	toggleMenu(image, event) {
-		const openMenu = this.state.openMenu == image.path ? null : image.path;
+		const newState = {
+			openMenu: this.state.openMenu == image.path ? null : image.path
+		};
 
-		this.setState({
-			openMenu: openMenu,
-		});
+		// get actual image dimensions for display
+		const domNode = document.getElementById(id(image.path));
+
+		if(domNode) {
+			newState.naturalHeight = domNode.naturalHeight;
+			newState.naturalWidth = domNode.naturalWidth;
+		}
+
+		this.setState(newState);
 	}
 
 	activateImage(image) {
@@ -83,7 +96,15 @@ export default class ImagePabel extends React.Component {
 						onLeftIconClick={ this.toggleMenu.bind(this, image) }
 						onClick={ this.activateImage.bind(this, image) } />
 						<Expander open={ this.state.openMenu == image.path }>
-							<img src={ image.url } />
+							<figure className="image">
+								<img id={ id(image.path) } src={ image.url } />
+								<figcaption className="content is-small">
+									<div><strong>Dimensions</strong> { this.state.naturalWidth } x { this.state.naturalHeight }</div>
+									<div><strong>Size</strong> { toByteString(image.size) }</div>
+									<div><strong>Created</strong> { toDate(image.created).toLocaleString() }</div>
+									<div><strong>Updated</strong> { toDate(image.updated).toLocaleString() }</div>
+								</figcaption>
+							</figure>
 						</Expander>
 				</li>) }
 			</ul> : null }

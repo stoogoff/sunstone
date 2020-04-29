@@ -60,7 +60,7 @@ IMAGE_ACTIONS[IMAGE_UPLOAD] = (state, payload) => {
 IMAGE_ACTIONS[IMAGE_LOAD] = (state, payload) => {
 	logger.info(IMAGE_LOAD, payload.length, payload)
 
-	const loadComplete = after(payload.length, () => {
+	const loadComplete = after(payload.length * 2, () => {
 		logger.info(IMAGE_LOAD, "loadComplete, preparing for dispatch", images)
 		dispatcher.dispatch(IMAGE_LOAD_COMPLETE, images);
 	});
@@ -73,10 +73,21 @@ IMAGE_ACTIONS[IMAGE_LOAD] = (state, payload) => {
 	});
 
 	images.forEach(image => {
-		storage.ref(image.path).getDownloadURL().then((url) => {
+		storage.ref(image.path).getDownloadURL().then(url => {
 			logger.info("got url", url)
+
 			image.url = url;
-			logger.info("setting url", image);
+
+			loadComplete();
+		})
+
+		storage.ref(image.path).getMetadata().then(metadata => {
+			logger.log("got metadata", metadata);
+
+			image.size = metadata.size;
+			image.type = metadata.contentType;
+			image.created = metadata.timeCreated;
+			image.updated = metadata.updated;
 
 			loadComplete();
 		});
