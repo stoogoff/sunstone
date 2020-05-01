@@ -2,7 +2,7 @@
 import { handlerCreator } from "./base";
 import { database } from "../lib/firebase";
 import { STORAGE_KEYS } from "../lib/config";
-import { NODE_CREATE, NODE_DELETE, NODE_LOAD_COMPLETE } from "../lib/action-keys";
+import { NODE_CREATE, NODE_DELETE, NODE_LOAD_COMPLETE, NODE_DELETE_BY_IMAGE } from "../lib/action-keys";
 import { replaceId } from "../lib/utils/";
 
 
@@ -27,6 +27,15 @@ NODE_ACTIONS[NODE_LOAD_COMPLETE] = (state, payload) => {
 	return payload;
 };
 
+NODE_ACTIONS[NODE_DELETE_BY_IMAGE] = (state, payload) => {
+	const nodesToDelete = state.filter(node => node.type == "Image" && node.image.path == payload);
+
+	nodesToDelete.forEach(node => {
+		database.ref(replaceId(STORAGE_KEYS.NODE, node.map, node.id)).remove();
+	});
+
+	return state.filter(node => !(node.type == "Image" && node.image.path == payload));
+};
 
 // TODO edit node, node, move node
 

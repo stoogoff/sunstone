@@ -240,8 +240,8 @@ export default class Editor extends React.Component {
 					{ activeLayer ? <Menu label={ activeLayer.name } button-dark>
 						{ this.props.layers.map(layer => <Menu.Item onClick={ this.activateLayer.bind(this, layer) } active={ layer.id == activeLayer.id }>{ layer.name }</Menu.Item>)}
 					</Menu> : null }
-					<Button label="Foreground" leftIcon="square" dark leftIconColour={ this.state.foreground } />
-					<Button label="Background" leftIcon="square" dark leftIconColour={ this.state.background } />
+					{ this.state.foreground == "transparent" ? <Icon icon="slash" className="colour-picker transparent" /> : <Icon icon="square" className="colour-picker" colour={ this.state.foreground } /> }
+					{ this.state.background == "transparent" ? <Icon icon="slash" className="colour-picker transparent" /> : <Icon icon="square" className="colour-picker" colour={ this.state.background } /> }
 					<Menu label={ this.state.mapName } right button-dark>
 						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id }>{ m.name }</Menu.Item>) }
 						<Menu.Divider />

@@ -1,7 +1,7 @@
 
 import { handlerCreator } from "./base";
 import { storage } from "../lib/firebase";
-import { IMAGE_UPLOAD, IMAGE_LOAD, IMAGE_LOAD_COMPLETE } from "../lib/action-keys";
+import { IMAGE_UPLOAD, IMAGE_LOAD, IMAGE_LOAD_COMPLETE, IMAGE_DELETE, NODE_DELETE_BY_IMAGE } from "../lib/action-keys";
 import { after } from "../lib/timer";
 import dispatcher from "../lib/dispatcher";
 import getLogger from "../lib/logger";
@@ -104,6 +104,22 @@ IMAGE_ACTIONS[IMAGE_LOAD_COMPLETE] = (state, payload) => {
 	logger.info(IMAGE_LOAD_COMPLETE, "payload", payload);
 
 	return [...state, ...payload];
+};
+
+
+IMAGE_ACTIONS[IMAGE_DELETE] = (state, payload) => {
+	logger.info(IMAGE_DELETE, "state", state);
+	logger.info(IMAGE_DELETE, "payload", payload);
+
+	// delete the image from firebase storage
+	storage.ref(payload.path).delete().then(() => {
+		// image deleted, inform nodes to be deleted
+		dispatcher.dispatch(NODE_DELETE_BY_IMAGE, payload.path);
+	}).catch(error => {
+		logger.error(error);
+	});
+
+	return state.filter(img => img.path != payload.path);
 };
 
 

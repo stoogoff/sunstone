@@ -2,9 +2,11 @@
 import paper from "paper/dist/paper-core";
 import Tool from "./tool";
 import { createId } from "../lib/utils";
+import getLogger from "../lib/logger";
 
-// display dialogue with drop area for uploading image
-// will this be OK to store in Firebase?
+// TODO the cursor image seems to disappear after the image is placed
+let logger = getLogger("draw");
+
 
 export default class Raster extends Tool {
 	constructor() {
@@ -76,6 +78,8 @@ export default class Raster extends Tool {
 	}
 
 	static draw(packet) {
+		logger.log("drawing image", packet)
+
 		let image = new paper.Raster({
 			source: packet.image.url,
 			position: new paper.Point(packet.position.x, packet.position.y)

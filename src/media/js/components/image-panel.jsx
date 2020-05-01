@@ -5,10 +5,11 @@ import Dropzone from "react-dropzone";
 import Expander from "./expander.jsx";
 import Button from "./button.jsx";
 import Icon from "./icon.jsx";
+import Modal from "./modal.jsx";
 import { id, toDate } from "../lib/string";
 import { toByteString } from "../lib/number";
 import dispatcher from "../lib/dispatcher";
-import { IMAGE_UPLOAD } from "../lib/action-keys";
+import { IMAGE_UPLOAD, IMAGE_DELETE } from "../lib/action-keys";
 
 // TODO deleting images
 
@@ -20,7 +21,9 @@ export default class ImagePabel extends React.Component {
 			openMenu: false,
 			loading: false,
 			naturalWidth: 0,
-			naturalHeight: 0
+			naturalHeight: 0,
+			showDialogue: false,
+			deletingImage: null,
 		};
 	}
 
@@ -51,6 +54,27 @@ export default class ImagePabel extends React.Component {
 	activateImage(image) {
 		if(this.props.onSelect) {
 			this.props.onSelect(image);
+		}
+	}
+
+	hideDialogue() {
+		this.setState({
+			showDialogue: false
+		});
+	}
+
+	displayDeleteDialogue(image) {
+		this.setState({
+			showDialogue: true,
+			deletingImage: image
+		});
+	}
+
+	deleteImage() {
+		if(this.state.deletingImage) {
+			dispatcher.dispatch(IMAGE_DELETE, this.state.deletingImage);
+
+			this.hideDialogue();
 		}
 	}
 
@@ -94,7 +118,8 @@ export default class ImagePabel extends React.Component {
 						warning={ this.props.activeImage == image.path }
 						leftIcon={ this.state.openMenu == image.path ? "chevron-down" : "chevron-right" }
 						onLeftIconClick={ this.toggleMenu.bind(this, image) }
-						onClick={ this.activateImage.bind(this, image) } />
+						onClick={ this.activateImage.bind(this, image) } 
+					/>
 						<Expander open={ this.state.openMenu == image.path }>
 							<figure className="image">
 								<img id={ id(image.path) } src={ image.url } />
@@ -105,9 +130,15 @@ export default class ImagePabel extends React.Component {
 									<div><strong>Updated</strong> { toDate(image.updated).toLocaleString() }</div>
 								</figcaption>
 							</figure>
+							<Button leftIcon="trash" onClick={ this.displayDeleteDialogue.bind(this, image) } />
 						</Expander>
 				</li>) }
 			</ul> : null }
+			<Modal active={ this.state.showDialogue } title="Delete Image" closable close={ this.hideDialogue.bind(this) }>
+				<p>Are you sure you want to delete this image? This action can't be undone.</p>
+				<Button label="OK" onClick={ this.deleteImage.bind(this) } />
+				<Button label="Cancel" onClick={ this.hideDialogue.bind(this) } />
+			</Modal>
 		</section>;
 	}
 }

@@ -142,7 +142,8 @@ console.log("AFTER", layers.map(l => `${l.name} - ${l.sort}`))
 						rightIcon={ layer.visible ? ICON.VISIBLE : ICON.HIDDEN }
 						onClick={ this.onClick.bind(this, layer) }
 						onLeftIconClick={ this.toggleMenu.bind(this, layer) }
-						onRightIconClick={ this.toggleVisibility.bind(this, layer) } />
+						onRightIconClick={ this.toggleVisibility.bind(this, layer) }
+					/>
 						<Expander open={ this.state.openMenu == layer.id }>
 							<div className="field has-addons">
 								<div className="control"><Button leftIcon="sort-up" disabled={ index == 0 } onClick={ this.moveLayerUp.bind(this, layer) } /></div>
