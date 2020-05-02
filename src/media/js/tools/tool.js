@@ -32,3 +32,11 @@ export default class Tool {
 		}
 	}
 }
+
+// parameters for selecting a paper item
+export const HIT_TEST = {
+	fill: true,
+	stroke: true,
+	segments: true,
+	tolerance: 5
+};

@@ -1,15 +1,8 @@
 
 import paper from "paper/dist/paper-core";
-import Tool from "./tool";
+import Tool, { HIT_TEST } from "./tool";
 import { NODE_DELETE } from "../lib/action-keys";
 
-
-const HIT_TEST = {
-	fill: true,
-	stroke: true,
-	segments: true,
-	tolerance: 5
-};
 
 
 export default class Delete extends Tool {
@@ -51,7 +44,7 @@ export default class Delete extends Tool {
 
 	onMouseUp(event) {
 		this.onComplete({
-			type: NODE_DELETE,
+			action: NODE_DELETE,
 			ids: this.deleteItems
 		});
 

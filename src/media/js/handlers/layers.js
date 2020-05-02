@@ -84,6 +84,9 @@ LAYER_ACTIONS[LAYER_SHOW] = (state, id) => {
 
 // creating a layer also saves it to firebase and create a paper layer
 LAYER_ACTIONS[LAYER_CREATE] = (state, payload) => {
+	// position the layer after other layers
+	payload.sort = state.length;
+
 	// save payload to firebase
 	database.ref(replaceId(STORAGE_KEYS.LAYER, payload.map, payload.id)).set(payload);
 

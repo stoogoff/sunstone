@@ -7,7 +7,7 @@ export default class Pan extends Tool {
 	constructor() {
 		super();
 
-		this.name = "Pan";
+		this.name = Pan.NAME;
 		this.icon = "location-arrow";
 
 		this._tool.distanceThreshold = 8;
@@ -26,3 +26,5 @@ export default class Pan extends Tool {
 		this.start = end;
 	}
 }
+
+Pan.NAME = "Pan";

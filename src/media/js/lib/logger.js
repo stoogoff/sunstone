@@ -1,8 +1,8 @@
 
 const LOGGING = {
-	"images": 15,
+	"images": 0,
 	"app": 0,
-	"draw": 3
+	"draw": 0
 };
 
 

@@ -41,6 +41,10 @@ export default class Shape extends Tool {
 				border: this.border,
 				width: this.width,
 				opacity: this.opacity,
+				position: {
+					x: this.shape.position.x,
+					y: this.shape.position.y
+				},
 				points: this.shape.segments.map(s => {
 					return {
 						x: s.point.x,
@@ -87,14 +91,15 @@ export default class Shape extends Tool {
 	static draw(packet) {
 		let path = new paper.Path();
 
+		packet.points.forEach(point => path.add(new paper.Point(point.x, point.y)));
+
 		path._externalId = packet.id;
 		path.strokeColor = packet.border;
 		path.strokeWidth = packet.width;
 		path.opacity = packet.opacity;
 		path.fillColor = packet.background;
 		path.closed = true;
-
-		packet.points.forEach(point => path.add(new paper.Point(point.x, point.y)));
+		path.position = new paper.Point(packet.position.x, packet.position.y);
 	}
 }
 

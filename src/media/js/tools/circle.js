@@ -16,11 +16,12 @@ export default class Circle extends Rectangle {
 		let rectangle = new paper.Rectangle(packet.rectangle.x, packet.rectangle.y, packet.rectangle.w, packet.rectangle.h);
 		let path = new paper.Path.Ellipse(rectangle);
 
+		path._externalId = packet.id;
 		path.fillColor = packet.background;
 		path.strokeColor = packet.border;
 		path.strokeWidth = packet.width;
 		path.opacity = packet.opacity;
-		path._externalId = packet.id;
+		path.position = new paper.Point(packet.position.x, packet.position.y);
 	}
 }
 

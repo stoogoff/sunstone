@@ -35,6 +35,7 @@ export const LAYER_ACTIVATE = "activate-layer";
 
 // nodes can be created, deleted and moved
 export const NODE_CREATE = "create-node";
+export const NODE_MOVE = "move-node";
 export const NODE_DELETE = "delete-node";
 export const NODE_DELETE_BY_IMAGE = "delete-nodes-by-image";
 

@@ -42,7 +42,6 @@ export default (layers, nodes, mode) => {
 	}
 
 	// TODO currently this just draws everything that hasn't been drawn before
-	// TODO it needs to delete nodes it has referenced which are not in the nodes argument
 	// TODO draw order of nodes needs to be maintained somehow, currently it may be it's reversed or possibly random
 
 	nodes.forEach(node => {
@@ -65,6 +64,12 @@ export default (layers, nodes, mode) => {
 					layer._layer.activate();
 
 					tools[node.type].draw(node);
+				}
+				else {
+					// the node exists so move it
+					const rendered = layer._layer.children[index];
+
+					rendered.position = node.position;
 				}
 			}
 		}

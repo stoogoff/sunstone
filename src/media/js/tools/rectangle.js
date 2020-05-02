@@ -66,6 +66,10 @@ export default class Rectangle extends Tool {
 			border: this.border,
 			width: this.width,
 			opacity: this.opacity,
+			position: {
+				x: this.object.position.x,
+				y: this.object.position.y
+			},
 			rectangle: {
 				x: this.rectangle.x,
 				y: this.rectangle.y,
@@ -99,6 +103,7 @@ export default class Rectangle extends Tool {
 		path.strokeColor = packet.border;
 		path.strokeWidth = packet.width;
 		path.opacity = packet.opacity;
+		path.position = new paper.Point(packet.position.x, packet.position.y);
 	}
 }
 

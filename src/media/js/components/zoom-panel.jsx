@@ -5,17 +5,23 @@ import Menu from "./menu.jsx";
 import Icon from "./icon.jsx";
 import { ZoomIn, ZoomOut, ZoomTo } from "../tools/zoom";
 
-export default (props) => {
-	const zoom = [ZoomIn, ZoomOut]
 
+const ZOOM = [ZoomIn, ZoomOut];
+const LEVELS = {
+	"500%": 5,
+	"250%": 2.5,
+	"100%": 1,
+	"75%": 0.75,
+	"50%": 0.5
+};
+
+
+export default (props) => {
 	return <span id="zoom" className="tag is-medium" >
 		<Icon large icon="search-plus" />
-		{ zoom.map(z => <Button text small rightIcon={ z.icon } onClick={ z.activate.bind(z) } />)}
+		{ ZOOM.map(z => <Button text small rightIcon={ z.icon } onClick={ z.activate.bind(z) } />)}
 		<Menu up right button-text>
-			<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 5) }>500%</Menu.Item>
-			<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 2.5) }>250%</Menu.Item>
-			<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 1) }>100%</Menu.Item>
-			<Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, 0.5) }>50%</Menu.Item>
+			{ Object.keys(LEVELS).map(key => <Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, LEVELS[key]) }>{ key }</Menu.Item>)}
 		</Menu>
 	</span>
 };

@@ -18,13 +18,14 @@ import { TextInput } from "./input/text.jsx";
 import RangeInput from "./input/range.jsx";
 
 // Sunstone tools
-import Pen from "../tools/pen";
-import Pan from "../tools/pan";
-import Marker from "../tools/marker";
 import Circle from "../tools/circle";
-import Rectangle from "../tools/rectangle";
-import Raster from "../tools/raster";
 import Delete from "../tools/delete";
+import Marker from "../tools/marker";
+import Move from "../tools/move";
+import Pan from "../tools/pan";
+import Pen from "../tools/pen";
+import Raster from "../tools/raster";
+import Rectangle from "../tools/rectangle";
 import Shape from "../tools/shape";
 
 // Sunstone utils
@@ -37,12 +38,12 @@ import { findByProperty } from "../lib/list";
 /*
 
 selection tool
-DONE deleting of selected objects
 editing of selected objects
 editing of common state of multiple objects (maybe)
 
 public state of objects for view version
 
+DONE deleting of selected objects
 DONE image upload tool (how to save this?)
 move object tool
 
@@ -85,6 +86,7 @@ export default class Editor extends React.Component {
 
 		this.tools = [
 			new Pan(),
+			new Move(),
 			new Marker(),
 			new Pen(),
 			new Rectangle(),
@@ -143,12 +145,16 @@ export default class Editor extends React.Component {
 		const activated = active.activate(this.getToolParams(), (payload) => {
 			payload.map = this.props.map.id;
 
-			if(payload.type == NODE_DELETE) {
+			console.log(payload)
+
+			dispatcher.dispatch(payload.action || NODE_CREATE, payload);
+
+			/*if(payload.type == NODE_DELETE) {
 				dispatcher.dispatch(NODE_DELETE, payload);
 			}
 			else {
 				dispatcher.dispatch(NODE_CREATE, payload);
-			}
+			}*/
 		});
 
 		if(activated) {

@@ -39,6 +39,10 @@ export default class Pen extends Tool {
 			colour: this.colour,
 			width: this.width,
 			opacity: this.opacity,
+			position: {
+				x: this.path.position.x,
+				y: this.path.position.y
+			},
 			points: this.path.segments.map(s => {
 				return {
 					x: s.point.x,
@@ -57,6 +61,8 @@ export default class Pen extends Tool {
 		path.opacity = packet.opacity;
 
 		packet.points.forEach(point => path.add(new paper.Point(point.x, point.y)));
+
+		path.position = new paper.Point(packet.position.x, packet.position.y);
 	}
 }
 
