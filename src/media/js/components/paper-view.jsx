@@ -12,17 +12,16 @@ export default class PaperView extends React.Component {
 	}
 
 	componentDidMount() {
-		this.scope = paper;
-		this.scope.setup(this.canvas.current);
-
-		if(this.props.nodes && this.props.nodes.length > 0 && this.props.layers && this.props.layers.length > 0) {
-			draw(this.props.layers, this.props.nodes, this.props.mode);
-		}
+		paper.setup(this.canvas.current);
 	}
 
 	componentWillUpdate(nextProps, nextState) {
 		if(nextProps.nodes != this.props.nodes) {
 			draw(nextProps.layers, nextProps.nodes, this.props.mode);
+		}
+
+		if(nextProps.map != this.props.map) {
+			paper.view.zoom = nextProps.map.zoom;
 		}
 	}
 

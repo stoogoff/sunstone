@@ -13,6 +13,7 @@ export const MAP_LOAD_UPDATES = "load-map-and-update";
 export const MAP_LOAD_COMPLETE = "map-load-complete";
 export const MAP_SUBSCRIBE = "subscribe-map-updates";
 export const MAP_UNSUBSCRIBE = "unsubscribe-map-upadtes";
+export const MAP_ZOOM = "zoom-map-to";
 
 
 // loading of nodes and layers
@@ -23,7 +24,6 @@ export const IMAGE_LOAD_COMPLETE = "image-load-complete";
 
 // layers can be created and deleted, reordered and their visibility changed
 export const LAYER_CREATE = "create-layer";
-export const LAYER_EDIT = "edit-layer";
 export const LAYER_RENAME = "rename-layer";
 export const LAYER_DELETE = "delete-layer";
 export const LAYER_MOVE_UP = "move-up-layer";

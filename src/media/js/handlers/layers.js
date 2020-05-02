@@ -1,12 +1,12 @@
 
 import { create, editById, deleteById, moveUpById, moveDownById, handlerCreator } from "./base";
 import { 
-	LAYER_CREATE, LAYER_EDIT, LAYER_DELETE,
+	LAYER_CREATE, LAYER_DELETE,
 	LAYER_MOVE_UP, LAYER_MOVE_DOWN, LAYER_LOAD_COMPLETE,
 	LAYER_SHOW, LAYER_HIDE, LAYER_ACTIVATE, LAYER_RENAME } from "../lib/action-keys";
 
 import { createId, replaceId } from "../lib/utils";
-import { findByProperty } from "../lib/list";
+import { findByProperty, sortByProperty } from "../lib/list";
 import { STORAGE_KEYS, VISIBILITY } from "../lib/config";
 import { database } from "../lib/firebase";
 import paper from "paper/dist/paper-core";
@@ -30,13 +30,45 @@ function createPaperLayer(layer) {
 }
 
 
-const LAYER_ACTIONS = {
-	[LAYER_EDIT]: editById,
-	[LAYER_DELETE]: deleteById,
-	[LAYER_MOVE_UP]: moveUpById,
-	[LAYER_MOVE_DOWN]: moveDownById
+const LAYER_ACTIONS = {};
+
+
+
+const moveLayer = (state, payload, sort) => {
+	let clone = [...state];
+
+	if(sort != payload.sort) {
+		const movingLayer = clone.find(findByProperty("sort", sort));
+
+		if(movingLayer) {
+			movingLayer.sort = payload.sort;
+
+			clone = editById(clone, movingLayer);
+
+			database.ref(replaceId(STORAGE_KEYS.LAYER_SORT, movingLayer.map, movingLayer.id)).set(movingLayer.sort);
+		}
+
+		payload.sort = sort;
+
+		database.ref(replaceId(STORAGE_KEYS.LAYER_SORT, payload.map, payload.id)).set(sort);
+	}
+
+	clone = editById(clone, payload).sort(sortByProperty("sort"));
+
+	clone.forEach(layer => layer._layer.bringToFront());
+
+	return clone;
+}
+
+
+
+LAYER_ACTIONS[LAYER_MOVE_UP] = (state, payload) => {
+	return moveLayer(state, payload, Math.max(0, payload.sort - 1));
 };
 
+LAYER_ACTIONS[LAYER_MOVE_DOWN] = (state, payload) => {
+	return moveLayer(state, payload, Math.min(state.length - 1, payload.sort + 1));
+};
 
 LAYER_ACTIONS[LAYER_RENAME] = (state, payload) => {
 	database.ref(replaceId(STORAGE_KEYS.LAYER_NAME, payload.map, payload.id)).set(payload.name);

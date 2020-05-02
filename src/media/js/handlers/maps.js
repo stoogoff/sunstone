@@ -8,7 +8,7 @@ import { createId, replaceId } from "../lib/utils";
 import { next } from "../lib/timer";
 import {
 	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD, MAP_LOAD_COMPLETE, MAP_SUBSCRIBE, MAP_UNSUBSCRIBE,
-	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, IMAGE_LOAD, IMAGE_LOAD_COMPLETE
+	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, IMAGE_LOAD, IMAGE_LOAD_COMPLETE, MAP_ZOOM
 } from "../lib/action-keys";
 
 
@@ -17,7 +17,8 @@ import {
 function convertMapData(map) {
 	map.nodes = map.nodes ? Object.values(map.nodes) : [];
 	map.layers = map.layers ? Object.values(map.layers) : [];
-
+	map.zoom = map.zoom || 1;
+console.log("convertMapData", map.layers)
 	map.layers.sort(sortByProperty("sort"));
 
 	return map;
@@ -44,6 +45,12 @@ MAP_ACTIONS[MAP_EDIT] = (state, payload) => {
 	return maps;
 };
 
+MAP_ACTIONS[MAP_ZOOM] = (state, payload) => {
+	database.ref(replaceId(STORAGE_KEYS.MAP_ZOOM, payload.id)).set(payload.zoom);
+
+	return editById(state, payload);
+};
+
 MAP_ACTIONS[MAP_DELETE] = deleteById; // TODO deleting a map needs to update firebase, but there's no UI support for this uet
 
 // create a map and save it to firebase
@@ -54,6 +61,7 @@ MAP_ACTIONS[MAP_CREATE] = (state, payload) => {
 	payload.url = window.location.href + "view.html#" + createRef.key;
 	payload.nodes = [];
 	payload.layers = [];
+	payload.zoom = 1;
 
 	createRef.set(payload);
 
@@ -79,8 +87,6 @@ MAP_ACTIONS[MAP_LOAD] = (state, payload) => {
 	});
 
 	imagesRef.listAll().then(response => {
-		console.warn(MAP_LOAD, "loading images")
-		console.log(response)
 		dispatcher.dispatch(IMAGE_LOAD, response.items);
 	});
 

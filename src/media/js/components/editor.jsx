@@ -31,7 +31,7 @@ import Shape from "../tools/shape";
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
 import { MODE, COLOURS } from "../lib/config";
-import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE } from "../lib/action-keys";
+import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
 
 
@@ -181,6 +181,13 @@ export default class Editor extends React.Component {
 		});
 	}
 
+	setZoomLevel(level) {
+		dispatcher.dispatch(MAP_ZOOM, {
+			id: this.props.map.id,
+			zoom: level
+		});
+	}
+
 	toggleSidebar() {
 		let updatedState = {
 			"expanded": !this.state.expanded
@@ -290,8 +297,8 @@ export default class Editor extends React.Component {
 					</Tabs.Tab>
 				</Tabs>
 			</nav>
-			<PaperView canvasId="map" layers={ this.props.layers } nodes={ this.props.nodes } mode={ MODE.EDIT } />
-			<ZoomPanel />
+			<PaperView canvasId="map" map={ this.props.map } layers={ this.props.layers } nodes={ this.props.nodes } mode={ MODE.EDIT } />
+			<ZoomPanel onZoom={ this.setZoomLevel.bind(this) } />
 			<Notification active={ this.state.copyActive } primary
 				timeout={ 4000 }
 				onClose={ this.setSimpleState.bind(this, "copyActive", false) }>

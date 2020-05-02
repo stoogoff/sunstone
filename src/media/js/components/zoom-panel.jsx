@@ -17,11 +17,21 @@ const LEVELS = {
 
 
 export default (props) => {
+	const onZoom = (zoom, level) => {
+		return () => {
+			const newLevel = zoom.activate(level);
+
+			if(props.onZoom) {
+				props.onZoom(newLevel);
+			}
+		};
+	};
+
 	return <span id="zoom" className="tag is-medium" >
 		<Icon large icon="search-plus" />
-		{ ZOOM.map(z => <Button text small rightIcon={ z.icon } onClick={ z.activate.bind(z) } />)}
+		{ ZOOM.map(z => <Button text small rightIcon={ z.icon } onClick={ onZoom(z) } />)}
 		<Menu up right button-text>
-			{ Object.keys(LEVELS).map(key => <Menu.Item onClick={ ZoomTo.activate.bind(ZoomTo, LEVELS[key]) }>{ key }</Menu.Item>)}
+			{ Object.keys(LEVELS).map(key => <Menu.Item onClick={ onZoom(ZoomTo, LEVELS[key]) }>{ key }</Menu.Item>)}
 		</Menu>
 	</span>
 };

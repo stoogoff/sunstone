@@ -18,7 +18,7 @@ const boundsCheckZoom = (zoom) => {
 
 	paper.view.zoom = zoom;
 
-	return false;
+	return paper.view.zoom;
 };
 
 
