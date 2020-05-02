@@ -1,5 +1,5 @@
 
-import { create, editById, deleteById, moveUpById, moveDownById, handlerCreator } from "./base";
+import { create, editById, deleteById, handlerCreator } from "./base";
 import { 
 	LAYER_CREATE, LAYER_DELETE,
 	LAYER_MOVE_UP, LAYER_MOVE_DOWN, LAYER_LOAD_COMPLETE,
@@ -54,7 +54,6 @@ const moveLayer = (state, payload, sort) => {
 	}
 
 	clone = editById(clone, payload).sort(sortByProperty("sort"));
-
 	clone.forEach(layer => layer._layer.bringToFront());
 
 	return clone;

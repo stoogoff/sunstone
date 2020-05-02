@@ -94,8 +94,10 @@ export default (layers, nodes, mode) => {
 			}
 
 			// remove a child from the layer if it no longer exists in the nodes array
+			// but only if it has an _externalId, if it doesn't have an _externalId set
+			// then it's a transient node like a cursor
 			layer._layer.children.forEach(child => {
-				if(!(child._externalId in nodesById)) {
+				if(child._externalId && !(child._externalId in nodesById)) {
 					child.remove();
 				}
 			});

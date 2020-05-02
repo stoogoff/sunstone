@@ -18,7 +18,7 @@ function convertMapData(map) {
 	map.nodes = map.nodes ? Object.values(map.nodes) : [];
 	map.layers = map.layers ? Object.values(map.layers) : [];
 	map.zoom = map.zoom || 1;
-console.log("convertMapData", map.layers)
+
 	map.layers.sort(sortByProperty("sort"));
 
 	return map;

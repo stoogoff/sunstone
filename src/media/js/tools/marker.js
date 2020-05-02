@@ -41,18 +41,12 @@ export default class Marker extends Tool {
 
 		marker._externalId = createId();
 
-		/*marker.name = currentMap.addObject(activeLayer, {
-			"x": event.point.x,
-			"y": event.point.y,
-			"feature": symbol.featurePath
-		});*/
-
 		this.onComplete({
 			id: marker._externalId,
 			type: this.name,
 			layer: marker.layer._externalId,
 			colour: this.colour,
-			point: {
+			position: {
 				x: event.point.x,
 				y: event.point.y
 			}
@@ -63,7 +57,7 @@ export default class Marker extends Tool {
 	static draw(packet) {
 		createSymbol(packet.colour);
 
-		let marker = symbols[packet.colour].place(new paper.Point(packet.point.x, packet.point.y));
+		let marker = symbols[packet.colour].place(new paper.Point(packet.position.x, packet.position.y));
 
 		marker._externalId = packet.id;
 	}

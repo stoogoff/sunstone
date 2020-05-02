@@ -28,6 +28,7 @@ NODE_ACTIONS[NODE_LOAD_COMPLETE] = (state, payload) => {
 };
 
 NODE_ACTIONS[NODE_DELETE_BY_IMAGE] = (state, payload) => {
+	// TODO not all of the nodes are deleted from the drawing
 	const nodesToDelete = state.filter(node => node.type == "Image" && node.image.path == payload);
 
 	nodesToDelete.forEach(node => {

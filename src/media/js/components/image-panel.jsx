@@ -11,8 +11,8 @@ import { toByteString } from "../lib/number";
 import dispatcher from "../lib/dispatcher";
 import { IMAGE_UPLOAD, IMAGE_DELETE } from "../lib/action-keys";
 
-// TODO deleting images
 
+// TODO deleting images
 export default class ImagePabel extends React.Component {
 	constructor(props) {
 		super(props);
@@ -122,6 +122,7 @@ export default class ImagePabel extends React.Component {
 					/>
 						<Expander open={ this.state.openMenu == image.path }>
 							<figure className="image">
+								<a className="delete" onClick={ this.displayDeleteDialogue.bind(this, image) }></a>
 								<img id={ id(image.path) } src={ image.url } />
 								<figcaption className="content is-small">
 									<div><strong>Dimensions</strong> { this.state.naturalWidth } x { this.state.naturalHeight }</div>
@@ -130,7 +131,6 @@ export default class ImagePabel extends React.Component {
 									<div><strong>Updated</strong> { toDate(image.updated).toLocaleString() }</div>
 								</figcaption>
 							</figure>
-							<Button leftIcon="trash" onClick={ this.displayDeleteDialogue.bind(this, image) } />
 						</Expander>
 				</li>) }
 			</ul> : null }

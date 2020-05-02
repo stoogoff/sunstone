@@ -2,10 +2,6 @@
 import paper from "paper/dist/paper-core";
 import Tool from "./tool";
 import { createId } from "../lib/utils";
-import getLogger from "../lib/logger";
-
-// TODO the cursor image seems to disappear after the image is placed
-let logger = getLogger("draw");
 
 
 export default class Raster extends Tool {
@@ -17,7 +13,6 @@ export default class Raster extends Tool {
 		this.image = null;
 		this.opacity = 1;
 		this.cursorImage = null;
-		this.placedImage = null;
 	}
 
 	update(options) {
@@ -53,33 +48,31 @@ export default class Raster extends Tool {
 
 	onMouseDown(event) {
 		if(this.image) {
-			this.placedImage = new paper.Raster({
+			const placedImage = new paper.Raster({
 				source: this.image.url,
 				position: event.point
 			});
 
-			this.placedImage._externalId = createId();
-			this.placedImage.opacity = this.opacity;
+			placedImage._externalId = createId();
+			placedImage.opacity = this.opacity;
 
 			this.cursorImage.bringToFront();
 
 			this.onComplete({
-				id: this.placedImage._externalId,
+				id: placedImage._externalId,
 				type: this.name,
-				layer: this.placedImage.layer._externalId,
+				layer: placedImage.layer._externalId,
 				image: this.image,
 				opacity: this.opacity,
 				position: {
-					x: this.placedImage.position.x,
-					y: this.placedImage.position.y
+					x: placedImage.position.x,
+					y: placedImage.position.y
 				}
 			});
 		}
 	}
 
 	static draw(packet) {
-		logger.log("drawing image", packet)
-
 		let image = new paper.Raster({
 			source: packet.image.url,
 			position: new paper.Point(packet.position.x, packet.position.y)
