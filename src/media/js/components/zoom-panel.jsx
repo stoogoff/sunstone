@@ -31,7 +31,7 @@ export default (props) => {
 		<Icon large icon="search-plus" />
 		{ ZOOM.map(z => <Button text small rightIcon={ z.icon } onClick={ onZoom(z) } />)}
 		<Menu up right button-text>
-			{ Object.keys(LEVELS).map(key => <Menu.Item onClick={ onZoom(ZoomTo, LEVELS[key]) }>{ key }</Menu.Item>)}
+			{ Object.keys(LEVELS).map(key => <Menu.Item onClick={ onZoom(ZoomTo, LEVELS[key]) } label={ key } />)}
 		</Menu>
 	</span>
 };

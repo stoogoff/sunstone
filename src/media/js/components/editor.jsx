@@ -30,7 +30,7 @@ import Shape from "../tools/shape";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
-import { MODE, COLOURS } from "../lib/config";
+import { MODE, COLOURS, ICON } from "../lib/config";
 import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
 
@@ -145,16 +145,7 @@ export default class Editor extends React.Component {
 		const activated = active.activate(this.getToolParams(), (payload) => {
 			payload.map = this.props.map.id;
 
-			console.log(payload)
-
 			dispatcher.dispatch(payload.action || NODE_CREATE, payload);
-
-			/*if(payload.type == NODE_DELETE) {
-				dispatcher.dispatch(NODE_DELETE, payload);
-			}
-			else {
-				dispatcher.dispatch(NODE_CREATE, payload);
-			}*/
 		});
 
 		if(activated) {
@@ -251,14 +242,14 @@ export default class Editor extends React.Component {
 				<div id="menu" className="level-right">
 					{ this.state.activeTool ? <Icon icon={ this.state.activeTool.icon } /> : null }
 					{ activeLayer ? <Menu label={ activeLayer.name } button-dark>
-						{ this.props.layers.map(layer => <Menu.Item onClick={ this.activateLayer.bind(this, layer) } active={ layer.id == activeLayer.id }>{ layer.name }</Menu.Item>)}
+						{ this.props.layers.map(layer => <Menu.Item onClick={ this.activateLayer.bind(this, layer) } active={ layer.id == activeLayer.id } label={ layer.name } icon={ layer.visible ? ICON.VISIBLE : ICON.HIDDEN } />)}
 					</Menu> : null }
 					{ this.state.foreground == "transparent" ? <Icon icon="slash" className="colour-picker transparent" /> : <Icon icon="square" className="colour-picker" colour={ this.state.foreground } /> }
 					{ this.state.background == "transparent" ? <Icon icon="slash" className="colour-picker transparent" /> : <Icon icon="square" className="colour-picker" colour={ this.state.background } /> }
 					<Menu label={ this.state.mapName } right button-dark>
-						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id }>{ m.name }</Menu.Item>) }
+						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id } label={ m.name } />) }
 						<Menu.Divider />
-						<Menu.Item>Create Map</Menu.Item>
+						<Menu.Item label="Create Map" />
 					</Menu>
 				</div>
 			</header>

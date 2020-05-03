@@ -22,9 +22,9 @@ export default (props) => {
 			</div>
 			<div id="menu" className="level-right">
 				<Menu label={ props.map.name } button-dark>
-					{ (props.maps || []).map(m => <Menu.Item active={ m.id == props.map.id }>{ m.name }</Menu.Item>) }
+					{ (props.maps || []).map(m => <Menu.Item active={ m.id == props.map.id } label={ m.name } />) }
 					<Menu.Divider />
-					<Menu.Item>Create Map</Menu.Item>
+					<Menu.Item label="Create Map" />
 				</Menu>
 			</div>
 		</header>

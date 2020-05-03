@@ -1,22 +1,44 @@
 
 import React from "react";
 import Button from "./button.jsx";
+import Icon from "./icon.jsx";
 import { TYPES, SIZES, BUTTON } from "../lib/utils";
+import { next } from "../lib/timer";
 
 
 export default class Menu extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.listener = null;
 		this.state = {
 			active: false
 		};
 	}
 
+	componentDidMount() {
+		this.listener = document.addEventListener("click", (evt) => {
+			this.setState({
+				active: false
+			});
+		}, false);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("click", this.listener);
+	}
+
 	toggleActive() {
-		this.setState({
+		const newState = {
 			active: !this.state.active
-		});
+		};
+
+		if(this.state.active) {
+			this.setState(newState);
+		}
+		else {
+			next(() => this.setState(newState));
+		}
 	}
 
 	render() {
@@ -35,8 +57,6 @@ export default class Menu extends React.Component {
 		});
 
 		const btnPropsList = [...TYPES, ...SIZES, ...BUTTON].filter(prop => "button-" + prop in this.props && this.props["button-" + prop]).reduce((a,b) => (a[b] = true, a), {});
-
-		// TODO an invisible modal or something to close the menu when clicking away from it
 
 		return <div className={ classList.join(" ") }>
 			<div className="dropdown-trigger">
@@ -68,7 +88,9 @@ Menu.Item = (props) => {
 		classList.push("is-active");
 	}
 
-	return <a className={ classList.join(" ") } onClick={ props.onClick }>{ props.children }</a>;
+	const icon = props.icon ? <Icon icon={ props.icon } pulled-right /> : null;
+
+	return <a className={ classList.join(" ") } onClick={ props.onClick }>{ props.label }{ icon }</a>;
 };
 
 Menu.Divider = () => (
