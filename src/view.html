@@ -20,13 +20,13 @@
 	// Your web app's Firebase configuration
 	// TODO needs to be externalised
 	var firebaseConfig = {
-		apiKey: "AIzaSyBbdm6ZtvOKLiVMls1EV8ofzHp6C7-J9pU",
-		authDomain: "we-evolve-sunstone.firebaseapp.com",
-		databaseURL: "https://we-evolve-sunstone.firebaseio.com",
-		projectId: "we-evolve-sunstone",
-		storageBucket: "we-evolve-sunstone.appspot.com",
-		messagingSenderId: "900439586715",
-		appId: "1:900439586715:web:a96bdf63b2329a916bd33e"
+		apiKey: "{{ FIREBASE.apiKey }}",
+		authDomain: "{{ FIREBASE.authDomain }}",
+		databaseURL: "{{ FIREBASE.databaseURL }}",
+		projectId: "{{ FIREBASE.projectId }}",
+		storageBucket: "{{ FIREBASE.storageBucket }}",
+		messagingSenderId: "{{ FIREBASE.messagingSenderId }}",
+		appId: "{{ FIREBASE.appId }}"
 	};
 	// Initialize Firebase
 	firebase.initializeApp(firebaseConfig);

@@ -16,6 +16,7 @@ const path = require("path");
 const fs = require("fs");
 const Metalsmith = require("metalsmith");
 const sass = require("metalsmith-sass");
+const hb = require("./hb");
 const rollup = require("./rollup");
 const babel = require("rollup-plugin-babel");
 const replace = require("rollup-plugin-replace");
@@ -111,7 +112,8 @@ Metalsmith(__dirname)
 	.destination(OUTPUT)
 	.metadata({
 		VERSION: VERSION,
-		LIVE: LIVE
+		LIVE: LIVE,
+		FIREBASE: require("./firebase.json")
 	})
 
 	.use(sass({
@@ -146,14 +148,8 @@ Metalsmith(__dirname)
 		}
 	}))
 
-	// write metadata into HTML files, may switch to using layouts in the future
-	.use(each((file, p, files, metalsmith) => {
-		const metadata = metalsmith.metadata();
-
-		Object.keys(metadata).forEach(key => {
-			file.contents = file.contents.toString().replace(new RegExp(`{{ ${key} }}`, "g"), metadata[key]);
-		});
-	}, ".html"))
+	// handlebars templates, mainly for variables
+	.use(hb())
 
 	// log
 	.use(each((f, k) => console.log(k)))
