@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import Modal from "./components/modal.jsx";
 import Editor from "./components/editor.jsx";
 import Viewer from "./components/viewer.jsx";
-import Tabs from "./components/tabs.jsx";
+import Home from "./components/home.jsx";
 
 // various utils
 import dispatcher from "./lib/dispatcher";
@@ -23,6 +23,7 @@ import storageHandler from "./handlers/storage";
 import layerHandler from "./handlers/layers";
 import nodeHandler from "./handlers/nodes";
 import imageHandler from "./handlers/images";
+import userHandler from "./handlers/users";
 
 import getLogger from "./lib/logger";
 
@@ -82,6 +83,7 @@ class App extends React.Component {
 		dispatcher.register("layers", layerHandler);
 		dispatcher.register("nodes", nodeHandler);
 		dispatcher.register("images", imageHandler);
+		dispatcher.register("users", userHandler);
 		/*dispatcher.register("mapIndex", (state = -1, action, payload) => {
 			if(action == MAP_SELECT) {
 				logger.log("selecting map", payload)
@@ -137,34 +139,7 @@ class App extends React.Component {
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
 		return <div className="full-screen">
-			<section className="hero is-warning is-bold is-medium">
-				<div className="hero-body">
-					<div className="container">
-						<h1 className="title">Sunstone</h1>
-						<h2 className="subtitle">Some random blurb...</h2>
-					</div>
-				</div>
-			</section>
-			<section className="section">
-				<div className="container">
-					<Tabs index={ 0 }>
-						<Tabs.Tab label="Use">
-									<p>Some using the app blurb</p>
-						</Tabs.Tab>
-						<Tabs.Tab label="Login">
-		Login form goes here
-						</Tabs.Tab>
-						<Tabs.Tab label="Register">
-		Registration form goes here
-						</Tabs.Tab>
-					</Tabs>
-				</div>
-			</section>
-			<footer className="footer">
-				<div className="container">
-					<p>Copyright &copy; 2020 we-evolve</p>
-				</div>
-			</footer>
+			<Home />
 		</div>;
 
 

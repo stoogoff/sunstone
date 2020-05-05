@@ -33,6 +33,7 @@ import dispatcher  from "../lib/dispatcher";
 import { MODE, COLOURS, ICON } from "../lib/config";
 import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
+import { setSimpleState } from "../lib/utils";
 
 
 /*
@@ -95,6 +96,8 @@ export default class Editor extends React.Component {
 			new Raster(),
 			new Delete()
 		];
+
+		this.setSimpleState = setSimpleState.bind(this);
 	}
 
 	componentDidMount() {
@@ -166,11 +169,11 @@ export default class Editor extends React.Component {
 		this.toolNeedsUpdate = true;
 	}
 
-	setSimpleState(type, value) {
+	/*setSimpleState(type, value) {
 		this.setState({
 			[type]: value
 		});
-	}
+	}*/
 
 	setZoomLevel(level) {
 		dispatcher.dispatch(MAP_ZOOM, {
@@ -275,7 +278,7 @@ export default class Editor extends React.Component {
 						label={ t.name }
 						onClick={ this.activateTool.bind(this, t.name) } />)}
 				</ul>
-				<Tabs index={ this.state.tabIndex } onTabChange={ this.setSimpleState.bind(this, "tabIndex") }>
+				<Tabs index={ this.state.tabIndex } onTabChange={ this.setSimpleState.bind(this, "tabIndex") } boxed>
 					<Tabs.Tab label="Tools">
 						<section>
 							<RangeInput label="Opacity" min={ 0 } max={ 1 } value={ this.state.opacity } onChange={ this.setToolState.bind(this, "opacity") } />

@@ -1,5 +1,7 @@
 
 import React from "react";
+import { getClassList } from "../lib/utils";
+
 
 const Tabs = (props) => {
 	const setTab = (index) => {
@@ -8,8 +10,14 @@ const Tabs = (props) => {
 		}
 	};
 
+	const classList = ["tabs", ...getClassList(props, false, true, true)];
+
+	if(props.className) {
+		classList.push(props.className);
+	}
+
 	return <div className="tabs-container">
-		<div className="tabs is-boxed">
+		<div className={ classList.join(" ") }>
 			<ul>
 				{ props.children.map((tab, index) => <li
 					onClick={ setTab.bind(null, index) }

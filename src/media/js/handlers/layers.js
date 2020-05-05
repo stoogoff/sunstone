@@ -9,7 +9,6 @@ import { createId, replaceId } from "../lib/utils";
 import { findByProperty, sortByProperty } from "../lib/list";
 import { STORAGE_KEYS, VISIBILITY } from "../lib/config";
 import { database } from "../lib/firebase";
-import paper from "paper/dist/paper-core";
 
 
 // move a layer up or down and reorder the underlying paper layers
@@ -93,7 +92,7 @@ LAYER_ACTIONS[LAYER_SHOW] = (state, id) => {
 	});
 };
 
-// creating a layer also saves it to firebase and create a paper layer
+// creating a layer saves it to firebase
 LAYER_ACTIONS[LAYER_CREATE] = (state, payload) => {
 	// position the layer after other layers
 	payload.sort = state.length;
