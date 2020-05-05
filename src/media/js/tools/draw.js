@@ -9,14 +9,14 @@ import Shape from "./shape";
 import getLogger from "../lib/logger";
 
 import { MODE } from "../lib/config";
-import { indexOfByProperty } from "../lib/list";
+import { findByProperty, indexOfByProperty } from "../lib/list";
 import { VISIBILITY } from "../lib/config";
 
 
-let logger = getLogger("draw");
+const logger = getLogger("draw");
 
 
-let tools = {
+const tools = {
 	[Pen.NAME]: Pen,
 	[Rectangle.NAME]: Rectangle,
 	[Circle.NAME]: Circle,
@@ -26,9 +26,6 @@ let tools = {
 };
 
 
-let lastDrawnNodes = {};
-
-
 // automatically draw a set of map nodes and layers
 export default (layers, nodes, mode) => {
 	logger.warn("Begin drawing")
@@ -36,12 +33,29 @@ export default (layers, nodes, mode) => {
 	logger.log("layers", layers);
 	logger.log("nodes", nodes);
 
+	// create a paper layer for each firebase layer or link them to an existing paper layer
+	if(layers) {
+		layers.forEach(layer => {
+			// don't create the paper layer if one with the same _externalId already exists
+			const existingLayer = paper.project.layers.find(findByProperty("_externalId", layer.id));
+
+			if(existingLayer) {
+				layer._layer = existingLayer;
+			}
+			else {
+				layer._layer = new paper.Layer();
+				layer._layer.name = layer.name;
+				layer._layer._externalId = layer.id;
+			}
+
+			layer._layer.opacity = layer.visible ? VISIBILITY.SHOW : VISIBILITY.HIDDEN;
+		});
+	}
 
 	if(!nodes) {
 		return;
 	}
 
-	// TODO currently this just draws everything that hasn't been drawn before
 	// TODO draw order of nodes needs to be maintained somehow, currently it may be it's reversed or possibly random
 
 	nodes.forEach(node => {

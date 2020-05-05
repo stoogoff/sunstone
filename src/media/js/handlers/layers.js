@@ -12,28 +12,7 @@ import { database } from "../lib/firebase";
 import paper from "paper/dist/paper-core";
 
 
-// create a paper.Layer and attach it to the firebase layer
-function createPaperLayer(layer) {
-	// don't create the paper layer if one with the same _externalId already exists
-	const existingLayer = paper.project && paper.project.layers ? paper.project.layers.find(findByProperty("_externalId", layer.id)) : null;
-
-	if(existingLayer) {
-		layer._layer = existingLayer;
-	}
-	else {
-		layer._layer = new paper.Layer();
-		layer._layer.name = layer.name;
-		layer._layer._externalId = layer.id;
-	}
-
-	layer._layer.opacity = layer.visible ? VISIBILITY.SHOW : VISIBILITY.HIDDEN;
-}
-
-
-const LAYER_ACTIONS = {};
-
-
-
+// move a layer up or down and reorder the underlying paper layers
 const moveLayer = (state, payload, sort) => {
 	let clone = [...state];
 
@@ -57,9 +36,10 @@ const moveLayer = (state, payload, sort) => {
 	clone.forEach(layer => layer._layer.bringToFront());
 
 	return clone;
-}
+};
 
 
+const LAYER_ACTIONS = {};
 
 LAYER_ACTIONS[LAYER_MOVE_UP] = (state, payload) => {
 	return moveLayer(state, payload, Math.max(0, payload.sort - 1));
@@ -121,14 +101,12 @@ LAYER_ACTIONS[LAYER_CREATE] = (state, payload) => {
 	// save payload to firebase
 	database.ref(replaceId(STORAGE_KEYS.LAYER, payload.map, payload.id)).set(payload);
 
-	createPaperLayer(payload);
-
 	return create(state, payload);
 };
 
 // activate the supplied layer and mark all the others as in active
 LAYER_ACTIONS[LAYER_ACTIVATE] = (state, payload) => {
-	return state.map(layer => {
+	const newState = state.map(layer => {
 		if(layer.id == payload) {
 			layer._layer.activate();
 
@@ -137,21 +115,14 @@ LAYER_ACTIONS[LAYER_ACTIVATE] = (state, payload) => {
 
 		return {...layer, active: false};
 	});
+
+	newState.forEach(layer => database.ref(replaceId(STORAGE_KEYS.LAYER_ACTIVE, layer.map, layer.id)).set(layer.active));
+
+	return newState;
 }
 
-// layers loaded from firebase, so they need to create paper layers as well
-// override the current state (MAYBE better to add if new, edit if exists rather than completely wipe)
+// layers loaded from firebase, so override the existing layer state
 LAYER_ACTIONS[LAYER_LOAD_COMPLETE] = (state, payload) => {
-	payload.forEach(base => createPaperLayer(base));
-
-	let activated = payload.filter(layer => layer.active);
-
-	// as we're loading layers, make sure one is active for drawing
-	if(activated.length == 0 && payload.length > 0) {
-		payload[0].active = true;
-		payload[0]._layer.activate();
-	}
-
 	return payload;
 };
 

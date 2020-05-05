@@ -21,7 +21,7 @@ export default class PaperView extends React.Component {
 		}
 
 		if(nextProps.map != this.props.map) {
-			paper.view.zoom = nextProps.map.zoom;
+			paper.view.zoom = nextProps.map.zoom || 1;
 		}
 	}
 

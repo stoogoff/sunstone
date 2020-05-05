@@ -31,7 +31,7 @@ import Shape from "../tools/shape";
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
 import { MODE, COLOURS, ICON } from "../lib/config";
-import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM } from "../lib/action-keys";
+import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
 
 
@@ -41,11 +41,11 @@ selection tool
 editing of selected objects
 editing of common state of multiple objects (maybe)
 
-public state of objects for view version
+DONE public state of objects for view version
 
 DONE deleting of selected objects
 DONE image upload tool (how to save this?)
-move object tool
+DONE move object tool
 
 */
 
@@ -222,6 +222,16 @@ export default class Editor extends React.Component {
 		return this.props.layers ? this.props.layers.find(findByProperty("active", true)) :null;
 	}
 
+	// these actions might need to change to VIEW_USER_*/DISPLAY_USER_* as this isn't doing the action, just displaying the form
+
+	login() {
+		dispatcher.dispatch(USER_LOGIN);
+	}
+
+	register() {
+		dispatcher.dispatch(USER_REGISTER);
+	}
+
 	render() {
 		if(!this.props.map) {
 			return null;
@@ -249,7 +259,8 @@ export default class Editor extends React.Component {
 					<Menu label={ this.state.mapName } right button-dark>
 						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id } label={ m.name } />) }
 						<Menu.Divider />
-						<Menu.Item label="Create Map" />
+						<Menu.Item label="Login" onClick={ this.login.bind(this) } />
+						<Menu.Item label="Register" onClick={ this.register.bind(this) } />
 					</Menu>
 				</div>
 			</header>

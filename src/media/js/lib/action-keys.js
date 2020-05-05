@@ -13,7 +13,7 @@ export const MAP_LOAD_UPDATES = "load-map-and-update";
 export const MAP_LOAD_COMPLETE = "map-load-complete";
 export const MAP_SUBSCRIBE = "subscribe-map-updates";
 export const MAP_UNSUBSCRIBE = "unsubscribe-map-upadtes";
-export const MAP_ZOOM = "zoom-map-to";
+export const MAP_ZOOM = "zoom-map";
 
 
 // loading of nodes and layers
@@ -44,3 +44,9 @@ export const NODE_DELETE_BY_IMAGE = "delete-nodes-by-image";
 export const IMAGE_UPLOAD = "create-image";
 export const IMAGE_LOAD = "load-image";
 export const IMAGE_DELETE = "delete-image";
+
+
+// users can login and register
+// TODO update user accounts
+export const USER_LOGIN = "login-user";
+export const USER_REGISTER = "register-user";

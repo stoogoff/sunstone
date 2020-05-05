@@ -1,7 +1,7 @@
 
 import paper from "paper/dist/paper-core";
 
-let currentZoom = 1;
+
 const MIN = 0.1;
 const MAX = 5;
 const STEP = 0.1;
@@ -27,9 +27,9 @@ export const ZoomIn = {
 	icon: "plus",
 
 	activate() {
-		currentZoom += STEP;
+		paper.view.zoom += STEP;
 
-		return boundsCheckZoom(currentZoom);
+		return boundsCheckZoom(paper.view.zoom);
 	}
 };
 
@@ -38,9 +38,9 @@ export const ZoomOut = {
 	icon: "minus",
 
 	activate() {
-		currentZoom -= STEP;
+		paper.view.zoom -= STEP;
 
-		return boundsCheckZoom(currentZoom);
+		return boundsCheckZoom(paper.view.zoom);
 	}
 };
 
@@ -49,8 +49,8 @@ export const ZoomTo = {
 	icon: "zoom out",
 
 	activate(level) {
-		currentZoom = level;
+		paper.view.zoom = level;
 
-		return boundsCheckZoom(currentZoom);
+		return boundsCheckZoom(paper.view.zoom);
 	}
 };

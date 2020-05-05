@@ -42,4 +42,5 @@ export const STORAGE_KEYS = {
 	LAYER_VISIBLE: "/maps/$ID$/layers/$ID$/visible",
 	LAYER_NAME: "/maps/$ID$/layers/$ID$/name",
 	LAYER_SORT: "/maps/$ID$/layers/$ID$/sort",
+	LAYER_ACTIVE: "/maps/$ID$/layers/$ID$/active",
 };
