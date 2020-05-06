@@ -1,6 +1,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 // components
 import Modal from "./components/modal.jsx";
@@ -84,12 +85,12 @@ class App extends React.Component {
 		dispatcher.register("nodes", nodeHandler);
 		dispatcher.register("images", imageHandler);
 		dispatcher.register("users", userHandler);
-		/*dispatcher.register("mapIndex", (state = -1, action, payload) => {
-			if(action == MAP_SELECT) {
-				logger.log("selecting map", payload)
-				return payload;
-			}
-		})*/
+		//dispatcher.register("mapIndex", (state = -1, action, payload) => {
+		//	if(action == MAP_SELECT) {
+		//		logger.log("selecting map", payload)
+		//		return payload;
+		//	}
+		//})
 
 
 		// viewing a map instead of editing
@@ -139,15 +140,24 @@ class App extends React.Component {
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
 		return <div className="full-screen">
-			<Home />
-		</div>;
+			<BrowserRouter>
+				<Switch>
+					<Route path="/view">
+						<Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
+					</Route>
+					<Route path="/create">
+						<Editor maps={ this.state.maps } map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
+					</Route>
+					<Route path="/">
+						<Home />
+					</Route>
+				</Switch>
+			</BrowserRouter>
 
-
-		return <div className="full-screen">
-			{ __MODE__ == MODE.VIEW
+			{/* __MODE__ == MODE.VIEW
 				? <Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
 				: <Editor maps={ this.state.maps } map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
-			}
+			*/}
 			<Modal title="Loading map" active={ dialogueIsActive }>
 				<progress class="progress is-small is-warning" max="100"></progress>
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}

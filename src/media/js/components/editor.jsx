@@ -34,6 +34,10 @@ import { MODE, COLOURS, ICON } from "../lib/config";
 import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
 import { setSimpleState } from "../lib/utils";
+import getLogger from "../lib/logger";
+
+const logger = getLogger("editor");
+
 
 
 /*
@@ -101,6 +105,9 @@ export default class Editor extends React.Component {
 	}
 
 	componentDidMount() {
+		logger.warn("componentDidMount")
+		logger.info("activating tool[0]")
+
 		let active = this.tools[0].activate();
 
 		if(active) {
@@ -111,6 +118,9 @@ export default class Editor extends React.Component {
 	}
 
 	componentWillUpdate(nextProps, nextState) {
+		logger.warn("componentWillUpdate")
+		logger.log(nextProps, nextState)
+
 		if(nextProps.map != this.props.map) {
 			this.setState({
 				mapName: nextProps.map ? nextProps.map.name : ""
@@ -168,12 +178,6 @@ export default class Editor extends React.Component {
 		this.setSimpleState(type, value);
 		this.toolNeedsUpdate = true;
 	}
-
-	/*setSimpleState(type, value) {
-		this.setState({
-			[type]: value
-		});
-	}*/
 
 	setZoomLevel(level) {
 		dispatcher.dispatch(MAP_ZOOM, {
@@ -236,6 +240,9 @@ export default class Editor extends React.Component {
 	}
 
 	render() {
+		logger.warn("render")
+		logger.log(this.props.map)
+
 		if(!this.props.map) {
 			return null;
 		}

@@ -1,31 +1,23 @@
 
-import React from "react";
+import React, { useRef } from "react";
 import paper from "paper/dist/paper-core";
 import draw from "../tools/draw";
+import getLogger from "../lib/logger";
 
 
-export default class PaperView extends React.Component {
-	constructor(props) {
-		super(props);
+const logger = getLogger("draw");
 
-		this.canvas = React.createRef();
-	}
 
-	componentDidMount() {
-		paper.setup(this.canvas.current);
-	}
+export default props => {
+	logger.warn("render");
+	logger.log(props);
 
-	componentWillUpdate(nextProps, nextState) {
-		if(nextProps.nodes != this.props.nodes) {
-			draw(nextProps.layers, nextProps.nodes, this.props.mode);
-		}
+	const canvas = useRef(null);
 
-		if(nextProps.map != this.props.map) {
-			paper.view.zoom = nextProps.map.zoom || 1;
-		}
-	}
+	paper.setup(canvas.current)
+	paper.view.zoom = props.map.zoom || 1;
 
-	render() {
-		return <canvas id={ this.props.canvasId } ref={ this.canvas }></canvas>;
-	}
-}
+	draw(props.layers, props.nodes, props.mode);
+
+	return <canvas id={ props.canvasId } ref={ canvas }></canvas>;
+};

@@ -50,3 +50,9 @@ export const IMAGE_DELETE = "delete-image";
 // TODO update user accounts
 export const USER_LOGIN = "login-user";
 export const USER_REGISTER = "register-user";
+
+
+export const VIEW_MAP = "view-map";
+
+
+

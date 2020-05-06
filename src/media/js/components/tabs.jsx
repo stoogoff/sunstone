@@ -1,5 +1,6 @@
 
 import React from "react";
+import Icon from "./icon.jsx";
 import { getClassList } from "../lib/utils";
 
 
@@ -22,7 +23,7 @@ const Tabs = (props) => {
 				{ props.children.map((tab, index) => <li
 					onClick={ setTab.bind(null, index) }
 					className={ props.index == index ? "is-active" : null  }>
-						<a>{ tab.props.label }</a>
+						<a>{ tab.props.icon ? <Icon icon={ tab.props.icon } /> : null }{ tab.props.label }</a>
 				</li>)}
 			</ul>
 		</div>
