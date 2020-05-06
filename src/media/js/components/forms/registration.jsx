@@ -36,7 +36,7 @@ export default class Login extends React.Component {
 			<TextInput label="Password" leftIcon="lock" value={ this.state.password } required onChange={ setSimpleState.bind(this, "password") }  />
 			<TextInput label="Repeat Password" leftIcon="lock" value={ this.state.repeatPassword } required onChange={ setSimpleState.bind(this, "repeatPassword") }  />
 			<div className="control">
-				<Button label="Register" primary onClick={ this.submit.bind(this) } disabled={ this.hasError() } />
+				<Button label="Register" link onClick={ this.submit.bind(this) } disabled={ this.hasError() } />
 			</div>
 		</div>;
 	}

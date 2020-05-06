@@ -42,7 +42,7 @@ const storeMapData = (key, state, payload) => {
 	let stored = local.get(STORAGE_KEYS.MAP_LOCAL) || {};
 
 	stored[key] = justCoreData(state);
-	stored.index = indexOfByProperty(state, "id", payload.id);
+	stored.index = payload ? indexOfByProperty(state, "id", payload.id) : 0;
 
 	local.set(STORAGE_KEYS.MAP_LOCAL, stored);
 

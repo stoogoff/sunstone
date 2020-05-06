@@ -123,9 +123,9 @@ class App extends React.Component {
 			dispatcher.hydrate("index", 0);
 			dispatcher.hydrate("maps", []);
 
-			dispatcher.dispatch(MAP_CREATE, {
+			/*dispatcher.dispatch(MAP_CREATE, {
 				name: DEFAULT_MAP
-			});
+			});*/
 		}
 	}
 
@@ -139,6 +139,9 @@ class App extends React.Component {
 		let mapName = this.state.map ? this.state.map.name : null;
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
+		logger.warn("render")
+		logger.log(this.state.maps);
+
 		return <div className="full-screen">
 			<BrowserRouter>
 				<Switch>
@@ -149,7 +152,7 @@ class App extends React.Component {
 						<Editor maps={ this.state.maps } map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
 					</Route>
 					<Route path="/">
-						<Home />
+						<Home map={ this.state.map } loading={ dialogueIsActive } />
 					</Route>
 				</Switch>
 			</BrowserRouter>
@@ -158,10 +161,10 @@ class App extends React.Component {
 				? <Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
 				: <Editor maps={ this.state.maps } map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
 			*/}
-			<Modal title="Loading map" active={ dialogueIsActive }>
+			{/*<Modal title="Loading map" active={ dialogueIsActive }>
 				<progress class="progress is-small is-warning" max="100"></progress>
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}
-			</Modal>
+			</Modal>*/}
 		</div>;
 	}
 }

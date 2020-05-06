@@ -1,6 +1,6 @@
 
 import { create, editById, deleteById, handlerCreator } from "./base";
-import { STORAGE_KEYS } from "../lib/config";
+import { STORAGE_KEYS, DEFAULT_MAP } from "../lib/config";
 import { sortByProperty } from "../lib/list";
 import dispatcher from "../lib/dispatcher";
 import { database, storage } from "../lib/firebase";
@@ -51,6 +51,9 @@ MAP_ACTIONS[MAP_DELETE] = deleteById; // TODO deleting a map needs to update fir
 MAP_ACTIONS[MAP_CREATE] = (state, payload) => {
 	let createRef = database.ref(STORAGE_KEYS.MAP_ROOT).push();
 
+	payload = payload || {};
+
+	payload.name = payload.name || DEFAULT_MAP;
 	payload.id = createRef.key;
 	payload.url = window.location.href + "view.html#" + createRef.key;
 	payload.nodes = [];
