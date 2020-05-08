@@ -6,22 +6,22 @@ import Button from "./button.jsx";
 import Login from "./forms/login.jsx";
 import Registration from "./forms/registration.jsx";
 import dispatcher from "../lib/dispatcher";
+import router from "../lib/history";
 import { MAP_CREATE } from "../lib/action-keys";
 
 
 export default props => {
-	console.log("Home", props.map)
+	console.log("Home", props.user)
 
 	//const maps = props.maps ? props.maps.length : 0;
-	const history = useHistory();
+
 	const onClick = () => {
 		console.log("Creating map")
 		// potential race condition
 		dispatcher.dispatch(MAP_CREATE);
 
-		history.push("/create");
+		router.push("/create");
 	};
-
 
 	return <div className="full-screen">
 		<section className="hero is-warning is-bold is-medium">
@@ -65,7 +65,7 @@ export default props => {
 					<Tabs.Tab label="Register" icon="user-plus">
 						<div className="columns">
 							<div className="column">
-								<Registration />
+								<Registration error={ props.user && props.user.error ? props.user.error : null }/>
 							</div>
 							<div className="column notification">
 								Some text with instructions

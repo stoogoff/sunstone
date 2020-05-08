@@ -2,8 +2,9 @@
 const LOGGING = {
 	"images": 0,
 	"app": 15,
-	"draw": 15,
-	"editor": 15
+	"draw": 0,
+	"editor": 0,
+	"user": 15
 };
 
 

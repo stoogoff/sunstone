@@ -54,6 +54,8 @@ export class TextInput extends BaseText {
 	render() {
 		const inputId = this.props.label ? "input_" + id(this.props.label) : null;
 		let classList = ["control"];
+		let inputClassList = ["input"];
+		let helpClassList = ["help"];
 
 		if("rightIcon" in this.props) {
 			classList.push("has-icons-right");
@@ -63,11 +65,16 @@ export class TextInput extends BaseText {
 			classList.push("has-icons-left");
 		}
 
+		if(this.state.error || this.props.danger) {
+			inputClassList.push("is-danger");
+			helpClassList.push("is-danger");
+		}
+
 		return <div className="field">
 			{ this.props.label ? <label htmlFor={ inputId } className="label">{ this.props.label } { this.props.required ? <span className="required">*</span> : null }</label> : null }
 			<div className={ classList.join(" ") } onClick={ this.handleClick.bind(this, this.props.value) }>
-				<input id={ inputId } className={ this.getClassName("input") }
-					type="text"
+				<input id={ inputId } className={ inputClassList.join(" ") }
+					type={ this.props.type || "text" }
 					value={ this.props.value }
 					onChange={ this.handleChange.bind(this) }
 					onBlur={ this.handleBlur.bind(this) }
@@ -76,7 +83,7 @@ export class TextInput extends BaseText {
 				{ this.props.leftIcon ? <span className="icon is-small is-left"><i className={ `fas fa-${this.props.leftIcon}` }></i></span> : null }
 				{ this.props.rightIcon ? <span className="icon is-small is-right"><i className={ `fas fa-${this.props.rightIcon}` }></i></span> : null }
 			</div>
-			{ this.props.note ? <div className="help">{ this.props.note }</div> : null }
+			{ this.props.note ? <div className={ helpClassList.join(" ") }>{ this.props.note }</div> : null }
 		</div>;
 	}
 }

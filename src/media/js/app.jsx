@@ -1,7 +1,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Router, Switch, Route, createBrowserHistory } from "react-router-dom";
 
 // components
 import Modal from "./components/modal.jsx";
@@ -14,8 +14,9 @@ import dispatcher from "./lib/dispatcher";
 import { local } from "./lib/local-store";
 import { MODE, STORAGE_KEYS, DEFAULT_MAP, DEFAULT_LAYER } from "./lib/config";
 
-import { MAP_CREATE, MAP_LOAD, MAP_SUBSCRIBE, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE } from "./lib/action-keys";
+import { MAP_CREATE, MAP_LOAD, MAP_SUBSCRIBE, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE, USER_LOGIN_COMPLETE } from "./lib/action-keys";
 
+import router from "./lib/history";
 import { createId } from "./lib/utils";
 import { indexOfByProperty } from "./lib/list";
 
@@ -24,7 +25,7 @@ import storageHandler from "./handlers/storage";
 import layerHandler from "./handlers/layers";
 import nodeHandler from "./handlers/nodes";
 import imageHandler from "./handlers/images";
-import userHandler from "./handlers/users";
+import userHandler from "./handlers/user";
 
 import getLogger from "./lib/logger";
 
@@ -58,23 +59,27 @@ class App extends React.Component {
 			// if layers have loaded and the array is empty, create a new one
 			// otherwise, loading is complete and state should be set
 			if(action == LAYER_LOAD_COMPLETE && state.layers.length == 0) {
-				if(state.layers.length == 0) {
-					logger.log("componentDidMount: no layers, creating empty layer")
-					dispatcher.dispatch(LAYER_CREATE, {
-						id: createId(),
-						name: DEFAULT_LAYER,
-						map: this.state.map.id,
-						visible: true
-					});
-				}
+				logger.log("componentDidMount: no layers, creating empty layer")
+				dispatcher.dispatch(LAYER_CREATE, {
+					id: createId(),
+					name: DEFAULT_LAYER,
+					map: this.state.map.id,
+					visible: true,
+					active: true
+				});
 			}
+			/*else if(action == USER_LOGIN_COMPLETE) {
+				// TODO switch route to create
+				router.push("/create");
+			}*/
 			else {
 				this.setState({
 					maps: state.maps,
 					map: state.maps ? state.maps[state.index] : null,
 					nodes: state.nodes,
 					layers: state.layers,
-					images: state.images
+					images: state.images,
+					user: state.user
 				});
 			}
 		});
@@ -84,7 +89,9 @@ class App extends React.Component {
 		dispatcher.register("layers", layerHandler);
 		dispatcher.register("nodes", nodeHandler);
 		dispatcher.register("images", imageHandler);
-		dispatcher.register("users", userHandler);
+		dispatcher.register("user", userHandler);
+
+
 		//dispatcher.register("mapIndex", (state = -1, action, payload) => {
 		//	if(action == MAP_SELECT) {
 		//		logger.log("selecting map", payload)
@@ -92,6 +99,7 @@ class App extends React.Component {
 		//	}
 		//})
 
+		dispatcher.hydrate("user", {});
 
 		// viewing a map instead of editing
 		if(__MODE__ == MODE.VIEW) {
@@ -143,7 +151,7 @@ class App extends React.Component {
 		logger.log(this.state.maps);
 
 		return <div className="full-screen">
-			<BrowserRouter>
+			<Router history={ router }>
 				<Switch>
 					<Route path="/view">
 						<Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
@@ -152,10 +160,10 @@ class App extends React.Component {
 						<Editor maps={ this.state.maps } map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
 					</Route>
 					<Route path="/">
-						<Home map={ this.state.map } loading={ dialogueIsActive } />
+						<Home map={ this.state.map } loading={ dialogueIsActive } user={ this.state.user } />
 					</Route>
 				</Switch>
-			</BrowserRouter>
+			</Router>
 
 			{/* __MODE__ == MODE.VIEW
 				? <Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />

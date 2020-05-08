@@ -49,7 +49,9 @@ export const IMAGE_DELETE = "delete-image";
 // users can login and register
 // TODO update user accounts
 export const USER_LOGIN = "login-user";
+export const USER_LOGIN_COMPLETE = "login-user-complete";
 export const USER_REGISTER = "register-user";
+export const USER_REGISTER_ERROR = "register-user-error";
 
 
 export const VIEW_MAP = "view-map";

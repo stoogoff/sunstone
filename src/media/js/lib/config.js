@@ -44,3 +44,9 @@ export const STORAGE_KEYS = {
 	LAYER_SORT: "/maps/$ID$/layers/$ID$/sort",
 	LAYER_ACTIVE: "/maps/$ID$/layers/$ID$/active",
 };
+
+export const AUTH_ERRORS = {
+	EMAIL_IN_USE: "auth/email-already-in-use",
+	EMAIL_INVALID: "auth/invalid-email",
+	PASSWORD_WEAK: "auth/weak-password"
+};
