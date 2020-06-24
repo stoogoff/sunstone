@@ -68,14 +68,13 @@ STORAGE_ACTIONS[MAP_ZOOM] = (state, payload) => {
 	console.log(MAP_ZOOM, state, payload)
 
 	let stored = local.get(STORAGE_KEYS.MAP_LOCAL) || {};
-	let map = getMapById(stored[VIEWED] || [], payload.id);
+	let map = getMapById(stored[CREATED] || [], payload.id);
 
 	if(map) {
-		return storeMapData(VIEWED, editById(state, payload), payload);
+		return storeMapData(CREATED, editById(state, payload), payload);
 	}
 	else {
-		map = getMapById(stored[CREATED] || [], payload.id)
-		return storeMapData(CREATED, editById(state, payload), payload);
+		return storeMapData(VIEWED, editById(state, payload), payload);
 	}
 };
 

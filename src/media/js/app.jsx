@@ -109,7 +109,7 @@ class App extends React.Component {
 				const storedData = local.get(STORAGE_KEYS.MAP_LOCAL);
 				const index = indexOfByProperty(storedData.viewed || [], "id", mapId);
 
-				dispatcher.hydrate("index", index || 0);
+				dispatcher.hydrate("index", index > -1 ? index : 0);
 				dispatcher.hydrate("maps", storedData.viewed);
 			}
 			else {
