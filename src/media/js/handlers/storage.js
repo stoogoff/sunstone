@@ -58,23 +58,25 @@ STORAGE_ACTIONS[MAP_CREATE] = (state, payload) => storeMapData(CREATED, state, p
 
 // WIP
 // both of these functions need to handle either created or viewed
-STORAGE_ACTIONS[MAP_LOAD_COMPLETE] = (state, payload) => {
+/*STORAGE_ACTIONS[MAP_LOAD_COMPLETE] = (state, payload) => {
 	//storeMapData(VIEWED, state, payload);
 	return state;
-};
+};*/
 
 // find the map either in the created or viewed key and update it
 STORAGE_ACTIONS[MAP_ZOOM] = (state, payload) => {
-	return state;
-	/*let stored = local.get(STORAGE_KEYS.MAP_LOCAL) || {};
+	console.log(MAP_ZOOM, state, payload)
+
+	let stored = local.get(STORAGE_KEYS.MAP_LOCAL) || {};
 	let map = getMapById(stored[VIEWED] || [], payload.id);
 
-	if(!map) {
-		map = getMapById(STORED[CREATED] || [], payload.id)
+	if(map) {
+		return storeMapData(VIEWED, editById(state, payload), payload);
 	}
-
-
-	return storeMapData("viewed", editById(state, payload), payload);*/
+	else {
+		map = getMapById(stored[CREATED] || [], payload.id)
+		return storeMapData(CREATED, editById(state, payload), payload);
+	}
 };
 
 

@@ -51,3 +51,13 @@ export const getClassList = (props, useTypes, useSizes, useButton) => {
 
 	return classList.filter(prop => prop in props && props[prop]).map(prop => "is-" + prop);
 }
+
+export const copy = (text, then) => {
+	if(navigator.clipboard && navigator.clipboard.writeText) {
+		navigator.clipboard.writeText(text).then(then);
+	}
+	else if(window.clipboardData) {
+		window.clipboardData.setData("Text", text);
+		then();
+	}
+}

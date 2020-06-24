@@ -33,7 +33,7 @@ import dispatcher  from "../lib/dispatcher";
 import { MODE, COLOURS, ICON } from "../lib/config";
 import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
-import { setSimpleState } from "../lib/utils";
+import { setSimpleState, copy } from "../lib/utils";
 import getLogger from "../lib/logger";
 
 const logger = getLogger("editor");
@@ -129,7 +129,7 @@ export default class Editor extends React.Component {
 	}
 
 	copyURL() {
-		navigator.clipboard.writeText(this.props.map.url).then(() => {
+		copy(this.props.map.url, () => {
 			this.setState({
 				copyMessage: `Link ${this.props.map.url} copied to clipboard.`,
 				copyActive: true

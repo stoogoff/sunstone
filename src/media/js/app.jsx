@@ -1,7 +1,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Switch, Route, createBrowserHistory } from "react-router-dom";
+//import { Router, Switch, Route, createBrowserHistory } from "react-router-dom";
 
 // components
 import Modal from "./components/modal.jsx";
@@ -25,7 +25,7 @@ import storageHandler from "./handlers/storage";
 import layerHandler from "./handlers/layers";
 import nodeHandler from "./handlers/nodes";
 import imageHandler from "./handlers/images";
-import userHandler from "./handlers/user";
+//import userHandler from "./handlers/user";
 
 import getLogger from "./lib/logger";
 
@@ -89,7 +89,7 @@ class App extends React.Component {
 		dispatcher.register("layers", layerHandler);
 		dispatcher.register("nodes", nodeHandler);
 		dispatcher.register("images", imageHandler);
-		dispatcher.register("user", userHandler);
+		//dispatcher.register("user", userHandler);
 
 
 		//dispatcher.register("mapIndex", (state = -1, action, payload) => {
@@ -99,7 +99,7 @@ class App extends React.Component {
 		//	}
 		//})
 
-		dispatcher.hydrate("user", {});
+		//dispatcher.hydrate("user", {});
 
 		// viewing a map instead of editing
 		if(__MODE__ == MODE.VIEW) {
@@ -107,10 +107,13 @@ class App extends React.Component {
 
 			if(local.has(STORAGE_KEYS.MAP_LOCAL)) {
 				const storedData = local.get(STORAGE_KEYS.MAP_LOCAL);
-				const index = indexOfByProperty(storedData.viewed, "id", mapId);
+				const index = indexOfByProperty(storedData.viewed || [], "id", mapId);
 
 				dispatcher.hydrate("index", index || 0);
 				dispatcher.hydrate("maps", storedData.viewed);
+			}
+			else {
+				dispatcher.hydrate("index", 0);
 			}
 
 			dispatcher.dispatch(MAP_SUBSCRIBE, mapId);
@@ -131,9 +134,9 @@ class App extends React.Component {
 			dispatcher.hydrate("index", 0);
 			dispatcher.hydrate("maps", []);
 
-			/*dispatcher.dispatch(MAP_CREATE, {
+			dispatcher.dispatch(MAP_CREATE, {
 				name: DEFAULT_MAP
-			});*/
+			});
 		}
 	}
 
@@ -147,11 +150,11 @@ class App extends React.Component {
 		let mapName = this.state.map ? this.state.map.name : null;
 		let dialogueIsActive = this.state.layers == null || this.state.layers.length == 0;
 
-		logger.warn("render")
-		logger.log(this.state.maps);
+		//logger.warn("render")
+		//logger.log(this.state.maps);
 
 		return <div className="full-screen">
-			<Router history={ router }>
+			{/* <Router history={ router }>
 				<Switch>
 					<Route path="/view">
 						<Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
@@ -163,16 +166,16 @@ class App extends React.Component {
 						<Home map={ this.state.map } loading={ dialogueIsActive } user={ this.state.user } />
 					</Route>
 				</Switch>
-			</Router>
+			</Router> */}
 
-			{/* __MODE__ == MODE.VIEW
+			{ __MODE__ == MODE.VIEW
 				? <Viewer map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
 				: <Editor maps={ this.state.maps } map={ this.state.map } nodes={ this.state.nodes } layers={ this.state.layers } images={ this.state.images } />
-			*/}
-			{/*<Modal title="Loading map" active={ dialogueIsActive }>
+			}
+			{<Modal title="Loading map" active={ dialogueIsActive }>
 				<progress class="progress is-small is-warning" max="100"></progress>
 				{ mapName ? <p>Loading map data for <strong>{ mapName }</strong>.</p> : <p>Loading map data.</p>}
-			</Modal>*/}
+			</Modal>}
 		</div>;
 	}
 }

@@ -10,6 +10,9 @@ const s3 = require("s3");
 const LAST_VERSION_PATH = path.join(__dirname, "LAST_VERSION");
 const LAST_VERSION = fs.existsSync(LAST_VERSION_PATH) ? fs.readFileSync(LAST_VERSION_PATH, "utf8") : "0.0.0";
 
+const VERSION_PATH = path.join(__dirname, "VERSION");
+const VERSION = fs.existsSync(VERSION_PATH) ? fs.readFileSync(VERSION_PATH, "utf8") : "0.0.1";
+
 if(VERSION === LAST_VERSION) {
 	throw `Failed to deploy: VERSION ${VERSION} matches LAST_VERSION ${LAST_VERSION}`;
 }
