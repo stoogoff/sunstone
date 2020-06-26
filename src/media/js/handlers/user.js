@@ -26,7 +26,7 @@ const USER_ACTIONS = {};
 
 
 USER_ACTIONS[USER_LOGIN] = (state, payload) => {
-	console.log(USER_LOGIN, state, payload)
+	//console.log(USER_LOGIN, state, payload)
 
 	return payload;
 };
@@ -43,7 +43,7 @@ USER_ACTIONS[USER_REGISTER] = (state, payload) => {
 
 	// create a user, and pass on any errors if they occur
 	auth.createUserWithEmailAndPassword(payload.email, payload.password).then(user => {
-		console.log("after create", creds)
+		//console.log("after create", creds)
 
 		auth.currentUser.updateProfile({
 			displayName: payload.username

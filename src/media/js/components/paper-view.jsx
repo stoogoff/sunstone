@@ -13,9 +13,17 @@ export default props => {
 	logger.log(props);
 
 	const canvas = useRef(null);
+	const bounds = paper.view ? new paper.Point(paper.view.bounds.x, paper.view.bounds.y) : null;
 
-	paper.setup(canvas.current)
+	paper.setup(canvas.current);
 	paper.view.zoom = props.map.zoom || 1;
+
+	// reset panning
+	if(bounds && bounds != paper.view.bounds) {
+		let delta = bounds.subtract(new paper.Point(paper.view.bounds.x, paper.view.bounds.y));
+
+		paper.view.translate(delta.negate());
+	}
 
 	draw(props.layers, props.nodes, props.mode);
 

@@ -83,7 +83,9 @@ export default (layers, nodes, mode) => {
 					// the node exists so move it
 					const rendered = layer._layer.children[index];
 
-					rendered.position = node.position;
+					if(rendered.position != node.position) {
+						rendered.position = node.position;
+					}
 				}
 			}
 		}

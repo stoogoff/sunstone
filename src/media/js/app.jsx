@@ -31,6 +31,10 @@ import getLogger from "./lib/logger";
 
 // TODO there should be a facility for creating a new ID
 // TODO facility for multiple maps
+// BUG changing tool recentres the image so panning, switch tool is a problem, this applies to view as well
+// BUG drawing image doesn't place the image until you go to a new tool
+//
+
 
 
 const logger = getLogger("app");

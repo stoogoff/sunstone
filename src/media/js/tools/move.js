@@ -42,11 +42,7 @@ export default class Move extends Tool {
 	}
 
 	onMouseUp(event) {
-		console.log("Move.onMouseUp")
-
 		if(this.selected) {
-			console.log(this.selected)
-
 			this.onComplete({
 				action: NODE_MOVE,
 				id: this.selected._externalId,

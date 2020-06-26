@@ -3,6 +3,7 @@ import paper from "paper/dist/paper-core";
 import Tool from "./tool";
 
 // TODO holding space bar should activate pan
+// TODO current pan should be stored in local storage on map data
 export default class Pan extends Tool {
 	constructor() {
 		super();
@@ -21,7 +22,7 @@ export default class Pan extends Tool {
 		let end = event.point.subtract(paper.view.center);
 		let delta = this.start.subtract(end);
 
-		paper.view.scrollBy(delta);
+		paper.view.translate(delta.negate());
 
 		this.start = end;
 	}

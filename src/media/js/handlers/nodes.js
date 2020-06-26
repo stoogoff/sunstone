@@ -39,14 +39,10 @@ NODE_ACTIONS[NODE_DELETE_BY_IMAGE] = (state, payload) => {
 };
 
 NODE_ACTIONS[NODE_MOVE] = (state, payload) => {
-	console.log("payload", payload)
-
 	const position = {
 		x: payload.position.x,
 		y: payload.position.y
 	};
-
-	console.log("updated", { id: payload.id, position: position })
 
 	// TODO this will only work for images at the moment
 	database.ref(replaceId(STORAGE_KEYS.NODE_POSITION, payload.map, payload.id)).set(position);
