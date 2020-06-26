@@ -14,7 +14,7 @@ import dispatcher from "./lib/dispatcher";
 import { local } from "./lib/local-store";
 import { MODE, STORAGE_KEYS, DEFAULT_MAP, DEFAULT_LAYER } from "./lib/config";
 
-import { MAP_CREATE, MAP_LOAD, MAP_SUBSCRIBE, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE, USER_LOGIN_COMPLETE } from "./lib/action-keys";
+import { MAP_CREATE, MAP_ACTIVATE, MAP_LOAD, MAP_SUBSCRIBE, NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, LAYER_CREATE, USER_LOGIN_COMPLETE } from "./lib/action-keys";
 
 import router from "./lib/history";
 import { createId } from "./lib/utils";
@@ -92,12 +92,31 @@ class App extends React.Component {
 		//dispatcher.register("user", userHandler);
 
 
-		//dispatcher.register("mapIndex", (state = -1, action, payload) => {
-		//	if(action == MAP_SELECT) {
-		//		logger.log("selecting map", payload)
-		//		return payload;
-		//	}
-		//})
+		dispatcher.register("index", (state = -1, action, payload, fullState) => {
+
+			if(action == MAP_ACTIVATE) {
+				logger.log("STATE", state)
+				logger.log("FULL STATE", fullState)
+				logger.log(action, payload)
+
+				const newIndex = indexOfByProperty(fullState.maps, "id", payload);
+
+				// TODO load the map
+				if(newIndex > -1 && newIndex != state) {
+					let stored = local.get(STORAGE_KEYS.MAP_LOCAL) || {};
+
+					stored.index = newIndex;
+
+					local.set(STORAGE_KEYS.MAP_LOCAL, stored);
+
+					return newIndex;
+				}
+
+				return state;
+			}
+
+			return state;
+		});
 
 		//dispatcher.hydrate("user", {});
 

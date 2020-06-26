@@ -31,7 +31,7 @@ import Shape from "../tools/shape";
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
 import { MODE, COLOURS, ICON } from "../lib/config";
-import { MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
+import { MAP_CREATE_AND_SWITCH, MAP_ACTIVATE, MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
 import { setSimpleState, copy } from "../lib/utils";
 import getLogger from "../lib/logger";
@@ -137,6 +137,12 @@ export default class Editor extends React.Component {
 		});
 	}
 
+	activateMap(mapId) {
+		if(mapId != this.props.map.id) {
+			dispatcher.dispatch(MAP_ACTIVATE, mapId);
+		}
+	}
+
 	activateLayer(layer) {
 		this.toolNeedsUpdate = true;
 
@@ -239,6 +245,11 @@ export default class Editor extends React.Component {
 		dispatcher.dispatch(USER_REGISTER);
 	}
 
+	// WIP
+	createNew() {
+		dispatcher.dispatch(MAP_CREATE_AND_SWITCH);
+	}
+
 	render() {
 		logger.warn("render")
 		logger.log(this.props.map)
@@ -267,10 +278,11 @@ export default class Editor extends React.Component {
 					{ this.state.foreground == "transparent" ? <Icon icon="slash" className="colour-picker transparent" /> : <Icon icon="square" className="colour-picker" colour={ this.state.foreground } /> }
 					{ this.state.background == "transparent" ? <Icon icon="slash" className="colour-picker transparent" /> : <Icon icon="square" className="colour-picker" colour={ this.state.background } /> }
 					<Menu label={ this.state.mapName } right button-dark>
-						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id } label={ m.name } />) }
+						{ (this.props.maps || []).map(m => <Menu.Item active={ m.id == this.props.map.id } label={ m.name } onClick={ this.activateMap.bind(this, m.id) } />) }
 						<Menu.Divider />
-						<Menu.Item label="Login" onClick={ this.login.bind(this) } />
-						<Menu.Item label="Register" onClick={ this.register.bind(this) } />
+						{/*<Menu.Item label="Login" onClick={ this.login.bind(this) } />
+						<Menu.Item label="Register" onClick={ this.register.bind(this) } /> */}
+						<Menu.Item label="New" onClick={ this.createNew.bind(this) } />
 					</Menu>
 				</div>
 			</header>

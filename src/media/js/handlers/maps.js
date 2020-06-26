@@ -7,7 +7,7 @@ import { database, storage } from "../lib/firebase";
 import { createId, replaceId } from "../lib/utils";
 import { next } from "../lib/timer";
 import {
-	MAP_CREATE, MAP_EDIT, MAP_DELETE, MAP_LOAD, MAP_LOAD_COMPLETE, MAP_SUBSCRIBE, MAP_UNSUBSCRIBE,
+	MAP_CREATE, MAP_ACTIVATE, MAP_EDIT, MAP_DELETE, MAP_LOAD, MAP_LOAD_COMPLETE, MAP_SUBSCRIBE, MAP_UNSUBSCRIBE,
 	NODE_LOAD_COMPLETE, LAYER_LOAD_COMPLETE, IMAGE_LOAD, IMAGE_LOAD_COMPLETE
 } from "../lib/action-keys";
 
@@ -68,6 +68,10 @@ MAP_ACTIONS[MAP_CREATE] = (state, payload) => {
 
 	return [...state, payload];
 };
+
+/*MAP_ACTIONS[MAP_ACTIVATE] = (state, payload) => {
+
+};*/
 
 // load a map from firebase and notify once its complete
 MAP_ACTIONS[MAP_LOAD] = (state, payload) => {

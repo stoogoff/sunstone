@@ -5,7 +5,9 @@
 
 
 // maps can be created and deleted
+export const MAP_ACTIVATE = "activate-map";
 export const MAP_CREATE = "create-map";
+export const MAP_CREATE_AND_SWITCH = "create-map-switch"; // WIP
 export const MAP_EDIT = "edit-map";
 export const MAP_DELETE = "delete-map";
 export const MAP_LOAD = "load-map";

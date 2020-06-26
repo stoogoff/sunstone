@@ -38,7 +38,7 @@ const dispatcher = {
 
 		Object.keys(handlers).forEach(key => {
 			Object.values(handlers[key]).forEach(handler => {
-				newState[key] = handler(newState[key], action, payload);
+				newState[key] = handler(newState[key], action, payload, {...newState});
 			});
 		});
 

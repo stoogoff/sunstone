@@ -65,17 +65,10 @@ STORAGE_ACTIONS[MAP_CREATE] = (state, payload) => storeMapData(CREATED, state, p
 
 // find the map either in the created or viewed key and update it
 STORAGE_ACTIONS[MAP_ZOOM] = (state, payload) => {
-	console.log(MAP_ZOOM, state, payload)
-
 	let stored = local.get(STORAGE_KEYS.MAP_LOCAL) || {};
 	let map = getMapById(stored[CREATED] || [], payload.id);
 
-	if(map) {
-		return storeMapData(CREATED, editById(state, payload), payload);
-	}
-	else {
-		return storeMapData(VIEWED, editById(state, payload), payload);
-	}
+	return storeMapData(map ? CREATED : VIEWED, editById(state, payload), payload);
 };
 
 
