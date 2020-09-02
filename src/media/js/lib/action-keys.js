@@ -58,5 +58,5 @@ export const USER_REGISTER_ERROR = "register-user-error";
 
 export const VIEW_MAP = "view-map";
 
-
-
+// make the editor render a component as the tool's work isn't over
+export const COMPONENT_RENDER = "render-component";

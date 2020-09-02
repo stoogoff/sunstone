@@ -6,6 +6,7 @@ import Circle from "./circle";
 import Marker from "./marker";
 import Raster from "./raster";
 import Shape from "./shape";
+import Text from "./text.jsx";
 import getLogger from "../lib/logger";
 
 import { MODE } from "../lib/config";
@@ -23,6 +24,7 @@ const tools = {
 	[Marker.NAME]: Marker,
 	[Raster.NAME]: Raster,
 	[Shape.NAME]: Shape,
+	[Text.NAME]: Text,
 };
 
 

@@ -9,7 +9,12 @@ export default class Tool {
 	}
 
 	registerEventHandlers() {
-		["onFrame", "onMouseDown", "onMouseDrag", "onMouseUp", "onClick", "onDoubleClick", "onMouseMove", "onMouseEnter", "onMouseLeave", "onKeyDown", "onKeyUp"].forEach(h => {
+		[
+			"onFrame",
+			"onMouseDown", "onMouseDrag", "onMouseUp", "onMouseMove", "onMouseEnter", "onMouseLeave",
+			"onClick", "onDoubleClick", 
+			"onKeyDown", "onKeyUp"
+		].forEach(h => {
 			if(this[h]) {
 				this._tool[h] = this[h].bind(this);
 			}

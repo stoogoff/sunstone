@@ -3,7 +3,6 @@ import paper from "paper/dist/paper-core";
 import Tool from "./tool";
 
 // TODO holding space bar should activate pan
-// TODO current pan should be stored in local storage on map data
 export default class Pan extends Tool {
 	constructor() {
 		super();

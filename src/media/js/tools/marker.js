@@ -5,8 +5,6 @@ import { createId } from "../lib/utils";
 
 let imported, symbols = {};
 
-// TODO add text when adding a marker
-
 
 // create copy of the symbol in the supplied colour
 function createSymbol(colour) {
@@ -28,30 +26,34 @@ export default class Marker extends Tool {
 		this.name = Marker.NAME;
 		this.icon = "map-marker-alt";
 		this.colour = "black";
+		this.scale = 1;
+		this.marker = null;
 	}
 
 	update(options) {
 		this.colour = options.foreground;
+		this.scale = parseInt(options.width) || 1;
 
 		createSymbol(this.colour);
 	}
 
 	onMouseDown(event) {
-		let marker = symbols[this.colour].place(event.point);
+		this.marker = symbols[this.colour].place(event.point);
 
-		marker._externalId = createId();
+		this.marker._externalId = createId();
+		this.marker.scale(this.scale);
 
 		this.onComplete({
-			id: marker._externalId,
+			id: this.marker._externalId,
 			type: this.name,
-			layer: marker.layer._externalId,
+			layer: this.marker.layer._externalId,
 			colour: this.colour,
+			scale: this.scale,
 			position: {
 				x: event.point.x,
 				y: event.point.y
 			}
 		});
-
 	}
 
 	static draw(packet) {
@@ -60,6 +62,7 @@ export default class Marker extends Tool {
 		let marker = symbols[packet.colour].place(new paper.Point(packet.position.x, packet.position.y));
 
 		marker._externalId = packet.id;
+		marker.scale(packet.scale || 1);
 	}
 }
 

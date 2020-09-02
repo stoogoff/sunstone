@@ -27,11 +27,12 @@ import Pen from "../tools/pen";
 import Raster from "../tools/raster";
 import Rectangle from "../tools/rectangle";
 import Shape from "../tools/shape";
+import Text from "../tools/text.jsx";
 
 // Sunstone utils
 import dispatcher  from "../lib/dispatcher";
 import { MODE, COLOURS, ICON } from "../lib/config";
-import { MAP_CREATE_AND_SWITCH, MAP_ACTIVATE, MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER } from "../lib/action-keys";
+import { MAP_CREATE_AND_SWITCH, MAP_ACTIVATE, MAP_EDIT, NODE_CREATE, NODE_DELETE, LAYER_ACTIVATE, MAP_ZOOM, USER_LOGIN, USER_REGISTER, COMPONENT_RENDER } from "../lib/action-keys";
 import { findByProperty } from "../lib/list";
 import { setSimpleState, copy } from "../lib/utils";
 import getLogger from "../lib/logger";
@@ -87,6 +88,9 @@ export default class Editor extends React.Component {
 
 			// drawer state test
 			expanded: false,
+
+			// any component which the active tool needs to render
+			toolComponent: null
 		}
 
 		this.tools = [
@@ -94,6 +98,7 @@ export default class Editor extends React.Component {
 			new Move(),
 			new Marker(),
 			new Pen(),
+			new Text(),
 			new Rectangle(),
 			new Circle(),
 			new Shape(),
@@ -162,6 +167,16 @@ export default class Editor extends React.Component {
 
 		// once a tool has finished its operation it MAY need to send data somewhere
 		const activated = active.activate(this.getToolParams(), (payload) => {
+			if(payload.action === COMPONENT_RENDER) {
+				this.setSimpleState("toolComponent", payload.component);
+
+				return;
+			}
+
+			if(this.state.toolComponent != null) {
+				this.setSimpleState("toolComponent", null);
+			}
+
 			payload.map = this.props.map.id;
 
 			dispatcher.dispatch(payload.action || NODE_CREATE, payload);
@@ -169,7 +184,8 @@ export default class Editor extends React.Component {
 
 		if(activated) {
 			const updatedState = {
-				activeTool: active
+				activeTool: active,
+				toolComponent: null
 			};
 
 			if(active.name == Raster.NAME) {
@@ -328,6 +344,7 @@ export default class Editor extends React.Component {
 				onClose={ this.setSimpleState.bind(this, "copyActive", false) }>
 					{ this.state.copyMessage }
 			</Notification>
+			{ this.state.toolComponent ? this.state.toolComponent : null }
 		</div>;
 	}
 }
